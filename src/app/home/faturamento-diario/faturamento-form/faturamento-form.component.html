@@ -1,0 +1,25 @@
+<section>
+    <div class="bgCor card-label d-flex between align-middle">
+        <label class="color-text">FATURAMENTO POR {{tipoConsulta}} DE {{dataRecebida | date: 'dd/MM/yyyy'}}</label>
+    </div>
+    <!-- SELETOR DE CONSULTA -->
+    <section class="mb-2 align-middle mt-3">
+        <div class="form-control form-control-sm bgTopoTipoConsulta color-text">
+            <label class="form-label me-2 ">Tipo de consulta:</label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input cursor-pointer" type="radio" name="flexRadioDefault1" [(ngModel)]="tipoConsulta" checked id="flexRadioDefault1" value="CLIENTE">
+                <label class="form-check-label" for="flexRadioDefault1">Cliente</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input cursor-pointer" type="radio" [(ngModel)]="tipoConsulta" name="flexRadioDefault1" id="flexRadioDefault2"  value="BENEFICIAMENTO">
+                <label class="form-check-label" for="flexRadioDefault2">Beneficiamento</label>
+            </div>
+        </div>
+    </section>
+</section>
+
+<section class="mb-5">
+    <app-faturamento-cliente *ngIf="tipoConsulta =='CLIENTE'"></app-faturamento-cliente>
+    <app-faturamento-beneficiamento *ngIf="tipoConsulta =='BENEFICIAMENTO'"></app-faturamento-beneficiamento>
+    <button class="btn btn-danger" routerLink="/dashboard-analitico">Voltar</button>
+</section>

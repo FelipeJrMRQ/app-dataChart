@@ -1,0 +1,72 @@
+<header class="bgCor head-label p-2 d-flex justify-content-between align-middle">
+    <label class="color-text">Programação de itens</label>
+</header>
+<section>
+    <div class="row">
+        
+        <div class="col-12 col-lg-6">
+            <div class="mb-2">
+                <a [href]="urlImagem" target="_blank">
+                    <img [src]="urlImagem" alt="Imagem não encontrada" class="image-size">
+                </a>
+            </div>
+            <label for="" class="bold d-block">CLIENTE:</label>
+            <p>{{data.nomeCliente}}</p>
+            <label for="" class="bold d-block">PRODUTO:</label>
+            <p>{{data.nomeProduto}}</p>
+            <label for="" class="bold d-block">BENEFICIAMENTO:</label>
+            <p>{{data.nomeBeneficiamento}}</p>
+            <label for="" class="bold">QUANTIDADE ENTRADA:</label>
+            <p>{{data.qtdeEntrada}}</p>
+            <label for="" class="bold">SALDO:</label>
+            <p>{{data.saldoRetorno}}</p>
+            <label for="" class="bold">VALOR PREVISTO:</label>
+            <p>{{data.valorPrevisto | currency: 'BRL'}}</p>
+        </div>
+
+        <div class="col-12 col-lg-6">
+           <form>
+            <label for="" class="form-label">Quantidade programada</label>
+            <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="qtdeProgramada" min="1" max="10" (keyup)="alterarValorPrevisto(data)" >
+            <label for="" class="form-label mt-2">Linha</label>
+            <div class="input-group">
+                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao">
+                    <option selected [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
+                </select>
+                <button class="btn btn-outline-secondary" type="button" (click)="cadastrarLinha()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <label for="" class="form-label mt-2">Turno</label>
+            <div class="input-group">
+                <select class="form-select" name="turn" [(ngModel)]="idTurno">
+                    <option selected [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
+                </select>
+                <button class="btn btn-outline-secondary" type="button" (click)="cadastrarTurno()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <label for="" class="form-label mt-2">Prioridade</label>
+            
+            <select class="form-select" name="prioridade" [(ngModel)]="programacao.prioridade">
+                <option value="3">BAIXA</option>
+                <option selected value="2">NORMAL</option>
+                <option value="1">ALTA</option>
+                <option value="0">CRITICO</option>
+            </select>
+
+            <label class="form-label">Data</label>
+            <input type="date" name="data" class="form-control" [(ngModel)]="programacao.data">
+            <label for="" class="mt-2 form-label">Observação</label>
+            <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao" [(ngModel)]="programacao.observacao"></textarea>
+            <button class="btn btn-primary mt-2 me-2" (click)="salvarProgramacao()" [disabled]="data.programado">Programar</button>
+            <button class="btn btn-danger mt-2" (click)="fechar(false)">Fechar</button>
+           </form>
+        </div>
+
+    </div>
+
+
+</section>

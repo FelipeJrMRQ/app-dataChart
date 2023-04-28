@@ -1,0 +1,24 @@
+<header class="bold card-label d-flex between align-middle">
+    <label class="color-text">ALTERAÇÃO DE SENHA</label>
+</header>
+
+<section class="mt-4">
+    <div class="row">
+        <div class="col-12 mt-2">
+            <label for="" class="form-label">Senha atual:</label>
+            <input type="password" class="form-control" [(ngModel)]="senha">
+        </div>
+        <div class="col-12 col-lg-6 mt-2">
+            <label for="" class="form-label">Nova senha:</label>
+            <input type="password" class="form-control" [(ngModel)]="nSenha">
+        </div>
+        <div class="col-12 col-lg-6 mt-2">
+            <label for="" class="form-label">Confirmação de senha:</label>
+            <input type="password" class="form-control" [(ngModel)]="cSenha">
+        </div>
+        <div class="col-12 mt-3">
+            <button class="btn btn-primary me-1 mt-1" (click)="alterarSenha()">Salvar</button>
+            <button class="btn btn-danger  ms-1 mt-1" (click)="fecharDialogo()">Fechar</button>
+        </div>
+    </div>
+</section>

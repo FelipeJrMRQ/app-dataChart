@@ -1,0 +1,41 @@
+<section>
+    <div class="table">
+        <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortBeneficiamento($event)">
+            <thead>
+                <tr>
+                    <th mat-sort-header="nomeBeneficiamento" scope="col">Beneficiamento</th>
+                    <th mat-sort-header="qtde" class="d-none d-lg-table-cell" scope="col">Qtde</th>
+                    <th mat-sort-header="area" class="d-none d-lg-table-cell"  scope="col">Área</th>
+                    <th class="text-end" scope="col">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr (click)="consultarProdutosDoClientePorBeneficiamento(beneficiamento.cdBeneficiamento)" class="c-pointer"
+                *ngFor="let beneficiamento of beneficiamentos | paginate: {itemsPerPage:itensPorPagina,currentPage:paginaAtual,id:'tblCateiraClienteBeneficiamento'},let i = index">
+                    <td class="text-truncate" style="max-width: 220px;">{{beneficiamento.nomeBeneficiamento}}</td>
+                    <td class="d-none d-lg-table-cell" >{{beneficiamento.quantidade | number}}</td>
+                    <td class="d-none d-lg-table-cell" >{{beneficiamento.area | number : '1.0-2'}}</td>
+                    <td class="text-end">{{beneficiamento.valor | currency :'BRL'}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="bold">Total:</td>
+                    <td class="d-none d-lg-table-cell bold" >{{qtde | number}}</td>
+                    <td class="d-none d-lg-table-cell bold" >{{area | number :'1.0-2'}}</td>
+                    <td class="text-end bold">{{valor | currency : 'BRL'}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-10">
+            <pagination-controls id="tblCateiraClienteBeneficiamento" (pageChange)="itensPorPagina = $event" [maxSize]="5"
+                nextLabel="" previousLabel=""></pagination-controls>
+        </div>
+        <div *ngIf="exportarDados" class="col-2 text-success text-end c-pointer" (click)="gerarArquivo()"  >
+            <i class="fas fa-download iconeExcell " data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados"></i>
+        </div>
+    </div>
+</section>

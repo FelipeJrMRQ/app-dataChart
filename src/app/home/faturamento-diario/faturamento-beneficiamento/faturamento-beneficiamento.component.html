@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="col-12">
+        <div>
+            <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortBeneficiamento($event)">
+                <thead>
+                    <tr>
+                        <th mat-sort-header="nomeBeneficiamento">Beneficiamento</th>
+                        <th mat-sort-header="quantidade" class="d-none d-lg-table-cell">Qtde</th>
+                        <th mat-sort-header="area" class="d-none d-lg-table-cell">Área</th>
+                        <th class="text-end">Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="c-pointer" *ngFor="let beneficiamento of beneficiamentos | paginate:{ itemsPerPage:itensPagina,currentPage:paginaFaturamentoCliente,id:'tbFaturamentoCliente'};let i = index" (click)="navegar(beneficiamento.cdBeneficiamento, beneficiamento.nomeBeneficiamento)">
+                        <td class="text-truncate" style="max-width: 200px;">{{beneficiamento.nomeBeneficiamento}}</td>
+                        <td class="d-none d-lg-table-cell" >{{beneficiamento.quantidade}}</td>
+                        <td class="d-none d-lg-table-cell">{{beneficiamento.area | number:'1.0-2'}}</td>
+                        <td class="text-end">{{beneficiamento.valor | currency: 'BRL' }}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="bold">
+                        <td>Total</td>
+                        <td class="d-none d-lg-table-cell">{{totalQtde}}</td>
+                        <td class="d-none d-lg-table-cell">{{totalArea |number:'1.0-2'}}</td>
+                        <td class="text-end">{{total | currency: 'BRL' }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-11">
+        <pagination-controls id="tbFaturamentoCliente" (pageChange)="paginaFaturamentoCliente = $event" nextLabel="" previousLabel="" [maxSize]="5"></pagination-controls>
+    </div>
+    <div *ngIf="exportarDados" class="col-1 iconeExcell c-pointer text-center text-success p-1 align-middle"  (click)="gerarArquivo()">
+        <i class="fas fa-download iconeExcell " data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados" ></i>
+    </div>
+</div>

@@ -1,0 +1,245 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+
+html,
+body {
+    height: 100%;
+}
+
+.c-pointer{
+    cursor: pointer;
+}
+
+/* esconde a barra scroll */
+body::-webkit-scrollbar{
+    width: 0px;
+}
+
+.head-label{
+    margin: 0.5em 0em 0.5em 0em;
+    padding: 5px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 0.2em;
+    box-shadow: 2px 2px 3px;
+}
+
+.iconeExcell{
+    font-size: 20px;
+}
+
+body {
+    /* background-color: rgba(231, 225, 219, 0.918); */
+    background-color: rgba(255, 254, 254, 0.76);
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.my-snack-bar-sucesso {
+    background-color: rgb(11, 131, 17) !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.my-snack-bar-erro {
+    background-color: rgba(153, 58, 58, 0.993) !important;
+    color: rgb(252, 252, 252) !important;
+}
+
+:root {
+    /* css global do corpo */
+    --body: #fff;
+    --text-body: #363636;
+
+    /* grafico acelerador bordas e background */
+    --quadrado: #fff;
+    --circulo: rgba(0, 0, 0, 0.082);
+
+    /* css cards */
+    --card: #fff;
+    --card-header:  rgb(2, 78, 218);
+    --card-bordar: rgba(31, 31, 31, 0.817);
+
+    /* css tabelas e bordas tabelas  */
+    --thead: rgb(216, 216, 216);
+    --tfoot: rgb(216, 216, 216);
+    
+    --tabela-card-background: #cfe2ff;
+    --background-tabela: #f2f5f7;
+    --tabela-borda-left:  rgb(2, 78, 218);
+    --tabela-borda: rgb(0, 0, 0);
+
+    /* input da data */
+    --input: #fff;
+
+    --head-label: #ffffff;
+    --head-label-borda: rgb(3, 3, 3);
+
+
+}
+
+:root .dark-theme {
+    /* css global do corpo */
+    --body: #3d3d3d;
+    --text-body: rgba(255, 255, 255, 0.879);
+ 
+
+    /* grafico acelerador bordas e background */
+    --quadrado: #4b4b4b;
+    --circulo: rgb(156, 152, 152);
+
+    /* css cards */
+    --card: #4b4b4b;
+    --card-bordar: rgba(16, 140, 248, 0.741);
+    --card-header: rgba(16, 140, 248, 0.741);
+
+    /* css tabelas e bordas tabelas  */
+    --thead: #1e1e1e;
+    --tfoot: #1e1e1e;
+
+    --tabela-card-background: rgba(16, 140, 248, 0.741);
+
+    --background-tabela: #221f1f;
+    --tabela-borda-left: rgba(255, 255, 255, 0.975);
+    --tabela-borda: #fff;
+
+    /* input da data */
+    --input: #3d3d3d;
+
+    /* head-label-atualizar */
+    --head-label: #1e1e1e;
+    --head-label-borda: #fff;
+
+
+
+}
+
+/* muda o thema do corpo e do menu lateral */
+body,.bgTopoTipoConsulta,.bg,.container,
+.bgMenuLateral {
+    background-color: var(--body);
+    transition: 0.3s linear;
+}
+
+/* muda a cor dos textos  */
+h1,
+p,
+a,
+h2,
+h3,
+th,
+td,
+.vl-fat,
+.bginput,
+.color-text,
+form {
+    color: var(--text-body);
+}
+
+/* muda a cor dos cards  */
+.card {
+    background-color: var(--card);
+    border-color: var(--card-bordar);
+}
+
+/* muda a cor das tabelas/top da tabela/footer  */
+thead,
+tfoot {
+    background-color: var(--thead);
+    font-weight: bold;
+}
+
+/* muda a cor das tabela Específica que esta com esta classe no topo da tabela dos cards tabelas*/
+.tbackground {
+    background-color: var(--tabela-card-background);
+}
+
+/* muda a cor das  bordas da tabela,Específica que esta com esta classe*/
+.bgCor {
+    background-color: var(--background-tabela);
+    border-left: .40rem solid var(--tabela-borda-left);
+    border-bottom: 1px solid var(--tabela-borda);
+}
+
+/* muda a cor dos input todos que estão com a classe a baixo bginput  */
+.bgInput[type="date"],
+.bgInput[type="text"],
+.bgInput[type="number"],
+.bgInput {
+    background-color: var(--input);
+    color: var(--text-body);
+}
+
+.colorBgCard {
+    background: var(--card-header);
+}
+
+.head-label-thema {
+    border: 1px solid;
+    background-color: var(--head-label);
+    border-color: var(--head-label-borda);
+
+}
+
+.content-chart{
+    width: 300px;
+    height: 150px;
+    /* border: 1px solid black; */
+    overflow: hidden;
+}
+
+.chart-body {
+    background-color: var(--quadrado);
+    width: 300px;
+    height: 300px;
+    padding: 0;
+    margin: 0;
+    margin-top: -51%;
+    position: relative;
+    overflow: hidden;
+}
+
+.chart {
+    border: 30px solid var(--circulo);
+    border-bottom: 30px solid rgb(221, 22, 22);
+    border-right: 30px solid rgb(221, 22, 22);
+    border-style: double;
+    width: 95%;
+    height: 95%;
+    margin-top: 100%;
+    padding: 0;
+    border-radius: 50%;
+    rotate: 45deg;
+}
+
+.bg-color-chart-30{
+    border-bottom: 30px solid rgb(221, 22, 22);
+    border-right: 30px solid rgb(221, 22, 22);
+    border-style: double;
+}
+
+.bg-color-chart-50{
+    border-bottom: 30px solid rgb(196, 192, 9);
+    border-right: 30px solid rgb(196, 192, 9);
+    border-style: double;
+}
+
+.bg-color-chart-70{
+    border-bottom: 30px solid rgb(2, 151, 2);
+    border-right: 30px solid rgb(2, 151, 2);
+    border-style: double;
+}
+
+.vl-faturamento-chart{
+    /* border: 1px solid black; */
+    padding: 5px;
+    margin-top: 110px;
+    font-weight: bold;
+    position: absolute;
+    font-size: 20px;
+}
+
+
+html, body { height: 100%; }
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif ,"Open Sans"; }

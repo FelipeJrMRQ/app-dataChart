@@ -1,0 +1,35 @@
+<section>
+    <div class="table">
+        <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortCliente($event)" >
+            <thead>
+                <tr>
+                    <th scope="col" mat-sort-header="nomeCliente">Cliente</th>
+                    <th scope="col" class="text-end">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    class="c-pointer"
+                    *ngFor="let cliente of clientes | paginate:{itemsPerPage:itensPaginas,currentPage:paginasCarteiraCliente,id:'tbCarteiraCliente'}let i = index"
+                    (click)="consultarProdutosPorCliente(cliente.cdCliente)">
+                    <td class="text-truncate" style="max-width: 200px;">{{cliente.nome}}</td>
+                    <td class="text-end">{{cliente.valor | currency: 'BRL'}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td >Total:</td>
+                    <td class="text-end">{{valorTotal | currency:'BRL'}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <pagination-controls id="tbCarteiraCliente" (pageChange)="paginasCarteiraCliente = $event" [maxSize]="5" nextLabel="" previousLabel=""></pagination-controls>
+        </div>
+        <div *ngIf="exportarDados" class="col-2 c-pointer text-success text-end" (click)="gerarArquivo()" >
+            <i class="fas fa-download iconeExcell " data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados"></i>
+        </div>
+    </div>
+</section>

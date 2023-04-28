@@ -1,0 +1,29 @@
+<section>
+    <!-- SELETOR DE DATA  -->
+    <div class="row">
+        <div class="col-8 col-md-4 col-lg-4 mt-1">
+            <div class="input-group">
+                <input type="date" class="form-control bgInput text-center" [(ngModel)]="dataAtual">
+                <button class="input-group-text btn btn-primary" (click)="consultarPorData()" [disabled]="btn">
+                    <i class="fas fa-search-dollar"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-4 col-md-8 col-lg-8 text-end mt-1">
+            <button class="btn btn-primary" (click)="alterarParaModoSintetico()">Sintético
+                <i class="fas fa-chart-line ms-1"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- <div class="row">
+        <div class="col-12 col-lg-6 mt-2">
+            <app-card-dia></app-card-dia>
+        </div>
+    
+        <div class="col-12 col-lg-6">
+            <app-card-mes></app-card-mes>
+        </div>
+    </div> -->
+
+</section>

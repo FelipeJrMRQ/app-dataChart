@@ -1,0 +1,56 @@
+<div class="bgCor head-label p-2 d-flex justify-content-between align-middle">
+    <label class="color-text">Faturamento Diário</label>
+</div>
+
+<div ngClass="{{dNone}}" class="chart-container">
+    <canvas id="myChartBarH"></canvas>
+</div>
+
+<div>
+    <div class="tbl-update">
+        <div class="" *ngIf="!dataType">
+            <div class="tbl-block" [ngClass]="upDateOption">
+                <div class="text-light text-center mt-1 align-middle">
+                    <div class="spinner-border ms-auto me-2" role="status" aria-hidden="true">
+                    </div>
+                    <br>
+                    <strong>Atualizando informações aguarde...</strong>
+                </div>
+            </div>
+            <table class="table table-sm table-hover table-borderless table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Data</th>
+                        <th scope="col" class="text-center">Dia</th>
+                        <th scope="col" class="text-center">Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="c-pointer" (click)="navegarParaDetalhesFaturamentoPorCliente(faturamento)"
+                        *ngFor="let faturamento of listaFaturamentoDiario | paginate: { itemsPerPage: itensPagina, currentPage:paginaFaturamentoDiario,id:'tbFatuDiario' };let j =index">
+                        <td>{{faturamento.data | date: 'dd/MM/yyyy'}}</td>
+                        <td class="text-center">{{verificaDiaDaSemana(faturamento.data)}}</td>
+                        <td class="text-center">{{faturamento.valor | currency: 'BRL'}}</td>
+                    </tr>
+                </tbody>
+                <tfoot class="table" *ngIf="listaFaturamentoDiario.length>0">
+                    <tr>
+                        <td>Total:</td>
+                        <td></td>
+                        <td class="text-center">{{valorFatutamentoMes | currency:'BRL'}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-11" >
+                <pagination-controls id='tbFatuDiario' (pageChange)="paginaFaturamentoDiario = $event" nextLabel="" previousLabel=""
+                [maxSize]="5"></pagination-controls>
+            </div>
+            <div *ngIf="exportarDados" class="col-1 align-middle p-1 text-center text-success c-pointer" data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados" (click)="gerarArquivoExportcao()">
+                <i class="fas fa-download iconeExcell " ></i>
+            </div>
+        </div>
+    </div>
+</div>
+

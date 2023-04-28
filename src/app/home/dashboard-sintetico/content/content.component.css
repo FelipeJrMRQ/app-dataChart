@@ -1,0 +1,147 @@
+section {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+.titulo{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+label{
+    font-size: 20px;
+}
+
+.sessao {
+    display: flex;
+    width: 100%;
+}
+
+.graficos {
+    display: flex;
+}
+
+.opcoes {
+    display: flex;
+    width: 100%;
+    margin-left: 10px;
+}
+
+.opcoes>.responsivo {
+    width: 100%;
+    margin-left: 10px;
+}
+
+
+
+/* Tela Menor */
+@media screen and (max-width:1320px) {
+    section {
+        flex-wrap: initial;
+        height: 100%;
+    }
+
+    .graficos {
+        display: block;
+    }
+
+    .graficos>div {
+        height: 50%;
+    }
+   
+
+    .opcoes {
+        margin-left: 1px;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .opcoes>div {
+        height: 50%;
+        margin-left: 0;
+    }
+    .titulo{
+        display: none;
+    }
+
+}
+
+
+/* Tablet e Mobile */
+@media screen and (max-width:1040px) {
+    section {
+        flex-wrap: wrap;
+    }
+
+    .sessao {
+        width: 100%;
+        margin: 0;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .graficos {
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .graficos>div {
+        height: 50%;
+        margin-left: 0;
+    }
+
+    .opcoes {
+        display: flex;
+        width: 100%;
+        margin-top: 20px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .opcoes>.responsivo {
+        margin-left: 0;
+    }
+
+    .responsivo {
+        width: 100%;
+    }
+
+    .titulo{
+        margin-top: 25px;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+
+
+}
+
+.notificacao {
+    background: #efefef;
+    border-radius: 8px;
+    color: #333;
+    display: flex;
+    margin: 8px;
+    padding: 24px;
+}
+
+.notificacao>div:nth-child(1) {
+    flex-grow: 1;
+}
+
+.notificacao>div:nth-child(2) {
+    cursor: pointer;
+}

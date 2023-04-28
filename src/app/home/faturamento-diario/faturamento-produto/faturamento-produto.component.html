@@ -1,0 +1,138 @@
+<div class="row mb-5">
+    <div class="col-12 col-lg-12">
+
+        <div class="bgCor card-label d-flex between align-middle">
+            <label class="color-text">FATURAMENTO POR {{tipoConsulta}} DE {{data}}</label>
+        </div>
+
+        <!-- TIPO DE CONSULTA -->
+        <section class="mb-2 align-middle">
+            <div class="form-control form-control-sm bgTopoTipoConsulta color-text">
+                <label class="form-label me-2">Tipo de consulta:</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input cursor-pointer" type="radio" name="flexRadioDefault1"
+                        [(ngModel)]="tipoConsulta" checked id="flexRadioDefault1" value="PRODUTO">
+                    <label class="form-check-label" for="flexRadioDefault1">Produto</label>
+                </div>
+                <div class="form-check form-check-inline" (click)="consultaFaturamentoPorBeneficiamento()">
+                    <input class="form-check-input cursor-pointer" type="radio" [(ngModel)]="tipoConsulta"
+                        name="flexRadioDefault1" id="flexRadioDefault2" value="BENEFICIAMENTO">
+                    <label class="form-check-label" for="flexRadioDefault2">Beneficiamento</label>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-1 text-center color-text" *ngIf="!btnDisable">
+            <label class="bold">{{nomeCliente}}</label>
+        </section>
+
+        <div *ngIf="btnDisable" class="mb-5 text-center align-middle">
+            <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+            </div>
+            <label for="" class="ms-2">Consultando dados Aguarde...</label>
+        </div>
+
+        <section *ngIf="tipoConsulta == 'PRODUTO' && produtosLista.length >0">
+            <div class="table">
+                <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortProduto($event)">
+                    <thead>
+                        <tr>
+                            <!-- <th class="align-middle d-none d-lg-table-cell">Código</th> -->
+                            <th mat-sort-header="nomeProduto">Produto</th>
+                            <th mat-sort-header="nomeBeneficiamento" class="d-none d-lg-table-cell">Beneficiamento</th>
+                            <th mat-sort-header="area" class="align-middle d-none d-lg-table-cell">Área</th>
+                            <th mat-sort-header="quantidade" class="align-middle d-none d-lg-table-cell">Qtde</th>
+                            <th class="align-middle text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr (click)="openDetalhesProduto(produto)"
+                            *ngFor="let produto of produtosLista | paginate:{itemsPerPage:itensPagina,currentPage:paginasFaturamentoProduto,id:'tbFaturamentoClienteProduto'} let i=index" class="c-pointer">
+                            <!-- <td class="d-none d-lg-table-cell ">{{produto.cdProduto}}</td> -->
+                            <td class="text-truncate" style="max-width: 200px;">{{produto.nomeProduto}}</td>
+                            <td class="d-none d-lg-table-cell ">{{produto.nomeBeneficiamento}}</td>
+                            <td class="d-none d-lg-table-cell ">{{produto.area | number:'1.0-2'}}</td>
+                            <td class="d-none d-lg-table-cell ">{{produto.quantidade | number}}</td>
+                            <td class="text-end">{{produto.valor | currency: 'BRL' }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="bold">
+                            <td>Total:</td>
+                            <!-- <td class="d-none d-lg-table-cell"></td> -->
+                            <td class="d-none d-lg-table-cell"></td>
+                            <td class="d-none d-lg-table-cell">{{totalArea | number:'1.0-2'}}</td>
+                            <td class="d-none d-lg-table-cell">{{totalQtde}}</td>
+                            <td data-title="Total:" class="text-end">{{valorTotal | currency: 'BRL' }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-11">
+                    <pagination-controls id="tbFaturamentoClienteProduto"
+                        (pageChange)="paginasFaturamentoProduto = $event" nextLabel="" previousLabel="" [maxSize]="5">
+                    </pagination-controls>
+                </div>
+                <div *ngIf="exportarDados" class="col-1 text-center text-success p-1 c-pointer" title="Exporta dados"
+                    (click)="gerarArquivo()">
+                    <i class="fas fa-download iconeExcell "></i>
+                </div>
+            </div>
+        </section>
+        <!-- Componente de faturamento por beneficiamento -->
+        <section *ngIf="tipoConsulta =='BENEFICIAMENTO'">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table">
+                        <table class="table table-sm table-hover table-striped" matSort
+                            (matSortChange)="sortBeneficiamento($event)">
+                            <thead>
+                                <tr>
+                                    <th mat-sort-header="nomeBeneficiamento">Beneficiamento</th>
+                                    <th mat-sort-header="area" class="d-none d-lg-table-cell">Área</th>
+                                    <th mat-sort-header="quantidade" class="d-none d-lg-table-cell">Qtde</th>
+                                    <th class="text-end align-middle">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="let beneficiamento of beneficiamentos | paginate:{itemsPerPage:itensPagina,currentPage:paginasFaturamentoBeneficiamento,id:'tbFaturamentoClienteBeneficiamento'} let i=index">
+                                    <td class="text-truncate" style="max-width: 200px;">
+                                        {{beneficiamento.nomeBeneficiamento}}</td>
+                                    <td class="d-none d-lg-table-cell">{{beneficiamento.area | number:'1.0-2'}}</td>
+                                    <td class="d-none d-lg-table-cell">{{beneficiamento.quantidade}}</td>
+                                    <td class="text-end">{{beneficiamento.valor | currency: 'BRL' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="bold">
+                                    <td>Total</td>
+                                    <td class="d-none d-lg-table-cell">{{totalArea |number:'1.0-2'}}</td>
+                                    <td class="d-none d-lg-table-cell">{{totalQtde}}</td>
+                                    <td class="text-end">{{valorTotal | currency: 'BRL' }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-11">
+                    <pagination-controls id="tbFaturamentoClienteBeneficiamento"
+                        (pageChange)="paginasFaturamentoBeneficiamento = $event" nextLabel="" previousLabel=""
+                        [maxSize]="5">
+                    </pagination-controls>
+                </div>
+                <div *ngIf="exportarDados" class="col-1 text-center text-success p-1 c-pointer" data-bs-toggle="tooltip"
+                    data-bs-placement="left" title="Exportar dados" (click)="gerarArquivoB()">
+                    <i class="fas fa-download iconeExcell "></i>
+                </div>
+            </div>
+        </section>
+        
+        <button class="btn btn-danger" (click)="voltarPagina(this.dataAtual)" [disabled]="btnDisable">Voltar</button>
+    </div>
+
+</div>

@@ -1,0 +1,117 @@
+.iconLateral {
+    font-size: 23px;
+    margin: 10px;
+    color: rgb(2, 78, 218);
+}
+
+.z-index-8 {
+    z-index: 8;
+    position: sticky;
+}
+
+.decoration-none {
+    padding: 5px;
+    text-decoration: none;
+}
+
+.list {
+    width: 100%;
+    padding: 5px;
+    background: linear-gradient(rgb(2, 78, 218) 0 100%) left / 0 no-repeat;
+    color: transparent;
+    transition: 0.5s linear;
+}
+
+.list:hover {
+    background-size: 100%;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    transition: 0.5s linear;
+}
+
+.list:hover a {
+    text-decoration: none;
+    color: white;
+}
+
+.list:hover a i {
+    text-decoration: none;
+    color: white;
+}
+
+.offcanvas {
+    width: 300px;
+}
+
+
+.offcanvas-end {
+    width: 300px;
+}
+
+
+.picture {
+    margin-left: 10px;
+    margin-bottom: -23px;
+}
+
+.bg-perfil {
+    width: 100%;
+    height: 180px;
+
+}
+
+#img-input {
+    display: none;
+    overflow: hidden;
+}
+
+.img-perfil {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    position: absolute;
+    top: 137px;
+    border: 2px solid rgb(187, 187, 187);
+    padding: 3px;
+    object-fit: cover;
+    overflow: hidden
+}
+
+.card-perfil {
+    background-color: #edededc2;
+    padding: 5px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.btn-close-offCanvar {
+    position: absolute;
+    margin-left: 0px;
+    font-size: 20px;
+    width: 60px;
+}
+
+.open-offCancas {
+    width: 40px;
+}
+
+.font-17 {
+    font-size: 17px;
+}
+
+.log-out {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+}
+
+.user-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 0;
+}

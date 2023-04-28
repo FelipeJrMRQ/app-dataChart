@@ -1,0 +1,21 @@
+.bgColor{
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.c-pointer{
+    cursor: pointer;
+}
+
+.card-label{
+    margin: 0.5em 0em 0.5em 0em;
+    padding: 10px;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 0.2em;
+    box-shadow: 2px 2px 3px;
+}

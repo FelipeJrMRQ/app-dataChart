@@ -1,0 +1,180 @@
+<section class="mb-5">
+    <div class="container">
+        <header>
+            <div class="bgCor card-label d-flex between align-middle bold">
+                <label class="color-text">CADASTRO DE USUÁRIOS</label>
+            </div>
+        </header>
+        <form>
+            <section class="row mt-3">
+                <div class="col-12 col-lg-4">
+                    <label class="form-label">Nome</label>
+                    <input type="text" class="form-control" name="nome" [(ngModel)]="usuario.nome">
+                </div>
+                <div class="col-12 col-lg-4">
+                    <label class="form-label">E-mail</label>
+                    <input type="email" required class="form-control" name="username" [(ngModel)]="usuario.username">
+                </div>
+                <div class="col-12 col-lg-4">
+                    <label class="form-label">Home page</label>
+                    <input type="email" required class="form-control" name="homePage">
+                </div>
+            </section>
+
+            <section class="mt-4">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <header>
+                            <div class="bgCor card-label d-flex between align-middle bold">
+                                <label class="color-text">PERMISSÕES DO USUÁRIO</label>
+                            </div>
+                        </header>
+                        <mat-accordion *ngIf="editar">
+                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                                *ngFor="let tela of telasDoUsuario">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <label for="" class="bold">
+                                            {{tela.nome}}
+                                        </label>
+                                    </mat-panel-title>
+                                    <!-- <mat-panel-description>
+                                    </mat-panel-description> -->
+                                </mat-expansion-panel-header>
+                                <div>
+                                    <div class="mb-3">
+                                        <label for="">ROTA: </label>
+                                        <strong class="ms-2">{{tela.rota}}</strong>
+                                    </div>
+                                    <label for="" class="mb-2 ms-1 bold" *ngIf="tela.componentes.length > 0">Lista de
+                                        componentes da tela</label>
+                                    <div class="form-check ms-5" *ngFor="let componente of tela.componentes"
+                                        class="sublinhado">
+                                        <i class="fas fa-check me-2 text-success" id="icone_{{componente.id}}"></i>
+                                        <label class="form-check-label c-pointer mt-2"
+                                            (click)="removerComponenteDaTelaDoUsuario(tela, componente)"
+                                            title="Clique para remover" (mouseenter)="exibirIconeDeRemocao(componente)"
+                                            (mouseout)="exibirIconeVinculo(componente)">
+                                            {{componente.nome}}
+                                        </label>
+                                    </div>
+                                    <div class="text-end mt-2">
+                                        <button class="btn btn-danger btn-sm" (click)="removerTela(tela)">Remover
+                                            tela</button>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <header>
+                            <div class="bgCor card-label d-flex between align-middle bold">
+                                <label class="color-text">TELAS DO SISTEMA</label>
+                            </div>
+                        </header>
+                        <mat-accordion>
+                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                                *ngFor="let tela of telasDoSistema">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <label for="" class="bold">{{tela.nome}}</label>
+                                    </mat-panel-title>
+                                    <!-- <mat-panel-description>
+                                    </mat-panel-description> -->
+                                </mat-expansion-panel-header>
+                                <div>
+                                    <div class="mb-2">
+                                        <label for="">ROTA:</label>
+                                        <strong class="ms-2">{{tela.rota}}</strong>
+                                    </div>
+                                    <label for="" class="mb-2 ms-1 bold" *ngIf="tela.componentes.length >0">Lista de
+                                        componentes da tela</label>
+                                    <div class="mb-2" *ngIf="tela.componentes.length > 0">
+                                        <input class="form-check-input me-2" type="checkbox" id="select_all"
+                                            (click)="selecionarTodas($event ,tela)">
+                                        <label class="form-check-label">Selecionar todas</label>
+                                    </div>
+                                    <div class="form-check ms-5" *ngFor="let componente of tela.componentes">
+                                        <input class="form-check-input" type="checkbox" value="{{componente.nome}}"
+                                            id="cp_{{componente.id}}"
+                                            (click)="selecionarComponentes($event,componente)">
+                                        <label class="form-check-label" for="{{componente.nome}}">
+                                            {{componente.nome}}
+                                        </label>
+                                    </div>
+                                    <div class="text-end">
+                                        <button class="btn btn-primary" (click)="vincularTelaAoUsuario($event, tela)"
+                                            [disabled]="!editar">Adicionar ao usuário</button>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </section>
+
+            <div>
+                <button class="btn btn-primary mt-2 mb-2" (click)="cadastrarUsuario()"
+                    *ngIf="!modoDeEdicao">Convidar</button>
+                <button class="btn btn-primary mt-2 mb-2" (click)="alterarUsuario()"
+                    *ngIf="modoDeEdicao">Alterar</button>
+                <button class="btn btn-danger ms-2" (click)="limparDados()">Limpar</button>
+            </div>
+        </form>
+
+        <section>
+            <header>
+                <div class="bgCor card-label d-flex between align-middle">
+                    <label class="color-text bold">CONSULTAR USUÁRIOS CADASTRADOS</label>
+                </div>
+            </header>
+            <form>
+                <div class="mt-3">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="email" placeholder="Digite o email do usuário"
+                            [(ngModel)]="email">
+                        <button class="btn btn-outline-secondary" (click)="consultarUsuario()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="table mb-5">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="d-none d-lg-table-cell" scope="col">ID</th>
+                            <th class="d-none d-lg-table-cell" scope="col">NOME</th>
+                            <th scope="col">E-MAIL</th>
+                            <th class="d-none d-lg-table-cell" scope="col">STATUS</th>
+                            <th class="text-center" scope="col">OPÇÔES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr (click)="editarUsuario(usuario)"
+                            *ngFor="let usuario of usuarios  | paginate:{itemsPerPage:itensPagina,currentPage:pagina,id:'tblFatProduto'}let i = index"
+                            class="c-pointer align-middle">
+                            <td class="d-none d-lg-table-cell">{{usuario.id}}</td>
+                            <td class="d-none d-lg-table-cell">{{usuario.nome}}</td>
+                            <td>{{usuario.email}}</td>
+                            <td class="d-none d-lg-table-cell" *ngIf="!usuario.contaAtiva">BLOQUEADO</td>
+                            <td class="d-none d-lg-table-cell" *ngIf="usuario.contaAtiva">ATIVO</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm " title="Bloquear" (click)="bloquearUsuario(usuario.id)">
+                                    <i class="fas fa-lock-open text-success" *ngIf="usuario.contaAtiva"></i>
+                                    <i class="fas fa-lock text-danger" *ngIf="!usuario.contaAtiva"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <pagination-controls class="col-11" id="tblFatProduto" (pageChange)="pagina =$event" nextLabel=""
+                previousLabel="" [maxSize]="5"></pagination-controls>
+        </section>
+
+    </div>
+
+
+</section>

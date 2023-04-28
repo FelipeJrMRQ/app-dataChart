@@ -1,0 +1,34 @@
+<section>
+    <header>
+        <div class="bgCor card-label color-text d-flex between align-middle">
+            <label class="color-text bold">DETALHES DO PRODUTO</label>
+        </div>
+    </header>
+    <div class="row">
+        <div class="col-12 col-lg-6 alinhamento">
+            <div class="text-center mb-2 ">
+                <a [href]="urlImagem" target="_blank" rel="noopener noreferrer">
+                    <img [src]="urlImagem" alt="Imagem não encontrada" class="image-size">
+                </a>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 color-text">
+            <label for="" class="form-label bold">CLIENTE:</label>
+            <p>{{data.nomeCliente}}</p>
+            <label for="" class="form-label bold">PRODUTO:</label>
+            <p>{{data.nomeProduto}}</p>
+            <label for="" class="form-label bold" *ngIf="visualizarPreco">PREÇO:</label>
+            <p *ngIf="visualizarPreco">{{data.valorUnitario | currency : 'BRL'}}</p>
+            <label for="" class="form-label bold">BENEFICIAMENTO</label>
+            <p>{{data.nomeBeneficiamento}}</p>
+            <label for="" class="form-label bold">QUANTIDADE:</label>
+            <p>{{data.quantidade | number }}</p>
+            <label for="" class="form-label bold">VALOR:</label>
+            <p>{{data.valor | currency : 'BRL'}}</p>
+        </div>
+        <hr>
+        <div class="text-end">
+            <button class="btn btn-danger" (click)="fechar()">Fechar</button>
+        </div>
+    </div>
+</section>

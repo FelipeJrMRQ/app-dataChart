@@ -1,0 +1,52 @@
+<header>
+    <div class="bgCor card-label d-flex between align-middle">
+        <label class="color-text bold">FATURAMENTO ACUMULADO POR PRODUTO</label>
+    </div>
+</header>
+
+<section class="mb-5">
+    <div class="text-center p-2 bold color-text">
+        <label for="">{{nomeCliente}}</label>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <div class="table">
+                <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortProduto($event)">
+                    <thead>
+                        <tr>
+                            <th scope="col" mat-sort-header="nomeProduto">Produto</th>
+                            <th scope="col" class="d-none d-lg-table-cell" mat-sort-header="area">Área</th>
+                            <th scope="col" class="d-none d-lg-table-cell" mat-sort-header="quantidade">Qtde</th>
+                            <th scope="col" class="text-end">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr (click)="openDetalhesProduto(produto)" *ngFor="let produto of produtos | paginate:{itemsPerPage:itensPagina,currentPage:paginaProduto,id:'tblFatProduto'}let i = index" class="c-pointer">
+                            <td class="text-truncate" style="max-width: 220px;">{{produto.nomeProduto}}</td>
+                            <td class="d-none d-lg-table-cell">{{produto.area | number :'1.0-2'}}</td>
+                            <td class="d-none d-lg-table-cell">{{produto.quantidade | number}}</td>
+                            <td class="text-end">{{produto.valor | currency : 'BRL'}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Total</td>
+                            <td class="d-none d-lg-table-cell">{{totalArea | number : '1.0-2'}} </td>
+                            <td class="d-none d-lg-table-cell">{{totalQtde | number}}</td>
+                            <td class="text-end">{{totalProduto | currency : 'BRL'}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-11">
+                    <pagination-controls id="tblFatProduto" (pageChange)="paginaProduto =$event" nextLabel="" previousLabel="" [maxSize]="5"></pagination-controls>
+                </div>
+                <div class="col-1 align-middle p-1 text-center text-success c-pointer" data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados" (click)="gerarExportProduto()">
+                    <i class="fas fa-download iconeExcell " ></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-danger" (click)="voltar()">Voltar</button>
+</section>

@@ -1,0 +1,50 @@
+<section *ngIf="cdBeneficiamento">
+    <div class="bgCor card-label d-flex between align-middle mb-2">
+        <label class="color-text">FATURAMENTO DE BENEFICIAMENTO POR CLIENTE - {{dataRecebida | date:
+            'dd/MM/yyyy'}}</label>
+    </div>
+    <section class="mb-2 text-center color-text">
+        <label class="bold">{{nomeBeneficiamento}}</label>
+    </section>
+</section>
+
+<div>
+    <div class="table">
+        <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortCliente($event)">
+            <thead>
+                <tr>
+                    <!-- <th mat-sort-header="cdCliente" scope="col" class="d-none d-lg-table-cell align-middle" >Código</th> -->
+                    <th mat-sort-header="nomeCliente" scope="col">Cliente</th>
+                    <th scope="col" class="text-end align-middle">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="c-pointer"
+                    *ngFor="let cliente of faturamentos | paginate:{itemsPerPage:itensPagina,currentPage:paginasFaturamentoCliente, id:'tbFaturamentoCliente'} let i = index"
+                    (click)="consultarFaturamentoClienteProduto(cliente.cdCliente, cliente.data, cliente.nomeCliente)">
+                    <!-- <td class="d-none d-lg-table-cell">{{cliente.cdCliente}}</td> -->
+                    <td class="text-truncate" style="max-width: 200px;">{{cliente.nomeCliente}}</td>
+                    <td class="text-end">{{cliente.valor | currency: 'BRL'}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="bold">
+                    <td class="">Total:</td>
+                    <!-- <td class="d-none d-lg-table-cell"></td> -->
+                    <td data-title="Valor" class="text-end">{{valorTotal |currency: 'BRL'}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-11">
+            <pagination-controls id="tbFaturamentoCliente" (pageChange)="paginasFaturamentoCliente =$event" nextLabel=""
+                previousLabel="" [maxSize]="5"></pagination-controls>
+        </div>
+        <div *ngIf="exportarDados" class="col-1 align-middle text-center text-success p-1 iconeExcell c-pointer" (click)="gerarArquivo()">
+            <i class="fas fa-download iconeExcell " data-bs-toggle="tooltip" data-bs-placement="left"
+                title="Exportar dados"></i>
+        </div>
+    </div>
+    <button class="btn btn-danger" *ngIf="cdBeneficiamento" (click)="voltarPaginaAnterior()">Voltar</button>
+</div>

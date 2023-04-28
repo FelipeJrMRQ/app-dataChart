@@ -1,0 +1,59 @@
+.cartao {
+    border: 1px solid rgb(173, 173, 173);
+    width: 100%;
+    border-radius: 7px;
+    min-height: 100px;
+    min-width: 250px;
+    box-shadow: 2px 2px 3px;
+}
+
+.header-cartao {
+    background-color: rgb(2, 78, 218);
+    border-radius: 7px 7px 0 0;
+    padding: 7px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.sublinhado{
+    position: relative;
+    display: block;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.sublinhado::after {
+    position: absolute;
+    content: "";
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #3498db;
+    transform: scaleX(0);
+    font-weight: bold;
+    transform-origin: right;
+    transition: transform 0.5s;
+}
+
+.sublinhado:hover {
+    color: #3498db;
+    transform:translateY(-2px);
+}
+
+.sublinhado:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+
+
+@media screen and (max-width:1320px) {
+    .cartao{
+        width: 100%;
+        min-width: 300px;
+        height: 50%;
+    }
+}

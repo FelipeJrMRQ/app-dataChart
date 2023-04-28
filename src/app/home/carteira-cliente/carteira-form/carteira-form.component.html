@@ -1,0 +1,31 @@
+<section>
+    <div class="bgCor card-label d-flex between align-middle">
+        <label class="color-text">CARTEIRA POR {{tipoConsulta}} DE {{dataRecebida | date: 'dd/MM/yyyy'}}</label>
+    </div>
+    <!-- SELETOR DE CONSULTA -->
+    <section class="mb-2 align-middle mt-3">
+        <div class="form-control form-control-sm bgTopoTipoConsulta color-text">
+            <label class="form-label me-2">Tipo de consulta:</label>
+            <div class="form-check form-check-inline ">
+                <input class="form-check-input c-pointer" type="radio" name="flexRadioDefault1" [(ngModel)]="tipoConsulta" checked id="flexRadioDefault1" value="BENEFICIAMENTO">
+                <label class="form-check-label c-pointer" for="flexRadioDefault1">Beneficiamento</label>
+            </div>
+            <div class="form-check form-check-inline ">
+                <input class="form-check-input c-pointer" type="radio" [(ngModel)]="tipoConsulta" name="flexRadioDefault1" id="flexRadioDefault2"  value="PRODUTO">
+                <label class="form-check-label c-pointer" for="flexRadioDefault2">Produto</label>
+            </div>
+        </div>
+    </section>
+</section>
+
+<section>
+    <div class="text-center mb-2">
+        <label class="color-text bold">{{nomeCliente}}</label>
+    </div>
+</section>
+
+<section class="mb-5">
+    <app-carteira-beneficiamento *ngIf="tipoConsulta=='BENEFICIAMENTO'" ></app-carteira-beneficiamento>
+    <app-carteira-produto *ngIf="tipoConsulta=='PRODUTO'" ></app-carteira-produto>
+    <button class="btn btn btn-danger" routerLink="/dashboard-analitico" >Voltar</button>
+</section>

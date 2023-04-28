@@ -1,0 +1,57 @@
+.card-label{
+    margin: 0.5em 0em 0.5em 0em;
+    padding: 10px;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 0.2em;
+    box-shadow: 2px 2px 3px;
+}
+
+.c-pointer{
+    cursor: pointer;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+#componente{
+    padding: 2px;
+}
+
+#componente:hover{
+    background-color: black;
+    color: aliceblue;
+    padding: 2px;
+}
+
+.sublinhado{
+    position: relative;
+    display: block;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.sublinhado::after {
+    position: absolute;
+    content: "";
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgb(2, 78, 218);;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s;
+}
+
+.sublinhado:hover {
+    font-weight: 900;
+    color: rgb(2, 78, 218);;
+    transform:translateY(-2px);
+}
+
+.sublinhado:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}

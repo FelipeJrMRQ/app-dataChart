@@ -1,0 +1,51 @@
+Telas
+
+atualizar-informacoes
+cadastro-usuario
+carteira-beneficiamento
+	exportar_dados
+	visualizar_detalhes_produto
+carteira-cliente
+	exportar_dados
+	visualizar_detalhes_produto
+configurar-meta
+configurar-telas
+dashboard-analitico
+	exportar_dados_carteira_cliente
+	exportar_dados_carteira_beneficiamento
+	exportar_dados_entrada
+	exportar_dados_faturamento
+dashboard-sintetico
+	grafico_diario
+	grafico_mensal
+	valor_orcamento
+	meta_mes
+	media_entradas
+	media_faturamento
+	media_faturamento_sabado
+	meta_sabado
+	valor_carteira
+	entradas_dia
+	meta_projetada
+	grafico_faturamento_diario
+	grafico_faturamento_mensal
+	grafico_entrada_vs_faturamento
+	grafico_faturamento_ano_anterior
+	grafico_comparativo_ano_anterior
+	grafico_evolucao_carteira
+entrada
+	exportar_dados
+	visualizar_detalhes_produto
+entrada-extrato-anual
+	exportar_dados
+	visualizar_detalhes_produto
+faturamento-extrato-anual
+	exportar_dados
+	visualizar_detalhes_produto
+faturamento-diario
+	exportar_dados
+	visualizar_detalhes_produto
+faturamento-mensal
+itens-programados
+produtos
+	visualizar_preco

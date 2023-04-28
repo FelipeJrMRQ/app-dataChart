@@ -1,0 +1,54 @@
+
+<header>
+    <section>
+        <div class="bgCor card-label d-flex between align-middle">
+            <label class="color-text">ENTRADA DE PRODUTO POR BENEFICIAMENTO {{dataRecebida | date: 'dd/MM/yyyy'}}</label>
+        </div>
+    </section>
+</header>
+
+<section class="mb-5">
+    <div class="color-text bold text-center p-2">
+        <label for="">{{nomeCliente}}</label>
+    </div>
+    <div class="table">
+        <table class="table table-sm table-hover table-striped" matSort>
+            <thead>
+                <tr>
+                    <td mat-sort-header="nomeProduto" class="bold">Produto</td>
+                    <td class="bold d-none d-lg-table-cell">Beneficiamento</td>
+                    <td class="bold d-none d-lg-table-cell">Qtde</td>
+                    <td class="bold d-none d-lg-table-cell">Área</td>
+                    <td class="bold text-end">Valor</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr (click)="openDetalhesProduto(produto)" 
+                *ngFor="let produto of entradas | paginate : {itemsPerPage: itensPagina, currentPage: pagina, id: 'entradaBeneficiamentoProduto'} let b = index" class="c-pointer">
+                    <td class="text-truncate" style="max-width: 220px;">{{produto.nomeProduto}}</td>
+                    <td class="d-none d-lg-table-cell">{{produto.nomeBeneficiamento}}</td>
+                    <td class="d-none d-lg-table-cell">{{produto.quantidade | number}}</td>
+                    <td class="d-none d-lg-table-cell">{{produto.area | number: '1.0-2'}}</td>
+                    <td class="text-end">{{produto.valorTotal | currency : 'BRL'}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <td class="bold">Total</td>
+                <td class="d-none d-lg-table-cell"></td>
+                <td class="bold d-none d-lg-table-cell">{{totalQtde | number}}</td>
+                <td class="bold d-none d-lg-table-cell">{{totalArea | number : '1.0-2'}}</td>
+                <td class="bold text-end ">{{totalValor | currency : 'BRL'}}</td>
+            </tfoot>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-11">
+            <pagination-controls id='entradaBeneficiamentoProduto' (pageChange)="pagina = $event" nextLabel="" previousLabel="" [maxSize]="5"></pagination-controls>
+        </div>
+        <div *ngIf="exportarDados" class="col-1 align-middle p-1 text-center text-success c-pointer"  data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados">
+            <i class="fas fa-download iconeExcell " ></i>
+        </div>
+    </div>
+    <button class="btn btn-danger" (click)="voltar()" >Voltar</button>
+</section>
+

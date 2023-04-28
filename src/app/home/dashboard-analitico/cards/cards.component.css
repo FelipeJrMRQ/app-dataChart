@@ -1,0 +1,78 @@
+h3 {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.fs-15 {
+    font-size: 15px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.sombra1 {
+    box-shadow: 3px 3px 5px rgb(124, 124, 124);
+}
+
+.arrow {
+    animation: upDown 1s infinite alternate;
+}
+
+@keyframes upDown {
+    0% {
+        transform: translateY(-25%);
+    }
+
+    100% {
+        transform: translateY(25%);
+    }
+}
+
+
+.content-chart {
+    width: 300px;
+    height: 150px;
+    overflow: hidden;
+}
+
+
+.vl-fat {
+    padding: 5px;
+    margin-top: 110px;
+    font-weight: bold;
+    position: absolute;
+    font-size: 20px;
+}
+
+.bg-color-30 {
+    border-bottom: 30px solid rgb(221, 22, 22);
+    border-right: 30px solid rgb(221, 22, 22);
+    border-style: double;
+}
+
+.bg-color-50 {
+    border-bottom: 30px solid rgb(196, 192, 9);
+    border-right: 30px solid rgb(196, 192, 9);
+    border-style: double;
+}
+
+.bg-color-70 {
+    border-bottom: 30px solid rgb(2, 151, 2);
+    border-right: 30px solid rgb(2, 151, 2);
+    border-style: double;
+}
+
+.sombra:hover {
+    box-shadow: 3px 3px 20px rgb(70, 69, 69);
+    transform: scale(1.01);
+    overflow: hidden;
+    max-width: 100%;
+    transition: all 0.5s;
+}
+
+.fab {
+    position: fixed;
+    margin-top: 0px;
+    z-index: 2;
+}

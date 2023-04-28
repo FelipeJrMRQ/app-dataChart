@@ -1,0 +1,56 @@
+.borda{
+    border: 1px solid black;
+   }
+   
+   .bg{
+   background-color: aqua;
+   }
+   
+   .bold{
+       font-weight: bold;
+   }
+   
+   .card-label{
+       margin: 0.5em 0em 0.5em 0em;
+       padding: 10px;
+       text-align: center;
+       font-size: 15px;
+       border-radius: 0.2em;
+       box-shadow: 2px 2px 3px;
+   }
+
+
+   /* @media all and (max-width:800px){
+    table,tbody,tr,td,tfoot{
+    display: block;
+    text-align: end;
+    }
+    table tbody tr td:before{
+        content: attr(data-title);
+        position: absolute;
+        font-weight: bold;
+        left: 16px;
+        display: block;
+    }
+    table{
+        border: none;
+    }
+    table,thead{
+        display: none;
+    }
+    table,tr,td{
+        display: block;
+        border-bottom: none;
+       
+    }
+    tfoot :before{
+        content: attr(data-title);
+        position: absolute;
+        font-weight: bold;
+        left: 20px;
+        display: block;
+    }
+    tfoot tr td{
+        border: none; 
+    }
+} */

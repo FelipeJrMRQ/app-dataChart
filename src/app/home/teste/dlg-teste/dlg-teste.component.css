@@ -1,0 +1,19 @@
+.card{
+    margin: 10px 0px;
+    padding: 10px;
+    border-color: rgba(9, 9, 9, 0.185);
+}
+
+.fa-times-circle{
+    color: rgb(194, 10, 10);
+}
+h2{
+    font-weight: bold;
+}
+
+.imgCard{
+    width: 350px;
+    height: 200px;
+    object-fit: fill;
+    display: none;
+}

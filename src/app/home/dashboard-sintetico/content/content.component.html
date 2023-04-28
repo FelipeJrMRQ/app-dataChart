@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-8 col-md-4 col-lg-4 mt-1">
+    <div class="input-group">
+      <input type="date" class="form-control bgInput text-center" [(ngModel)]="dataEscolhida" />
+      <button class="input-group-text btn btn-primary" (click)="emitirData()">
+        <i class="fas fa-search-dollar"></i>
+      </button>
+    </div>
+  </div>
+  <div class="col-4 col-md-8 col-lg-8 text-end mt-1">
+    <button class="btn btn-primary" (click)="alterarParaModoAnalitico()">Analítico
+      <i class="fas fa-table ms-1"></i>
+    </button>
+  </div>
+</div>
+
+<section class="color-text mb-3">
+  <div class="sessao">
+    <div class="graficos">
+      <div class="mt-1">
+        <app-card-dia></app-card-dia>
+      </div>
+      <div class="mt-1">
+        <app-card-mes></app-card-mes>
+      </div>
+    </div>
+    <div class="opcoes">
+      <div class="mt-1 responsivo">
+        <app-card-outros></app-card-outros>
+        <app-card-meta></app-card-meta>
+      </div>
+      <div class="mt-1 responsivo">
+        <app-card-periodo></app-card-periodo>
+        <app-card-media></app-card-media>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="row mb-5">
+  <div class="col-12 col-sm-12 col-md-6  col-xl-4 ">
+    <app-grafico-faturamento-diario></app-grafico-faturamento-diario>
+  </div>
+  <div class="col-12 col-sm-12 col-md-6  col-xl-4 ">
+    <app-grafico-faturamento-mensal></app-grafico-faturamento-mensal>
+  </div>
+  <div class="col-12 col-sm-12 col-md-6  col-xl-4 ">
+    <app-grafico-evolucao-carteira></app-grafico-evolucao-carteira>
+  </div>
+  <div class="col-12 col-sm-12 col-md-6  col-xl-4">
+    <app-grafico-entradas-mes></app-grafico-entradas-mes>
+  </div>
+  <div class="col-12 col-sm-12 col-md-6  col-xl-4">
+    <app-grafico-faturamento-ano-anterior></app-grafico-faturamento-ano-anterior>
+  </div>
+  <div class="col-12 col-sm-12 col-md-6  col-xl-4">
+    <app-grafico-comparativo-anual class="mb-5"></app-grafico-comparativo-anual>
+  </div>
+</div>

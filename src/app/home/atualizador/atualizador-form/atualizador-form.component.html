@@ -1,0 +1,112 @@
+<h2 class="text-bold text-center">Atualizações</h2>
+<div class="row color-text">
+
+    <div class="col-12 col-lg-6">
+        <header class="head-label head-label-thema p-2">
+            <label>Atualizador de informações</label>
+        </header>
+
+        <label class="form-label">Data Inicial</label>
+        <div class="input-group">
+            <input type="date" class="form-control text-center me-1 bgInput" [(ngModel)]="dataInicial">
+        </div>
+        <label class="form-label">DataFinal</label>
+        <input type="date" class="form-control text-center me-1 bgInput" [(ngModel)]="dataFinal">
+        <label class="form-label">Codigo Cliente</label>
+        <input class="form-control me-1 bgInput " [(ngModel)]="cdCliente" [disabled]="inputDisable">
+        <label class="form-label">Tipo de consulta:</label>
+        <select class="form-select  bgInput" [(ngModel)]="tipoConsulta" (click)="inpDisable()">
+            <option>Selecione uma opção</option>
+            <option value="meta-diaria">Meta diária</option>
+            <option value="valor-faturamento">Meta projetada</option>
+            <option value="entrada-dia">Entradas do dia</option>
+            <option value="entrada-cliente">Entradas por cliente</option>
+            <option value="entrada-produto">Entradas por produto</option>
+            <option value="faturamento-diario">Faturamento por dia</option>
+            <option value="faturamento-cliente">Faturamento por cliente</option>]
+            <option value="faturamento-cliente-produto">Faturamento produto</option>
+        </select>
+        <Button class="btn btn-primary col-12 mt-3 mb-2" (click)="atualizar()"
+            [disabled]="btnDisable">Atualizar</Button>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <header class="head-label  head-label-thema p-2">
+            <label>Parâmetros de meta</label>
+        </header>
+        <label class="form-label">Meta do dia:</label>
+        <div class="input-group">
+            <input type="text" class="form-control  bgInput" [(ngModel)]="metaDiaria.valor">
+            <button class="btn btn-primary" (click)="salvarMetaDiaria()">Salvar</button>
+        </div>
+        <label class="form-label">Meta Projetada:</label>
+        <div class="input-group">
+            <input type="text" class="form-control  bgInput" [(ngModel)]="metaProjetada.valor">
+            <button class="btn btn-primary" (click)="salvarMetaProjetada()">Salvar</button>
+        </div>
+    </div>
+
+
+    <section class="col-12 col-lg-12">
+        <header class="head-label head-label-thema p-2">
+            <label class="color-text">Simulador de meta projetada</label>
+        </header>
+        <div class="row">
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">Faturamento</label>
+                <input type="text" class="form-control  bgInput" [(ngModel)]="faturamento">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">Dias trabalhados</label>
+                <input type="text" class="form-control  bgInput" [(ngModel)]="diasTrabalhados">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">Fat. dos sábados</label>
+                <input type="text" class="form-control  bgInput" [(ngModel)]="valorSabado">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">Dias úteis do mês</label>
+                <input type="text" class="form-control  bgInput" [(ngModel)]="diasUteisDoMes">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">Resultado</label>
+                <input type="text" class="form-control bgInput" readonly [(ngModel)]="resultaDoMetaProjetada">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">.</label>
+                <button class="btn btn-primary form-control" (click)="calculaMetaProjetada()">Cálcular</button>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="col-12 col-lg-12 mt-4">
+        <header class="head-label head-label-thema p-2">
+            <label class="color-text">Simulador de meta diária</label>
+        </header>
+        <div class="row">
+            <div class="col-12 col-lg-4 mt-1">
+                <label class="form-label">Gap do mês</label>
+                <input type="text" class="form-control  bgInput" [(ngModel)]="valorGap">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">Dias úteis restantes</label>
+                <input type="text" class="form-control  bgInput" [(ngModel)]="diasUteisDoMes">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">Fat. dos sábados</label>
+                <input type="text" class="form-control  bgInput" [(ngModel)]="valorFatSabado">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">Resultado</label>
+                <input type="text" class="form-control  bgInput" readonly [(ngModel)]="resultadoMetaDiaria">
+            </div>
+            <div class="col-12 col-lg-2 mt-1">
+                <label class="form-label">.</label>
+                <button class="btn btn-primary form-control " (click)="calculaMetaDiaria()">Cálcular</button>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="mb-5">
+</div>

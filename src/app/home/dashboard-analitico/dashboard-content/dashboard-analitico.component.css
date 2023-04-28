@@ -1,0 +1,42 @@
+.fs-15{
+    font-size: 14px;
+}
+
+.head-label{
+    margin: 0.5em 0em 0.5em 0em;
+    border: 1px solid black;
+    padding: 5px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 0.2em;
+    box-shadow: 2px 2px 3px;
+}
+
+.aling-right{
+    text-align: right;
+    font-weight: bold;
+}
+
+.z-1{
+    z-index: -1;
+}
+
+.c-pointer{
+    cursor: pointer;
+}
+
+.esconder{
+    opacity: 0;
+    transition: opacity 1s linear;
+    transform: translate3d(0,10px,0);
+}
+
+.icone{
+    font-size: 35px;
+    display: flex;
+    justify-content: end;
+    position: relative;
+    opacity: 1;
+    transform: translate3d(0,0,0);
+    transition: 3s ease; 
+}

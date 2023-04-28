@@ -1,0 +1,54 @@
+<div class="bgCor head-label p-2 d-flex justify-content-between align-middle">
+    <label class="color-text">Carteira por beneficiamento</label>
+</div>
+
+<div>
+    <div class="tbl-update">
+        <div>
+            <div class="tbl-block" [ngClass]="upDateOption">
+                <div class="text-light text-center mt-1 align-middle">
+                    <div class="spinner-border ms-auto me-2" role="status" aria-hidden="true">
+                    </div>
+                    <br>
+                    <strong>Atualizando informações aguarde...</strong>
+                </div>
+            </div>
+            <table class="table table-sm table-hover table-borderless table-striped" matSort (matSortChange)="ordernarBeneficiamento($event)">
+                <thead>
+                    <tr>
+                        <th mat-sort-header="nome" scope="col">Beneficiamento</th>
+                        <th class="text-center" scope="col">Valor</th>
+                        <th class="text-center d-none d-lg-table-cell" scope="col">%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="c-pointer"
+                        *ngFor="let beneficiamento of listaCateriaBeneficiamento | paginate: { itemsPerPage:itensPagina, currentPage:paginaBenificiamento, id:'tbBenificiamento' };let i =index"
+                        (click)="exibirDetalhesDoBeneficiamento(beneficiamento.cdBeneficiamento,beneficiamento.nome)">
+                        <td class=" text-truncate" style="max-width: 200px;">{{beneficiamento.nome}}</td>
+                        <td class="text-center">{{beneficiamento.valor | currency : 'BRL'}}</td>
+                        <td class="text-center d-none d-lg-table-cell">{{calculoPercentual(beneficiamento.valor) | number:'1.0-1'}} %
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot class="table bold" *ngIf="listaCateriaBeneficiamento.length>0">
+                    <tr>
+                        <td>Total:</td>
+                        <td class="text-center">{{calcularTotalCarteiraClienteBeneficiamento | currency:'BRL'}}</td>
+                        <td class="d-none d-lg-table-cell"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-11">
+                <pagination-controls id='tbBenificiamento' (pageChange)="paginaBenificiamento = $event" nextLabel=""
+                    previousLabel="" [maxSize]="5"></pagination-controls>
+            </div>
+            <div *ngIf="exportarDados" class="col-1  p-1 text-center text-success c-pointer" (click)="gerarArquivoExportacao()">
+                <i class="fas fa-download iconeExcell" data-bs-toggle="tooltip" data-bs-placement="left"
+                    title="Exportar dados"></i>
+            </div>
+        </div>
+    </div>
+</div>

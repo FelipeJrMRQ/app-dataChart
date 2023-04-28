@@ -1,0 +1,29 @@
+<div class="container mt-5">
+    <div class="content first-content mt-5">
+        <div class="first-column">
+            <h2 class="title title-primary pulse">Bem-vindo!</h2>
+            <p class="description">Faça login para acessar dashboard.</p>
+            <p class="description">Utilize seu código de convite</p> 
+            <button class="btn btn-primary" routerLink="/validar-convite">Convite</button>
+        </div>
+        <div class="second-column">
+            <h2 class="title-second fadeInLeft">
+                <i class="fas fa-chart-line"></i>
+                Dashboard 
+            </h2>
+            <p class="description-second fadeInRight">Preencha os campos de login</p>
+
+            <form class="form">
+                <label class="label-input">
+                    <i class="fas fa-envelope icon-modify"></i>
+                    <input type="email" placeholder="Email" name="email" [(ngModel)]="user.email">
+                </label>
+                <label class="label-input">
+                    <i class="fas fa-unlock-alt icon-modify"></i>
+                    <input  type="password" placeholder="Senha" name="senha" [(ngModel)]="user.senha">
+                </label>
+                <button class="btn btn-second" (click)="fazerLogin()">Fazer login</button>
+            </form>
+        </div>
+    </div>
+</div>

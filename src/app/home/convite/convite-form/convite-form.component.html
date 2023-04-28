@@ -1,0 +1,32 @@
+<section class="text-center ">
+    <h1 class="bounce f-22">
+        <i class="fas fa-chart-line"></i>
+        Dashboard
+    </h1>
+</section>
+<section class="text-center container flipInX teste ">
+    <aside class="color-text">
+        <h2>Seja bem vindo!</h2>
+        <h3>Se você foi convidado a participar do sistema utilize seu código de convite.</h3>
+        <h3>Este código de convite foi enviado a você por e-mail.</h3>
+        <h3>Caso não tenha recebido verifique em sua caixa de SPAM ou Lixo eletrônico!</h3>
+    </aside>
+
+    <form>
+        <div class="container teste">
+            <input type="text" class="form-control" placeholder="Digite seu código de convite" name="codigo"
+                [(ngModel)]="codigo">
+
+            <div class="mt-3">
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-primary form-control" (click)="validarCodigoConvite()">Validar</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-danger form-control" routerLink="/">Voltar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>

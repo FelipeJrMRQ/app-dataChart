@@ -1,0 +1,123 @@
+<!-- CARD PRINCIPAL -->
+<div class="card  mb-3">
+    <div class="card-header colorBgCard text-white f-center linha">
+        <label class=" fs-15">Parâmetros do dia</label>
+        <div class="f-right linha">
+            <i class="fas fa-dollar-sign align-middle"></i>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="text-center">
+             <!-- GRÁFICO DE FATURAMENTO DO DIA -->
+            <label class="fs-15 color-text">FATURAMENTO DO DIA</label>
+            <div class="content-chart container d-flex justify-content-center c-pointer">
+                <section (click)="consultarFaturamentoPorCliente()">
+                    <div class="container d-flex justify-content-center">
+                        <div class="chart-body d-flex justify-content-center">
+                            <div class="chart align-self-center" style="{{roteD}}" [ngClass]="bgColorD">
+                            </div>
+                        </div>
+                        <div class="fat-percent color-text">
+                            <label>{{percentualFaturamento | number : '1.0-1'}}%</label>
+                        </div>
+                        <div class="vl-faturamento-chart c-pointer color-text">
+                            <label class="c-pointer">{{valorFaturamentoDia | currency :'BRL'}}</label>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="row mt-3">
+                <!-- CARD 1 VALOR META DO DIA-->
+                <div class="col-12 col-lg-6 mb-3">
+                    <div class="card sombra">
+                        <div class="card-header colorBgCard  text-white">
+                            <label class="f-left align-middle fs-15">Meta do dia</label>
+                            <div class="f-right">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title text-center">
+                                <div class="d-flex center" *ngIf="!valorMetaDoDia">
+                                    <strong>Carregando...</strong>
+                                    <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <h3 *ngIf="valorMetaDoDia">{{valorMetaDoDia | currency: 'BRL'}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CARD 2 VALOR GAP DO DIA -->
+                <div class="col-12 col-lg-6 mb-3">
+                    <div class="card  sombra">
+                        <div class="card-header colorBgCard  text-white">
+                            <label class="f-left align-middle fs-15">GAP do dia</label>
+                            <div class="f-right">
+                                <i class="fas fa-dollar-sign align-middle"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">
+                                <div class="d-flex d-none">
+                                    <strong>Carregando...</strong>
+                                    <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="card-title text-center">{{valorGapDia |currency:'BRL'}}
+                                        <i class="fas ms-2 arrow" ngClass="{{arrowGap}}"></i>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CARD 3 META POR SÁBADO -->
+                <div class="col-12 col-lg-6">
+                    <div class="card sombra mb-3">
+                        <div class="card-header text-white colorBgCard ">
+                            <label class="f-left align-middle fs-15 ">Meta por sábado</label>
+                            <div class="f-right">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">
+                                <div class="d-flex" *ngIf="!parametrosMeta.valorPorSabado">
+                                    <strong>Carregando...</strong>
+                                    <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <h3 *ngIf="parametrosMeta.valorPorSabado" class="card-title text-center">
+                                    {{parametrosMeta.valorPorSabado | currency:'BRL'}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CARD 4 VALOR DE ENTRADAS DO DIA -->
+                <div class="col-12 col-lg-6">
+                    <div class="card c-pointer sombra mb-3" (click)="consultarEntradasPorCliente()">
+                        <div class="card-header text-white colorBgCard ">
+                            <label class="f-left align-middle fs-15 ">Entradas do dia</label>
+                            <div class="f-right">
+                                <i class="fas fa-dolly"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">
+                                <div class="d-flex" *ngIf="!valorEntrada">
+                                    <strong>Carregando...</strong>
+                                    <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <h3 *ngIf="valorEntrada" class="card-title text-center">
+                                    {{valorEntrada | currency:'BRL'}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

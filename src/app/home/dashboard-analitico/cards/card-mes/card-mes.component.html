@@ -1,0 +1,148 @@
+<div class="card  mb-3 mt-2">
+    <div class="card-header colorBgCard text-white linha f-center">
+        <label class="  f-center align-middle fs-15">Parâmetros do mês</label>
+        <div class="f-right linha me-2">
+            <i class="fas fa-dollar-sign align-middle "></i>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="text-center">
+            <label class="fs-15 color-text">FATURAMENTO DO MÊS</label>
+            <div class="content-chart container d-flex justify-content-center c-pointer">
+                <section class="acelerador ">
+                    <div class="container d-flex justify-content-center" (click)="exibirDetalhesDoFaturamentoMensal()">
+                        <div class="chart-body d-flex justify-content-center">
+                            <div class="chart align-self-center" style="{{rote}}" ngClass="{{bgColor}}">
+                            </div>
+                        </div>
+                        <div class="fat-percent color-text">
+                            <label>{{percentualFaturamento | number : '1.0-1'}}%</label>
+                        </div>
+                        <div class="vl-faturamento-chart color-text">
+                            <label>{{valorFaturamentoMes | currency :'BRL'}}</label>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="row mt-3">
+
+                <!-- CARD 1 VALOR META DO MÊS -->
+                <div class="col-12 col-lg-6">
+                    <div class="card  mb-3 sombra">
+                        <div class="card-header colorBgCard  text-white">
+                            <label class="f-left align-middle fs-15">Meta</label>
+                            <div class="f-right">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title text-center">
+                                <div class="d-flex center" *ngIf="!parametrosMeta.valorMetaMensal">
+                                    <strong>Carregando...</strong>
+                                    <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <h3 *ngIf="parametrosMeta.valorMetaMensal">{{parametrosMeta.valorMetaMensal | currency:'BRL'}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2 VALOR GAP DO MÊS -->
+                <div class="col-12 col-lg-6">
+                    <div class="card  mb-3 sombra">
+                        <div class="card-header colorBgCard  text-white">
+                            <label class="f-left align-middle fs-15">GAP do mês</label>
+                            <div class="f-right">
+                                <i class="fas fa-dollar-sign align-middle"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title text-center">
+                                <div class="d-flex center" *ngIf="!valorGapMes">
+                                    <strong>Carregando...</strong>
+                                    <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 *ngIf="valorGapMes">{{valorGapMes| currency: 'BRL'}}
+                                        <i class="fas arrow ms-2" ngClass="{{arrowGap}}"></i>
+                                    </h3>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3 VALOR META PROJETADA -->
+                <div class="col-12 col-lg-6">
+                    <div class="card1 mb-3">
+                        <div class="cardFlip">
+                            <div class="card  frente" [ngClass]="colorBorderMes">
+                                <div class="card-header bg-secondary text-white" [ngClass]="colorMes">
+                                    <label class="f-left align-middle fs-15">Meta projetada</label>
+                                    <div class="f-right ">
+                                        <i class="fas fa-hand-holding-usd"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body align-middle">
+                                    <div class="d-flex center" *ngIf="!valorMetaProjetada">
+                                        <strong>Carregando...</strong>
+                                        <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                        </div>
+                                    </div>
+                                    <h3 *ngIf="valorMetaProjetada" class="text-center ">
+                                        {{valorMetaProjetada | currency:'BRL'}}
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="card  atras" [ngClass]="colorBorderMes">
+                                <div class="card-header bg-secondary text-white" [ngClass]="colorMes">
+                                    <label class="f-left align-middle fs-15">Meta projetada</label>
+                                    <div class="f-right ">
+                                        <i class="fas fa-hand-holding-usd"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body align-middle">
+                                    <div class="d-flex center" *ngIf="!valorMetaProjetada">
+                                        <strong>Carregando...</strong>
+                                        <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                        </div>
+                                    </div>
+                                    <h3 *ngIf="valorMetaProjetadaPorcetagem" class="text-center ">
+                                        {{valorMetaProjetadaPorcetagem | number:'1.0-2'}}%
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 4 VALOR EM CARTEIRA -->
+                <div class="col-12 col-lg-6">
+                    <div class="card  sombra mb-3">
+                        <div class="card-header text-white colorBgCard ">
+                            <label class="f-left align-middle fs-15 ">Valor em carteira</label>
+                            <div class="f-right">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">
+                                <div class="d-flex" *ngIf="!valorCarteira">
+                                    <strong>Carregando...</strong>
+                                    <div class="spinner-border ms-auto" role="status" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <h3 *ngIf="valorCarteira" class="card-title text-center">
+                                    {{valorCarteira | currency:'BRL'}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

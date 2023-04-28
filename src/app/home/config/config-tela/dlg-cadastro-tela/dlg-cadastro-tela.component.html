@@ -1,0 +1,18 @@
+<header>
+    <div class="bgCor card-label d-flex between align-middle bold">
+        <label class="color-text">CADASTRAR NOVA TELA</label>
+    </div>
+</header>
+
+<section>
+    <div>
+        <label for="nome-tela" class="form-label">Nome da tela</label>
+        <input type="text" id="nome-tela" class="form-control" [(ngModel)]="telaSistema.nome" />
+        <label for="nome-tela" class="form-label">Rota da tela</label>
+        <input type="text" id="nome-tela" class="form-control" [(ngModel)]="telaSistema.rota" />
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary mt-2 " (click)="salvarTelaSistema()">Cadastrar</button>
+            <button class="btn btn-danger mt-2 " (click)="fecharDialogo()">Fechar</button>
+        </div>
+    </div>
+</section>

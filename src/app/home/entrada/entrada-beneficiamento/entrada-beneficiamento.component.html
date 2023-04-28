@@ -1,0 +1,40 @@
+<section>
+    <div class="table">
+        <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortBeneficiamento($event)">
+           <thead>
+                    <tr>
+                        <td mat-sort-header="nomeBeneficiamento" class="bold">Beneficiamento</td>
+                        <td mat-sort-header="quantidade" class="d-none d-lg-table-cell bold">Qtde</td>
+                        <td mat-sort-header="area" class="d-none d-lg-table-cell bold">Área</td>
+                        <td class="text-end bold">Valor</td>
+                    </tr>
+           </thead>
+            <tbody>
+                <tr class="c-pointer" *ngFor="let beneficiamento of entradas | paginate: { itemsPerPage:itensPagina, currentPage:paginaEntradaBeneficiamento,id:'tbEntradaBeneficiamento' };let j = index" (click)="navegar(beneficiamento.cdBeneficiamento, beneficiamento.nomeBeneficiamento)">
+                    <td class="text-truncate" style="max-width: 210px;" >{{beneficiamento.nomeBeneficiamento}}</td>
+                    <td class="d-none d-lg-table-cell">{{beneficiamento.quantidade}}</td>
+                    <td class="d-none d-lg-table-cell">{{beneficiamento.area | number:'1.0-2'}}</td>
+                    <td class="text-end">{{beneficiamento.valor | currency : 'BRL'}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="bold">Total</td>
+                    <td class="d-none d-lg-table-cell bold">{{qtdeTotal}}</td>
+                    <td class="d-none d-lg-table-cell bold">{{areaTotal | number:'1.0-2'}}</td>
+                    <td class="text-end bold">{{valorTotal | currency: 'BRL'}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-11">
+            <pagination-controls id='tbEntradaBeneficiamento' (pageChange)="paginaEntradaBeneficiamento = $event" nextLabel="" previousLabel=""
+            [maxSize]="5"></pagination-controls>
+        </div>
+        <div *ngIf="exportarDados" class="col-1 align-middle p-1 text-center text-success c-pointer"  (click)="gerarArquivo()">
+            <i data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados" class="fas fa-download iconeExcell " ></i>
+        </div>
+    </div>
+
+    <button class="btn btn-danger" routerLink="/">Voltar</button>

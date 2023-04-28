@@ -1,0 +1,59 @@
+<section *ngIf="cdCliente">
+    <div class="bgCor card-label d-flex between align-middle mb-2">
+        <label class="color-text bold">CARTEIRA DE PRODUTOS DO CLIENTE {{dataRecebida | date: 'dd/MM/yyyy'}}</label>
+    </div>
+    <div class="text-center mb-2">
+        <label class="color-text bold">{{nomeBeneficiamento}}</label>
+    </div>
+</section>
+
+<section >
+    <div class="table">
+        <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortProduto($event)">
+            <thead>
+                <tr>
+                    <th scope="col" class="d-none d-lg-table-cell " mat-sort-header="nomeCliente">Cliente</th>
+                    <th scope="col" mat-sort-header="nomeProduto">Produto</th>
+                    <th scope="col" class="d-none d-lg-table-cell " mat-sort-header="quantidade">Qtde</th>
+                    <th scope="col" class="d-none d-lg-table-cell " mat-sort-header="area">Area</th>
+                    <th scope="col" class="d-none d-lg-table-cell " mat-sort-header="preco">Preço</th>
+                    <th scope="col" class="text-end">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr (click)="openDetalhesProduto(produto)" *ngFor="let produto of produtos | paginate: {itemsPerPage:itensPagina,currentPage:paginasCarteiraProduto,id:'tbCarteiraProduto'}, let i = index" class="c-pointer">
+                    <td class="d-none d-lg-table-cell ">{{produto.nomeCliente}}</td>
+                    <td class=" text-truncate" style="max-width: 200px;">{{produto.nomeProduto}}</td>
+                    <td class="d-none d-lg-table-cell ">{{produto.quantidade | number}}</td>
+                    <td class="d-none d-lg-table-cell ">{{produto.area | number :'1.0-2'}}</td>
+                    <td class="d-none d-lg-table-cell ">{{produto.valorUnitario | currency: 'BRL'}}</td>
+                    <td class="text-end">{{produto.valor | currency: 'BRL'}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="bold">Total:</td>
+                    <td class="d-none d-lg-table-cell bold"></td>
+                    <td class="d-none d-lg-table-cell bold">{{valorTQuantidade | number}}</td>
+                    <td class="d-none d-lg-table-cell bold">{{valorTotalArea | number:'1.0-2'}}</td>
+                    <td class="d-none d-lg-table-cell bold"></td>
+                    <td class="text-end bold">{{valorTotal | currency:'BRL'}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-10">
+            <pagination-controls id="tbCarteiraProduto" (pageChange)="paginasCarteiraProduto = $event" [maxSize]="5" nextLabel="" previousLabel=""></pagination-controls>
+        </div>
+        <div *ngIf="exportarDados" class="col-2 text-success text-end c-pointer" (click)="gerarArquivo()">
+            <i class="fas fa-download iconeExcell " data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados"></i>
+        </div>
+    </div>
+    
+</section>
+
+<section class="mb-5" *ngIf="cdCliente">
+    <button class="btn btn btn-danger" (click)="voltarPaginaAnterior()" >Voltar</button>
+</section>

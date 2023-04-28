@@ -1,0 +1,27 @@
+<div (click)="salvarClick($event)">
+    <!-- CARD DASHBOAD-->
+    <app-cards></app-cards>
+
+    <!-- CONTENT DASHBOARD-->
+    <section class="mb-5">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <app-tbl-carteira-cliente></app-tbl-carteira-cliente>
+            </div>
+            <div class="col-12 col-lg-6">
+                <app-tbl-carteira-beneficiamento></app-tbl-carteira-beneficiamento>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <app-tbl-faturamento-diario></app-tbl-faturamento-diario>
+            </div>
+            <div class="col-12 col-lg-6">
+                <app-tbl-entradas-diaria></app-tbl-entradas-diaria>
+            </div>
+        </div>
+        <div class="esconder">
+            <i class="far fa-arrow-alt-circle-up color-text icone c-pointer" (click)="VoltarTopo()"></i>
+        </div>
+    </section>
+</div>

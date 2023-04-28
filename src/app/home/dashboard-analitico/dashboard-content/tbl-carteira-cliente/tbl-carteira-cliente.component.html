@@ -1,0 +1,60 @@
+<div class=" bgCor head-label p-2 d-flex justify-content-between align-middle">
+    <label class="color-text">Carteira por cliente</label>
+    <!-- <i  (click)="changeDataChartPie()" *ngIf="!dataType" class="fas fa-chart-pie c-pointer color-text"></i>
+    <i class="fas fa-table c-pointer color-text " [ngClass]="dNone" (click)="changeDataChartPie()"></i> -->
+</div>
+<div [ngClass]='dNone' class="d-flex justify-content-center">
+    <canvas id="myChartPie"></canvas>
+</div>
+
+<div>
+    <div class="tbl-update">
+        <div class="" *ngIf="!dataType">
+            <div class="tbl-block" [ngClass]="upDateOption">
+                <div class="text-light text-center mt-1 align-middle">
+                    <div class="spinner-border ms-auto me-2" role="status" aria-hidden="true">
+                    </div>
+                    <br>
+                    <strong>Atualizando informações aguarde...</strong>
+                </div>
+            </div>
+            <table class="table table-sm table-hover table-borderless table-striped" matSort (matSortChange)="sortCliente($event)">
+                <thead>
+                    <tr>
+                        <th mat-sort-header="nome" scope="col">Cliente</th>
+                        <th class="text-center" scope="col">Valor</th>
+                        <th class="text-center d-none d-lg-table-cell" scope="col">%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="c-pointer"
+                        *ngFor="let cliente of listaCarteiraCliente | paginate: { itemsPerPage: itensPagina, currentPage:paginaCliente, id:'tbCliente' };let j =index"
+                        (click)="navegar(cliente.cdCliente, cliente.nome)">
+                        <td class=" text-truncate" style="max-width: 150px;">{{cliente.nome}}</td>
+                        <td class="text-center">{{cliente.valor | currency : 'BRL'}}</td>
+                        <td class="text-center d-none d-lg-table-cell">{{calculoPercentual(cliente.valor) | number:'1.0-2'}} %</td>
+                    </tr>
+                </tbody>
+                <tfoot class="table" *ngIf="listaCarteiraCliente.length>0">
+                    <tr>
+                        <td class="">Total:</td>
+                        <td class="text-center">{{calcularTotalCarteiraCliente | currency:'BRL'}}</td>
+                        <td class="d-none d-lg-table-cell"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="row">
+            <div class="col-11">
+                <pagination-controls id='tbCliente' *ngIf="!dataType" (pageChange)="paginaCliente = $event" nextLabel=""
+                    previousLabel="" [maxSize]="5">
+                </pagination-controls>
+            </div>
+            <div *ngIf="exportarDados" class="col-1 align-middle p-1 text-center text-success c-pointer" (click)="gerarArquivo()">
+                <i class="fas fa-download iconeExcell " data-bs-toggle="tooltip" data-bs-placement="left"
+                    title="Exportar dados"></i>
+            </div>
+        </div>
+    </div>
+</div>

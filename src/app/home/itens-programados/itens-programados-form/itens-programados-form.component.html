@@ -1,0 +1,209 @@
+<section class="mb-5">
+
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <div class="input-group">
+                <input type="date" class="form-control" [(ngModel)]="dataProgramacao">
+                <button class="btn btn-primary" (click)="consultarItensProgramadosAguardando()">
+                    <i class="fas fa-search-dollar"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- TOTAL VALOR -->
+        <div class="col-12">
+            <div class="card-label d-flex between align-middle">
+                <label class="color-text">VALOR TOTAL PROGRAMADO: </label>
+                <label for="" class="bold ms-2">{{totalGeral | currency: 'BRL'}}</label>
+            </div>
+        </div>
+
+        <!-- CARD 1° TURNO -->
+        <div class="col-12 col-lg-4 mt-1">
+            <div class="cartao">
+                <header class="header-cartao">
+                    <label for="" class="text-light bold">PRIMEIRO TURNO</label>
+                </header>
+                <div class="row p-2">
+                    <div class="col-5">
+                        <label for="" class="mt-1 bold">LINHA</label>
+                        <br>
+                        <a class="c-pointer" *ngFor="let l of itensLinhaTurno1" class="sublinhado" (click)="exibirItensProgramados(l)">
+                            <label for="" class=" mt-1 bold">{{l.linhaDeProducao.nome}}</label>
+                            <br>
+                        </a>
+                    </div>
+                    <div class="col-5">
+                        <label for="" class="bold">VALOR</label>
+                        <br>
+                        <div *ngFor="let linha of itensLinhaTurno1">
+                            <label for="" class="mt-1">{{linha.valorPrevisto | currency: 'BRL'}}</label>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="text-center">
+                            <label for="" class="bold">IMP</label>
+                            <br>
+                            <div *ngFor="let linha of itensLinhaTurno1" class="mt-1">
+                                <a class="c-pointer" (click)="testarPDF(linha)">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                        <div class="row">
+                            <div class="col-5 bold">
+                                TOTAL
+                            </div>
+                            <div class="col-5 bold">
+                                {{totalTurno1 | currency: 'BRL'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2° TURNO -->
+        <div class="col-12 col-lg-4 mt-1">
+            <div class="cartao">
+                <header class="header-cartao">
+                    <label for="" class="text-light bold">SEGUNDO TURNO</label>
+                </header>
+                <div class="row p-2">
+                    <div class="col-5">
+                        <label for="" class="mt-1 bold">LINHA</label>
+                        <br>
+                        <div *ngFor="let l of itensLinhaTurno2" class="sublinhado" (click)="exibirItensProgramados(l)">
+                            <label for="" class=" mt-1 bold">{{l.linhaDeProducao.nome}}</label>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <label for="" class="bold">VALOR</label>
+                        <br>
+                        <div *ngFor="let linha of itensLinhaTurno2">
+                            <label for="" class="mt-1">{{linha.valorPrevisto | currency: 'BRL'}}</label>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="text-center">
+                            <label for="" class="bold">IMP</label>
+                            <br>
+                            <div *ngFor="let linha of itensLinhaTurno2" class="mt-1">
+                                <a class="c-pointer" (click)="testarPDF(linha)">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                        <div class="row">
+                            <div class="col-5 bold">
+                                TOTAL
+                            </div>
+                            <div class="col-5 bold">
+                                {{totalTurno2 | currency: 'BRL'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3° TURNO -->
+        <div class="col-12 col-lg-4 mt-1">
+            <div class="cartao">
+                <header class="header-cartao">
+                    <label for="" class="text-light bold">TERCEIRO TURNO</label>
+                </header>
+                <div class="row p-2">
+                    <div class="col-5">
+                        <label for="" class="mt-1 bold">LINHA</label>
+                        <br>
+                        <div *ngFor="let l of itensLinhaTurno3" class="sublinhado" active (click)="exibirItensProgramados(l)">
+                            <label for="" class=" mt-1 bold" >{{l.linhaDeProducao.nome}}</label>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <label for="" class="bold">VALOR</label>
+                        <br>
+                        <div *ngFor="let linha of itensLinhaTurno3">
+                            <label for="" class="mt-1">{{linha.valorPrevisto | currency: 'BRL'}}</label>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="text-center">
+                            <label for="" class="bold">IMP</label>
+                            <br>
+                            <div *ngFor="let linha of itensLinhaTurno3" class="mt-1">
+                                <a class="c-pointer" (click)="testarPDF(linha)">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                        <div class="row">
+                            <div class="col-5 bold">
+                                TOTAL
+                            </div>
+                            <div class="col-5 bold">
+                                {{totalTurno3 | currency: 'BRL'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section *ngIf="itensLinhaVisualizacao.length > 0">
+        <div class="col-12 mt-3">
+            <div class="card-label align-middle text-center">
+                <label class="color-text">VISUALIZAÇÃO DOS ITENS PROGRAMADOS </label>
+                <label for="" class="bold ms-2">{{nomeLinhaVisualizacao}} - {{turnoVisualizacao}}</label>
+            </div>
+        </div>
+        
+        <div class="table mt-1 mb-5">
+            <table class="table table-striped table-sm font-12">
+                <thead>
+                    <tr>
+                        <th>CLIENTE</th>
+                        <th>PRODUTO</th>
+                        <th>BENEFICIAMENTO</th>
+                        <th>QTDE</th>
+                        <th>VALOR</th>
+                        <th>RESP.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let produto of itensLinhaVisualizacao">
+                        <td>{{produto.nomeCliente}}</td>
+                        <td>{{produto.nomeProduto}}</td>
+                        <td>{{produto.nomeBeneficiamento}}</td>
+                        <td>{{produto.qtdeProgramada}}</td>
+                        <td>{{produto.valorPrevisto | currency : 'BRL'}}</td>
+                        <td>{{produto.responsavel}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <td>TOTAIS</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{totalTbQtde}}</td>
+                    <td>{{totalTbValor | currency: 'BRL'}}</td>
+                    <td></td>
+                </tfoot>
+            </table>
+        </div>
+    </section>
+</section>

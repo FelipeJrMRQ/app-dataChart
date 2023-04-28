@@ -1,0 +1,24 @@
+.borda{
+ border: 1px solid black;
+}
+
+.bg{
+background-color: aqua;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.card-label{
+    margin: 0.5em 0em 0.5em 0em;
+    padding: 10px;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 0.2em;
+    box-shadow: 2px 2px 3px;
+}
+
+.c-pointer{
+    cursor: pointer;
+}

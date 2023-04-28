@@ -1,0 +1,67 @@
+<div class="mb-5">
+    <section class="">
+        <h3>Parâmetros de faturamento</h3>
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <form>
+                    <label>Meta de faturamento mensal</label>
+                    <div class="input-group  mb-3 ">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control bgInput" name="valorMetaMensal" [(ngModel)]="parametrosMeta.valorMetaMensal">
+                    </div>
+                    <label>Valor do orçamento</label>
+                    <div class="input-group mb-3 ">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control  bgInput " name="valorOrcamento" [(ngModel)]="parametrosMeta.valorOrcamento">
+                    </div>
+                    <label>Valor de Faturamento por sábado</label>
+                    <div class="input-group mb-3 ">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control  bgInput" name="valorPorSabado" [(ngModel)]="parametrosMeta.valorPorSabado">
+                    </div>
+                    <label>Data da meta</label>
+                    <div class="input-group mb-3 ">
+                        <input type="date" class="form-control bgInput" name="data" [(ngModel)]="parametrosMeta.data ">
+                    </div>
+                    <div class="row mb-2 mt-2">
+                        <div class="col-12 col-lg-6 mb-2">
+                            <button class="form-control btn btn-primary" (click)="salvar()">Salvar</button>
+                        </div>
+                        <div class="col-12 col-lg-6 mb-2">
+                            <button class="form-control btn btn-danger" routerLink="/">Voltar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="table">
+                    <table class="table table-sm table-striped table-hover">
+                        <thead>
+                            <th>Data Meta</th>
+                            <th>Meta</th>
+                            <th>Orçamento</th>
+                            <th>Valor Sábado</th>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let parametro of listaParamentrosMeta | paginate: { itemsPerPage:itensPagina, currentPage:paginaMeta, id:'tbMeta' };let i =index">
+                                <td>{{parametro.data| date:'MM/yyyy'}}</td>
+                                <td>{{parametro.valorMetaMensal | currency :'BRL'}}</td>
+                                <td>{{parametro.valorOrcamento | currency :'BRL'}}</td>
+                                <td>{{parametro.valorPorSabado | currency :'BRL'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <pagination-controls id='tbMeta' (pageChange)="paginaMeta = $event" nextLabel="" previousLabel="" [maxSize]="5"></pagination-controls>
+            </div>
+
+        </div>
+
+
+    </section>
+</div>

@@ -1,0 +1,66 @@
+<header class="bgCor head-label p-2 d-flex justify-content-between align-middle">
+    <label>Programação de itens</label>
+</header>
+<section>
+    <div class="row">
+        
+        <div class="col-12 col-lg-6">
+            <div class="text-center mb-2">
+                <img [src]="imagem" alt="Imagem não encontrada" class="image-size">
+            </div>
+            <label for="" class="bold d-block">CLIENTE:</label>
+            <p>{{data.nomeCliente}}</p>
+            <label for="" class="bold d-block">PRODUTO:</label>
+            <p>{{data.nomeProduto}}</p>
+            <label for="" class="bold d-block">BENEFICIAMENTO:</label>
+            <p>{{data.nomeBeneficiamento}}</p>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <form>
+                <label for="" class="form-label">Quantidade programada</label>
+                <input type="number" class="form-control" name="qtdeProgramada" readonly [(ngModel)]="data.qtdeProgramada" [value]="data.qtdeProgramada">
+                
+                <label for="" class="form-label mt-2">Linha</label>
+                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao">
+                    <option selected [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
+                </select>
+
+                <label for="" class="form-label mt-2">Turno</label>
+                <select class="form-select" name="turn" [(ngModel)]="idTurno">
+                    <option selected [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
+                </select>
+
+                <label for="" class="form-label mt-2">Prioridade</label>
+                <select class="form-select" name="prioridade" [(ngModel)]="prioridade">
+                    <option value="3">BAIXA</option>
+                    <option selected value="2">NORMAL</option>
+                    <option value="1">ALTA</option>
+                    <option value="0">CRITICO</option>
+                </select>
+
+                <label for="" class="mt-2 form-label">Observação</label>
+                <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao" [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
+               
+                <div class="row">
+                    <div class="col-12 col-lg-3">
+                        <button class="btn btn-primary mt-2 form-control" (click)="alterarProgramacao()">Alterar</button>
+                    </div>
+                    <div class="col-12 col-lg-3" *ngIf="data.status =='AGUARDANDO'">
+                        <button class="btn btn-success mt-2 form-control" (click)="iniciarProducao()">Iniciar</button>
+                    </div>
+                    <div class="col-12 col-lg-3" *ngIf="data.status =='INICIADO'">
+                        <button class="btn btn-success mt-2 form-control" (click)="concluirProducao()">Concluir</button>
+                    </div>
+                    <div class="col-12 col-lg-3" *ngIf="data.status =='AGUARDANDO'">
+                        <button class="btn btn-warning mt-2 form-control" (click)="excluirProgramacao(data.id)">Excluir</button>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <button class="btn btn-danger mt-2 form-control" (click)="fecharDialogo()">Fechar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
