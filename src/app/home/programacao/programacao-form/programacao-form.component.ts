@@ -18,6 +18,8 @@ import { DlgCadTurnoComponent } from '../dlg-cad-turno/dlg-cad-turno.component';
 import { ProgramacaoService } from 'src/app/services/programacao.service';
 import { Programacao } from 'src/app/models/programacao';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { ItensNaoRetornadosExport } from 'src/app/models/exports/itens-nao-retornados';
 
 @Component({
   selector: 'app-progamacao-form',
@@ -50,6 +52,9 @@ export class ProgramacaoFormComponent implements OnInit {
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
   programarItens: boolean = false;
+  private dataExport: ItensNaoRetornadosExport[];
+  processo1: any;
+  processo2: any;
 
   constructor(
     private itemNaoRetornadoService: ItemNaoRetornadoService,
@@ -59,7 +64,8 @@ export class ProgramacaoFormComponent implements OnInit {
     private turnoService: TurnoService,
     private snackBar: MatSnackBar,
     private programacaoService: ProgramacaoService,
-    private controleExibicaoService: ControleExibicaoService
+    private controleExibicaoService: ControleExibicaoService,
+    private usuarioService: UsuarioService,
   ) {
     this.itens = [];
     this.itensFiltro = [];
@@ -70,6 +76,7 @@ export class ProgramacaoFormComponent implements OnInit {
     this.turno = new Turno();
     this.itensProgramados = [];
     this.programacao = new Programacao();
+    this.dataExport = [];
   }
 
   ngOnInit(): void {
@@ -77,7 +84,6 @@ export class ProgramacaoFormComponent implements OnInit {
     this.consultarItensNaoRetornados();
     this.consultarLinhasDeProducao();
     this.consultarTurnoDeTrabalho();
-    this.consultaProgramacaoPorData();
     this.resgistrarLog();
   }
 
@@ -92,6 +98,9 @@ export class ProgramacaoFormComponent implements OnInit {
       },
       error: (e) => {
         console.log(e);
+      },
+      complete:()=>{
+        this.marcarItemProgramados();
       }
     });
   }
@@ -103,7 +112,10 @@ export class ProgramacaoFormComponent implements OnInit {
         let nfTemp: any;
         res.forEach((e) => {
           nfTemp = e.nf?.replace('  000', '-');
-          e.dataEntrada = moment(e.dataEntrada).format('DD/MM/yyyy')
+          this.processo1 = e.nomeBeneficiamento?.split('+')[0];
+          if(e.nomeBeneficiamento?.split('+')[1] != undefined){
+            this.processo2 = e.nomeBeneficiamento.split('+')[1]?.replace('PINTURA', '');
+          }
           e.nf = (nfTemp);
         });
       },
@@ -111,7 +123,7 @@ export class ProgramacaoFormComponent implements OnInit {
         console.log(e);
       },
       complete: () => {
-        this.marcarItemProgramados();
+       this.consultaProgramacaoPorData();
       }
     });
   }
@@ -126,13 +138,25 @@ export class ProgramacaoFormComponent implements OnInit {
         }
       });
     });
+    this.filtrar();
   }
 
-  public programarItensSelecionados() {
+  public consutarReponsavelProgramacao(){
+       this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')).subscribe({
+      next:(res)=>{
+        this.usuario = res[0];
+      },
+      complete:()=>{
+        this.programarItensSelecionados();
+      }
+    });
+  }
+
+  private programarItensSelecionados() {
     this.itensFiltro.forEach(item => {
       if (item.programacaoColetiva && !item.programado) {
         this.programacao = new Programacao();
-        this.programacao.responsavel = sessionStorage.getItem('user')?.toString();
+        this.programacao.responsavel = this.usuario.nome?.toUpperCase();
         this.programacao.espessura = item.espessura;
         this.programacao.cdCliente = item.cdCliente;
         this.programacao.nomeCliente = item.nomeCliente;
@@ -156,17 +180,12 @@ export class ProgramacaoFormComponent implements OnInit {
           error: (e) => {
             this.openSnackBar("Falha ao programar item!", this.snackBarErro);
           }
-          ,
-          complete: () => {
-
-          }
         });
       }
     });
-    this.limpar();
-    this.openSnackBar("Itens programados com sucesso!", this.snackBarSucesso);
     this.consultarItensNaoRetornados();
-    this.consultaProgramacaoPorData();
+    this.openSnackBar("Itens programados com sucesso!", this.snackBarSucesso);
+
   }
 
   public selecionarTodas() {
@@ -181,11 +200,36 @@ export class ProgramacaoFormComponent implements OnInit {
 
 
   public gerarArquivo() {
-    this.excelService.geradorExcell(this.itens, "Carteira_Produto");
+    this.itens.forEach(item=>{
+      let i = new ItensNaoRetornadosExport();
+      let processos: any = [];
+      processos = item.nomeBeneficiamento?.split('+');
+      console.log(processos[1]);
+      i.ENTRADA = `${moment(item.dataEntrada).format('DD/MM/yyyy').toString()} ${item.hora}` ;
+      i.NF = item.nf;
+      i.CONTROLE = item.cdEntrada;
+      i.ITEM = item.item;
+      i.TIPO_OS = item.nomeTipoOS;
+      i.CLIENTE = item.nomeCliente;
+      i.PRODUTO = item.nomeProduto;
+      i.PROCESSO1 = processos[0];
+      if(processos.length >= 1){
+        i.PROCESSO2 = processos[1];
+        i.PROCESSO2 = i.PROCESSO2?.replace('PINTURA ', '')
+      }
+      i.ESPESSURA = item.espessura;
+      i.PESO = item.peso;
+      i.SALDO = item.saldoRetorno;
+      i.VALOR = item.valorBeneficiamento;
+      i.VALOR_PREVISTO = item.valorPrevisto;
+      i.EMBALAGEM = item.nomeEmbalagem;
+      this.dataExport.push(i);
+    });
+    this.excelService.geradorExcell(this.dataExport, "Carteira_Produto");
   }
 
   public consultarLinhasDeProducao() {
-    this.linhaService.consultar().subscribe({
+    this.linhaService.consultarPorStatus().subscribe({
       next: (res) => {
         this.linhas = res;
       }, error: (e) => {
@@ -235,6 +279,7 @@ export class ProgramacaoFormComponent implements OnInit {
         this.itens;
       }
     });
+    
   }
 
   public iniciarProgramacao(item: ItemNaoRetornado) {
@@ -252,18 +297,17 @@ export class ProgramacaoFormComponent implements OnInit {
       next: (res) => {
         if (res) {
           this.consultarItensNaoRetornados();
-          this.consultaProgramacaoPorData();
         }
       }
     });
   }
 
-  public adicionarProgramacao(nome: any) {
-    if (nome) {
-      this.listaProgramacao.push(nome);
-    }
-    return this.listaProgramacao;
-  }
+  // public adicionarProgramacao(nome: any) {
+  //   if (nome) {
+  //     this.listaProgramacao.push(nome);
+  //   }
+  //   return this.listaProgramacao;
+  // }
 
 
   public sort(sort: Sort) {
@@ -342,6 +386,9 @@ export class ProgramacaoFormComponent implements OnInit {
 
   public cadastrarLinha() {
     const dlg = this.dialog.open(DlgCadLinhaComponent, {
+      height: '100%',
+      width: '100%',
+      maxWidth: '100%',
     });
     dlg.afterClosed().subscribe(res => {
       this.consultarLinhasDeProducao();

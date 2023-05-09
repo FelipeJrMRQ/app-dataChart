@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer } from '@angular/platform-browser';
 import { LinhaDeProducao } from 'src/app/models/linha-de-producao';
 import { Turno } from 'src/app/models/turno';
 import { ImageService } from 'src/app/services/image.service';
@@ -24,6 +25,8 @@ export class DlgDetalheItemComponent implements OnInit {
   prioridade: any;
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
+  public urlImagem: any;
+  quantidade: any;
 
 
   constructor(
@@ -34,13 +37,17 @@ export class DlgDetalheItemComponent implements OnInit {
     private turnoService: TurnoService,
     private programacaoService: ProgramacaoService,
     private snackBar: MatSnackBar,
+    private service: ImageService,
     private controleExibicaoService: ControleExibicaoService,
+    private sanitizer: DomSanitizer,
   ) {
     this.linhas = [];
     this.turnos = [];
    }
 
   ngOnInit(): void {
+    //Captura a quantidade programada do item antes de qualquer alteração
+    this.quantidade = this.data.qtdeProgramada;
     this.consultarImagem();
     this.consultarLinhasDeProducao();
     this.consultarTurnoDeTrabalho();
@@ -48,47 +55,52 @@ export class DlgDetalheItemComponent implements OnInit {
   }
 
   public consultarImagem() {
-    this.imagem = this.imageService.downloadImg(`${this.data.cdProduto}`);
+    this.service.downloadImg(`${this.data.cdProduto}`).subscribe({
+      next:(res)=>{
+        this.imagem = res;
+        this.urlImagem = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.imagem));
+      }
+     });
   }
 
-  public iniciarProducao(){
-    this.data.turno.id = this.idTurno;
-    this.data.linhaDeProducao.id = this.idLinhaDeProducao;
-    this.data.prioridade = this.prioridade;
-    this.data.status = "INICIADO";
-    this.programacaoService.salvar(this.data).subscribe({
-      next:()=>{
-        this.openSnackBar("Programação alterada com sucesso!", this.snackBarSucesso);
-        this.controleExibicaoService.registrarLog(`INICIOU A PROGRAMAÇÃO DO ITEM: [${this.data.nomeProduto}]`);
-        this.dialogRef.close();
-      },
-      error:()=>{
-        this.openSnackBar("Falha ao alterar programação", this.snackBarErro);
-      }
-    });
-  }
+  // public iniciarProducao(){
+  //   this.data.turno.id = this.idTurno;
+  //   this.data.linhaDeProducao.id = this.idLinhaDeProducao;
+  //   this.data.prioridade = this.prioridade;
+  //   this.data.status = "INICIADO";
+  //   this.programacaoService.salvar(this.data).subscribe({
+  //     next:()=>{
+  //       this.openSnackBar("Programação alterada com sucesso!", this.snackBarSucesso);
+  //       this.controleExibicaoService.registrarLog(`INICIOU A PROGRAMAÇÃO DO ITEM: [${this.data.nomeProduto}]`);
+  //       this.dialogRef.close();
+  //     },
+  //     error:()=>{
+  //       this.openSnackBar("Falha ao alterar programação", this.snackBarErro);
+  //     }
+  //   });
+  // }
 
-  public concluirProducao(){
-    this.data.turno.id = this.idTurno;
-    this.data.linhaDeProducao.id = this.idLinhaDeProducao;
-    this.data.prioridade = this.prioridade;
-    this.data.status = "CONCLUIDO";
-    this.programacaoService.salvar(this.data).subscribe({
-      next:()=>{
-        this.openSnackBar("Programação alterada com sucesso!", this.snackBarSucesso);
-        this.controleExibicaoService.registrarLog(`CONCLUIU A PROGRAMAÇÃO DO ITEM: [${this.data.nomeProduto}]`);
-        this.dialogRef.close();
-      },
-      error:()=>{
-        this.openSnackBar("Falha ao alterar programação", this.snackBarErro);
-      }
-    });
-  }
+  // public concluirProducao(){
+  //   this.data.turno.id = this.idTurno;
+  //   this.data.linhaDeProducao.id = this.idLinhaDeProducao;
+  //   this.data.prioridade = this.prioridade;
+  //   this.data.status = "CONCLUIDO";
+  //   this.programacaoService.salvar(this.data).subscribe({
+  //     next:()=>{
+  //       this.openSnackBar("Programação alterada com sucesso!", this.snackBarSucesso);
+  //       this.controleExibicaoService.registrarLog(`CONCLUIU A PROGRAMAÇÃO DO ITEM: [${this.data.nomeProduto}]`);
+  //       this.dialogRef.close();
+  //     },
+  //     error:()=>{
+  //       this.openSnackBar("Falha ao alterar programação", this.snackBarErro);
+  //     }
+  //   });
+  // }
 
   public excluirProgramacao(id: number){
     this.programacaoService.excluirProgramacao(id).subscribe({
       next:(res)=>{
-        this.dialogRef.close();
+        this.dialogRef.close(this.data);
         this.controleExibicaoService.registrarLog(`EXCLUIU A PROGRAMAÇÃO DO ITEM: [${this.data.nomeProduto}]`);
         this.openSnackBar("Item excluído com sucesso!", this.snackBarSucesso);
       },
@@ -98,8 +110,10 @@ export class DlgDetalheItemComponent implements OnInit {
     });
   }
 
-  public fecharDialogo(){
-    this.dialogRef.close();
+  public fecharDialogo(retorno: boolean){
+    this.dialogRef.close({
+      data: retorno
+    });
   }
 
   public consultarLinhasDeProducao(){
@@ -113,6 +127,14 @@ export class DlgDetalheItemComponent implements OnInit {
 }
 
 public alterarProgramacao(){
+  if(this.data.qtdeProgramada <= 0 ){
+    this.openSnackBar('A quantidade programada não pode ser menor ou igual a zero!', this.snackBarErro);
+    return;
+  }else if(this.data.qtdeProgramada > this.quantidade){
+    this.openSnackBar('A quantidade programada não pode ser maior que o saldo!', this.snackBarErro);
+    return;
+  }
+  this.data.valorPrevisto = ((this.data.valorPrevisto/this.quantidade)*this.data.qtdeProgramada);
   this.data.turno.id = this.idTurno;
   this.data.linhaDeProducao.id = this.idLinhaDeProducao;
   this.data.prioridade = this.prioridade;
@@ -120,7 +142,7 @@ public alterarProgramacao(){
     next:()=>{
       this.openSnackBar("Programação alterada com sucesso!", this.snackBarSucesso);
       this.controleExibicaoService.registrarLog(`ALTEROU A PROGRAMAÇÃO DO ITEM: [${this.data.nomeProduto}]`);
-      this.dialogRef.close();
+      this.fecharDialogo(true);
     },
     error:()=>{
       this.openSnackBar("Falha ao alterar programação", this.snackBarErro);

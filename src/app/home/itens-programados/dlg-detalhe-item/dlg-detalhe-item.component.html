@@ -5,8 +5,10 @@
     <div class="row">
         
         <div class="col-12 col-lg-6">
-            <div class="text-center mb-2">
-                <img [src]="imagem" alt="Imagem não encontrada" class="image-size">
+            <div class="mb-2">
+                <a [href]="urlImagem" target="_blank">
+                    <img [src]="urlImagem" alt="Imagem não encontrada" class="image-size">
+                </a>
             </div>
             <label for="" class="bold d-block">CLIENTE:</label>
             <p>{{data.nomeCliente}}</p>
@@ -14,12 +16,19 @@
             <p>{{data.nomeProduto}}</p>
             <label for="" class="bold d-block">BENEFICIAMENTO:</label>
             <p>{{data.nomeBeneficiamento}}</p>
+            <label for="" class="bold d-block">VALOR PREVISTO:</label>
+            <p>{{data.valorPrevisto | currency : 'BRL'}}</p>
+            <label for="" class="bold d-block">PROGRAMADO POR:</label>
+            <p>{{data.responsavel}}</p>
         </div>
 
         <div class="col-12 col-lg-6">
             <form>
-                <label for="" class="form-label">Quantidade programada</label>
-                <input type="number" class="form-control" name="qtdeProgramada" readonly [(ngModel)]="data.qtdeProgramada" [value]="data.qtdeProgramada">
+                <label for="" class="form-label">Data</label>
+                <input type="date" class="form-control" name="dataProgramacao" [(ngModel)]="data.data" [value]="data.data">
+
+                <label for="" class="form-label mt-2">Quantidade programada</label>
+                <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="data.qtdeProgramada" [value]="data.qtdeProgramada">
                 
                 <label for="" class="form-label mt-2">Linha</label>
                 <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao">
@@ -30,6 +39,9 @@
                 <select class="form-select" name="turn" [(ngModel)]="idTurno">
                     <option selected [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
                 </select>
+
+                <label for="" class="form-label mt-2">Sequência</label>
+                <input type="number" class="form-control" name="sequencia" [(ngModel)]="data.sequencia">
 
                 <label for="" class="form-label mt-2">Prioridade</label>
                 <select class="form-select" name="prioridade" [(ngModel)]="prioridade">
@@ -43,20 +55,14 @@
                 <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao" [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
                
                 <div class="row">
-                    <div class="col-12 col-lg-3">
+                    <div class="col-12 col-lg-4">
                         <button class="btn btn-primary mt-2 form-control" (click)="alterarProgramacao()">Alterar</button>
                     </div>
-                    <div class="col-12 col-lg-3" *ngIf="data.status =='AGUARDANDO'">
-                        <button class="btn btn-success mt-2 form-control" (click)="iniciarProducao()">Iniciar</button>
-                    </div>
-                    <div class="col-12 col-lg-3" *ngIf="data.status =='INICIADO'">
-                        <button class="btn btn-success mt-2 form-control" (click)="concluirProducao()">Concluir</button>
-                    </div>
-                    <div class="col-12 col-lg-3" *ngIf="data.status =='AGUARDANDO'">
+                    <div class="col-12 col-lg-4" *ngIf="data.status =='AGUARDANDO'">
                         <button class="btn btn-warning mt-2 form-control" (click)="excluirProgramacao(data.id)">Excluir</button>
                     </div>
-                    <div class="col-12 col-lg-3">
-                        <button class="btn btn-danger mt-2 form-control" (click)="fecharDialogo()">Fechar</button>
+                    <div class="col-12 col-lg-4">
+                        <button class="btn btn-danger mt-2 form-control" (click)="fecharDialogo(false)">Fechar</button>
                     </div>
                 </div>
             </form>

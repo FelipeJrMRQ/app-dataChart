@@ -1,6 +1,7 @@
 
 export class ItemNaoRetornado{
     dataEntrada: string | undefined;
+    hora: string | undefined;
     cdCliente: number | undefined;
     nomeCliente: string | undefined;
     cdProduto: number | undefined;

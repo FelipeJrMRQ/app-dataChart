@@ -4,8 +4,33 @@
 <section>
     <form>
         <label for="">Linha:</label>
-        <input type="text" class="form-control" name="nome" [(ngModel)]="linhaDeProducao.nome">
+        <input type="text" class="form-control" autocomplete="off" name="nome" [(ngModel)]="linhaDeProducao.nome">
         <button class="btn btn-primary mt-3" (click)="salvar()">Salvar</button>
-        <button class="btn btn-danger mt-3 ms-2" (click)="fechar()">Fechar</button>
+        <button class="btn btn-danger mt-3 ms-2" (click)="fechar()">Voltar</button>
     </form>
+
+    <section class="mt-4">
+        <h2>Desativar / Ativar linhas de produção</h2>
+       
+        <div class="table mt-2">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Data incluão</th>
+                        <th scope="col" class="text-center">Alterar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let linha of linhas">
+                        <td>{{linha.nome}}</td>
+                        <td>{{linha.status}}</td>
+                        <td>{{linha.dataInclusao | date : 'dd/MM/yyyy'}}</td>
+                        <td class="text-center"><i class="fas fa-power-off ms-1 c-pointer" (click)="alterarStatus(linha)" data-bs-toggle="tooltip" data-bs-placement="left" title="Ativar/Inativar"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </section>

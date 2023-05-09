@@ -30,19 +30,18 @@ export class ItensProgramadosFormComponent implements OnInit {
   totalTurno3: any = 0;
   totalGeral: any = 0;
   totalTbQtde: any = 0;
-  totalTbValor: any = 0;
   processo: any = [];
   linhas: LinhaDeProducao[];
   turnos: Turno[];
   itensProgramados: Programacao[];
   itensIniciados: Programacao[];
-  idTurno: number = 0;
-  idLinha: number = 0;
   docPdf: jsPDF;
   dataProgramacao: string = moment().format("yyyy-MM-DD");
   itensLinhaVisualizacao: Programacao[];
   nomeLinhaVisualizacao: any;
   turnoVisualizacao: any;
+  itemSelecionadoVisualizacao: any;
+  atualizarExibicao: boolean = false;
 
   constructor(
     private programacaoService: ProgramacaoService,
@@ -68,69 +67,62 @@ export class ItensProgramadosFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.consultarLinhasDeProducao();
-    this.consultarTurnoDeTrabalho();
+    //this.consultarLinhasDeProducao();
+    //this.consultarTurnoDeTrabalho();
     this.consultarItensProgramadosAguardando();
     this.controleExibicaoService.registrarLog('ACESSOU A TELA ITENS PROGRAMADOS');
-    let txt = document.getElementById('txt-fd');
   }
 
-  public testarPDF(itensLinha: ItensLinha) {
-    let titulo: any = "";
-    this.docPdf = new jsPDF(
-      {
-        orientation: "landscape",
+  public visualizarDetalhesDoItem(item: Programacao) {
+    let dialogo = this.dialog.open(DlgDetalheItemComponent, {
+      data: item,
+      height:'97%'
+    });
+
+    /**
+     * Quanto houver alguma alteração na programação o sistema realiza uma nova consulta
+     * e limpa a lista de exibição atual
+     */
+    dialogo.afterClosed().subscribe({
+      next: (res) => {
+        if (res.data) {
+          this.atualizarExibicao = true;
+          this.consultarItensProgramadosAguardando();
+        }
       }
-    )
-    this.docPdf.setFontSize(10);
-    var bodyTabela: any = [];
-    itensLinha.itensProgramados.forEach(item => {
-      this.processo = [];
-      this.processo = item.nomeBeneficiamento?.split('+');
-      titulo = `${moment(this.dataProgramacao).format('DD/MM/yyyy')} - PROGAMAÇÃO CROMA ${item.linhaDeProducao.nome}`
-      let linha = [
-        moment(item.data).format('DD/MM/yyyy'),
-        item.nomeCliente,
-        item.nomeProduto,
-        this.processo[0],
-        this.processo[1],
-        item.espessura,
-        item.qtdeProgramada,
-        item.cdEntrada,
-        item.item,
-        item.observacao,
-      ];
-      bodyTabela.push(linha);
-    });
-
-
-    this.docPdf.text(titulo, 14, 10);
-    autoTable(this.docPdf, {
-      headStyles: { fillColor: 'black', fontSize: 4 },
-      footStyles: { fillColor: 'black' },
-      theme: 'grid',
-      styles: { fontSize: 4, fontStyle: 'bold', lineColor: 'black' },
-      head: [
-        ['ENTRADA', 'CLIENTE', 'PRODUTO', 'PROCESSO 1', 'PROCESSO 2', 'ESPESSURA', 'QTDE', 'CONTROLE', 'ITEM', 'OBS', 'SIM', 'NÃO', 'POR QUE?']
-      ],
-      body: bodyTabela
-      ,
-      // foot: [['TOTAIS', '', '', '', '', '', '', '', '', '', '', '']]
-    });
-
-    this.docPdf.output("dataurlnewwindow");
-    // this.docPdf.save("A");
+    })
   }
 
+  /**
+   * Realiza uma consulta dos itens programados no banco de dados com status de Aguardando
+   */
+  public consultarItensProgramadosAguardando() {
+    this.programacaoService.consultarPorDataStatus(this.dataProgramacao).subscribe({
+      next: (res) => {
+        this.itensProgramados = res;
+      },
+      complete: () => {
+        this.colocarItensNaLista();
+      }
+    });
+  }
+
+  /**
+   * Realiza uma tratativa nos dados vindos do banco para adequar a visualização
+   * a disposição dos elementos na tela montando um objeto com as informações
+   * adequadas
+   */
   private colocarItensNaLista() {
     this.itensLinha = [];
     this.itensProgramados.forEach(item => {
+      //Se o item já existir na lista será feito apenas uma atualização
       if (this.itensLinha.some(il => il.linhaDeProducao.id == item.linhaDeProducao.id && il.turno.id == item.turno.id)) {
         let index = this.itensLinha.findIndex(itl => itl.linhaDeProducao.id == item.linhaDeProducao.id && itl.turno.id == item.turno.id);
         this.itensLinha[index].valorPrevisto += item.valorPrevisto;
         this.itensLinha[index].itensProgramados.push(item);
         this.itensLinha[index].turno = item.turno;
       } else {
+        //Se não existir o item na lista será criado um novo item
         let il = new ItensLinha();
         il.itensProgramados.push(item);
         il.linhaDeProducao = item.linhaDeProducao;
@@ -139,29 +131,14 @@ export class ItensProgramadosFormComponent implements OnInit {
         this.itensLinha.push(il);
       }
     });
-    console.log(this.itensLinha);
     this.separItensPorTurno();
   }
 
-  public consultarItensProgramadosAguardando() {
-    if (this.idTurno == 0 && this.idLinha == 0) {
-      this.programacaoService.consultarPorDataStatus(this.dataProgramacao, "AGUARDANDO").subscribe({
-        next: (res) => {
-          this.itensProgramados = res;
-        },
-        complete: () => {
-          this.colocarItensNaLista();
-        }
-      });
-    } else {
-      this.programacaoService.consultar(this.idLinha, this.idTurno, this.dataProgramacao, "AGUARDANDO").subscribe({
-        next: (res) => {
-          this.itensProgramados = res;
-        }
-      });
-    }
-  }
-
+  /**
+   * Para uma exibição mais agradável na tela é realizada uma separação por turno
+   * dos itens programados e os cálculos de valor previsto por turno e o total geral
+   * de todos os turnos.
+   */
   private separItensPorTurno() {
     this.itensLinhaTurno1 = [];
     this.itensLinhaTurno2 = [];
@@ -189,6 +166,32 @@ export class ItensProgramadosFormComponent implements OnInit {
           break
       }
     });
+    this.atualizarVisualizacaoAposAlteracao();
+  }
+
+  public atualizarVisualizacaoAposAlteracao() {
+    if (this.atualizarExibicao) {
+      let itens: any;
+      switch (this.itemSelecionadoVisualizacao.turno.nome) {
+        case 'MANHÃ':
+          itens = this.itensLinhaTurno1.filter(i => i.linhaDeProducao.id == this.itemSelecionadoVisualizacao.linhaDeProducao.id);
+          this.exibirItensProgramados(itens[0]);
+          this.atualizarExibicao = false;
+          break;
+        case 'TARDE':
+          itens= this.itensLinhaTurno2.filter(i => i.linhaDeProducao.id == this.itemSelecionadoVisualizacao.linhaDeProducao.id);
+          this.exibirItensProgramados(itens[0]);
+          this.atualizarExibicao = false;
+          break;
+        case 'NOITE':
+          itens = this.itensLinhaTurno3.filter(i => i.linhaDeProducao.id == this.itemSelecionadoVisualizacao.linhaDeProducao.id);
+          this.exibirItensProgramados(itens[0]);
+          this.atualizarExibicao = false;
+          break;
+        default:
+          break;
+      }
+     }
   }
 
   public consultarLinhasDeProducao() {
@@ -212,6 +215,7 @@ export class ItensProgramadosFormComponent implements OnInit {
   }
 
   public exibirItensProgramados(itens: ItensLinha) {
+    this.itemSelecionadoVisualizacao = itens;
     this.itensLinhaVisualizacao = itens.itensProgramados;
     this.nomeLinhaVisualizacao = itens.linhaDeProducao.nome;
     switch (itens.turno.id) {
@@ -227,8 +231,7 @@ export class ItensProgramadosFormComponent implements OnInit {
       default:
         break;
     }
-    itens.itensProgramados.forEach(e=>{
-      this.totalTbValor += e.valorPrevisto;
+    itens.itensProgramados.forEach(e => {
       this.totalTbQtde += e.qtdeProgramada;
     })
   }
@@ -241,4 +244,76 @@ export class ItensProgramadosFormComponent implements OnInit {
     });
   }
 
+  public gerarPdfProgramacao(itensLinha: ItensLinha) {
+    let titulo: any = "";
+    this.docPdf = new jsPDF(
+      {
+        orientation: "landscape",
+      }
+    )
+    this.docPdf.setFontSize(10);
+    var bodyTabela: any = [];
+    itensLinha.itensProgramados.forEach(item => {
+      this.processo = [];
+      this.processo = item.nomeBeneficiamento?.split('+');
+      titulo = `${moment(this.dataProgramacao).format('DD/MM/yyyy')} - PROGAMAÇÃO CROMA ${item.linhaDeProducao.nome}`
+      let linha = [
+        moment(item.data).format('DD/MM/yyyy'),
+        item.nomeCliente,
+        item.nomeProduto,
+        this.processo[0],
+        this.processo[1],
+        item.espessura,
+        item.qtdeProgramada,
+        item.cdEntrada,
+        item.item,
+        item.observacao,
+      ];
+      bodyTabela.push(linha);
+    });
+
+    this.docPdf.text(titulo, 14, 10);
+    autoTable(this.docPdf, {
+      headStyles: { fillColor: 'black', fontSize: 6 },
+      footStyles: { fillColor: 'black' },
+      theme: 'grid',
+      styles: { fontSize: 6, fontStyle: 'bold', lineColor: 'black' },
+      head: [
+        ['ENTRADA', 'CLIENTE', 'PRODUTO', 'PROCESSO 1', 'PROCESSO 2', 'ESP.', 'QTDE', 'CONTR.', 'ITEM', 'OBS', 'SIM', 'NÃO', 'POR QUE?']
+      ],
+      body: bodyTabela
+      ,
+      // foot: [['TOTAIS', '', '', '', '', '', '', '', '', '', '', '']]
+    });
+
+    this.docPdf.output("dataurlnewwindow");
+    // this.docPdf.save("A");
+  }
+
+
+  public iniciarProgramacao(item: Programacao){
+    item.status = "INICIADO";
+    item.inicioProducao = new Date();
+    this.programacaoService.salvar(item).subscribe({
+      next:(res)=>{
+
+      },
+      complete:()=>{
+        this.atualizarVisualizacaoAposAlteracao();
+      }
+    })
+  }
+
+  public finalizaProgramacao(item: Programacao){
+    item.status = "FINALIZADO";
+    item.fimProducao = new Date();
+    this.programacaoService.salvar(item).subscribe({
+      next:(res)=>{
+
+      },
+      complete:()=>{
+        this.atualizarVisualizacaoAposAlteracao();
+      }
+    })
+  }
 }

@@ -24,8 +24,8 @@ export class ProgramacaoService {
     return this.http.get<Programacao[]>(`${this.urlApi}/${idLinha}/${idTurno}/${data}/${status}`);
   }
 
-  public consultarPorDataStatus(data: String, status: string): Observable<Programacao[]> {
-    return this.http.get<Programacao[]>(`${this.urlApi}/${data}/${status}`);
+  public consultarPorDataStatus(data: String): Observable<Programacao[]> {
+    return this.http.get<Programacao[]>(`${this.urlApi}/${data}`);
   }
 
   public consultarPorData(data: String): Observable<ItemNaoRetornado[]> {

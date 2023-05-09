@@ -1,11 +1,13 @@
 <div class="row mb-4 nao-imprime">
     <div class="col-12 col-lg-2">
         <label for="" class="form-label">Cliente</label>
-        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeCliente" (focus)="limpar()">
+        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeCliente"
+            (focus)="limpar()">
     </div>
     <div class="col-12 col-lg-2">
         <label for="" class="form-label">Produto</label>
-        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeProduto" (focus)="limpar()">
+        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeProduto"
+            (focus)="limpar()">
     </div>
     <div class="col-12 col-lg-2">
         <label for="" class="form-label">Beneficiamento</label>
@@ -60,8 +62,9 @@
                     <th scope="col" class="color-text nao-imprime" mat-sort-header="item">ITEM</th>
                     <th scope="col" class="color-text" mat-sort-header="cliente">CLIENTE</th>
                     <th scope="col" class="color-text" mat-sort-header="produto">PRODUTO</th>
+                    <th scope="col" class="color-text" mat-sort-header="beneficiamento">PROCESSO 1</th>
+                    <th scope="col" class="color-text" mat-sort-header="beneficiamento2">PROCESSO 2</th>
                     <th scope="col" class="color-text" mat-sort-header="espessura">ESPESSURA</th>
-                    <th scope="col" class="color-text" mat-sort-header="beneficiamento">BENEFICIAMENTO</th>
                     <th scope="col" class="color-text" mat-sort-header="saldo">SALDO</th>
                     <th scope="col" class="color-text" mat-sort-header="valor">VALOR</th>
                 </tr>
@@ -69,15 +72,16 @@
             <tbody>
                 <tr class="c-pointer"
                     *ngFor="let item of itens | paginate:{itemsPerPage:itensPagina,currentPage:pagina,id:'itensNaoRetornados'} let i index">
-                    <td class="text-success text-center"><i class="fas fa-check" *ngIf="item.programado"></i></td>
-                    <td (click)="iniciarProgramacao(item)">{{item.dataEntrada}}</td>
+                    <td class="text-success"><i class="fas fa-check" *ngIf="item.programado"></i></td>
+                    <td (click)="iniciarProgramacao(item)">{{item.dataEntrada | date : 'dd/MM/yyyy'}} {{item.hora}}</td>
                     <td class="nao-imprime" (click)="iniciarProgramacao(item)">{{item.nf}}</td>
-                    <td class="">{{item.cdEntrada}}</td>
+                    <td class="" (click)="iniciarProgramacao(item)">{{item.cdEntrada}}</td>
                     <td class="nao-imprime" (click)="iniciarProgramacao(item)">{{item.item}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeCliente}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeProduto}}</td>
+                    <td (click)="iniciarProgramacao(item)">{{processo1}}</td>
+                    <td (click)="iniciarProgramacao(item)">{{processo2}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.espessura}}</td>
-                    <td (click)="iniciarProgramacao(item)">{{item.nomeBeneficiamento}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.saldoRetorno | number}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.valorPrevisto | currency: 'BRL'}}</td>
                 </tr>
@@ -86,8 +90,7 @@
     </div>
     <div class="row mb-4">
         <div class="col-10 nao-imprime">
-            <pagination-controls id="itensNaoRetornados" (pageChange)="pagina =$event" nextLabel="" previousLabel=""
-                [maxSize]="10"></pagination-controls>
+            <pagination-controls id="itensNaoRetornados" (pageChange)="pagina =$event" nextLabel="" previousLabel="" [maxSize]="10"></pagination-controls>
         </div>
         <div class="col-2  p-1 text-center text-success c-pointer nao-imprime align-middle mb-5"
             (click)="gerarArquivo()">
@@ -102,34 +105,34 @@
         <table class="table table-sm col-12 table-striped table-hover " matSort (matSortChange)="sortFiltro($event)">
             <thead>
                 <tr>
-                        <th scope="col" class="color-text" mat-sort-header="programados">PG</th>
-                        <th scope="col" class="color-text" mat-sort-header="data">ENTRADA</th>
-                        <th scope="col" class="color-text nao-imprime" mat-sort-header="nf">NF</th>
-                        <th scope="col" class="color-text" mat-sort-header="entrada">CONTROLE</th>
-                        <th scope="col" class="color-text nao-imprime" mat-sort-header="item">ITEM</th>
-                        <th scope="col" class="color-text" mat-sort-header="cliente">CLIENTE</th>
-                        <th scope="col" class="color-text" mat-sort-header="produto">PRODUTO</th>
-                        <th scope="col" class="color-text" mat-sort-header="espessura">ESPESSURA</th>
-                        <th scope="col" class="color-text" mat-sort-header="beneficiamento">BENEFICIAMENTO</th>
-                        <th scope="col" class="color-text" mat-sort-header="saldo">SALDO</th>
-                        <th scope="col" class="color-text" mat-sort-header="valor">VALOR</th>
+                    <th scope="col" class="color-text" mat-sort-header="programados">PG</th>
+                    <th scope="col" class="color-text" mat-sort-header="data">ENTRADA</th>
+                    <th scope="col" class="color-text nao-imprime" mat-sort-header="nf">NF</th>
+                    <th scope="col" class="color-text" mat-sort-header="entrada">CONTROLE</th>
+                    <th scope="col" class="color-text nao-imprime" mat-sort-header="item">ITEM</th>
+                    <th scope="col" class="color-text" mat-sort-header="cliente">CLIENTE</th>
+                    <th scope="col" class="color-text" mat-sort-header="produto">PRODUTO</th>
+                    <th scope="col" class="color-text" mat-sort-header="beneficiamento">BENEFICIAMENTO</th>
+                    <th scope="col" class="color-text" mat-sort-header="espessura">ESPESSURA</th>
+                    <th scope="col" class="color-text" mat-sort-header="saldo">SALDO</th>
+                    <th scope="col" class="color-text" mat-sort-header="valor">VALOR</th>
                 </tr>
             </thead>
             <tbody>
                 <tr
                     *ngFor="let item of itensFiltro | paginate:{itemsPerPage:itensPaginaFiltro,currentPage:paginaFiltro,id:'itensNaoRetornadosFiltro'} let j index">
-                    <td>
+                    <td class="">
                         <input type="checkbox" [(ngModel)]="item.programacaoColetiva" *ngIf="!item.programado">
                         <i class="fas fa-check text-success" *ngIf="item.programado"></i>
                     </td>
-                    <td (click)="iniciarProgramacao(item)">{{item.dataEntrada}}</td>
+                    <td (click)="iniciarProgramacao(item)">{{item.dataEntrada | date : 'dd/MM/yyyy'}} {{item.hora}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nf}}</td>
                     <td class="" (click)="iniciarProgramacao(item)">{{item.cdEntrada}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.item}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeCliente}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeProduto}}</td>
-                    <td (click)="iniciarProgramacao(item)">{{item.espessura}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeBeneficiamento}}</td>
+                    <td (click)="iniciarProgramacao(item)">{{item.espessura}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.saldoRetorno |number}} </td>
                     <td (click)="iniciarProgramacao(item)">{{item.valorPrevisto | currency: 'BRL'}}</td>
                 </tr>
@@ -143,7 +146,7 @@
         </div>
         <div class="col-12 col-lg-3 text-end">
             <button class="btn btn-sm btn-success" (click)="selecionarTodas()">Selecionar todas</button>
-            <button class="btn btn-primary btn-sm ms-2" (click)="programarItensSelecionados()">Programar</button>
+            <button class="btn btn-primary btn-sm ms-2" (click)="consutarReponsavelProgramacao()">Programar</button>
         </div>
     </div>
 </div>

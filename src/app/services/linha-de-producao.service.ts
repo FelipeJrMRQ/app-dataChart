@@ -24,9 +24,14 @@ export class LinhaDeProducaoService {
     return this.http.get<LinhaDeProducao[]>(`${this.urlApi}`);
   }
 
+  public consultarPorStatus():Observable<LinhaDeProducao[]>{
+    return this.http.get<LinhaDeProducao[]>(`${this.urlApi}/status`);
+  }
+
   public excluir():Observable<any>{
     return this.http.delete(`${this.urlApi}`);
   }
 
+  
 
 }

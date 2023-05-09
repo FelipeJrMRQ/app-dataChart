@@ -17,8 +17,12 @@ export class Programacao{
     responsavel: string | undefined;
     prioridade: number | undefined;
     data: string | undefined;
+    dataInclusao: Date | undefined;
+    inicioProducao: Date | undefined;
+    fimProducao: Date | undefined;
     status: any | undefined;
     item: any;
     cdEntrada: any;
     valorPrevisto: any;
+    sequencia: number | undefined;
 }
