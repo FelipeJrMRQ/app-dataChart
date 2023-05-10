@@ -6,19 +6,25 @@ import { ItensProgramadosFormComponent } from './itens-programados-form/itens-pr
 import { MatDialogModule } from '@angular/material/dialog';
 import { DlgDetalheItemComponent } from './dlg-detalhe-item/dlg-detalhe-item.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DlgAlterarSetupComponent } from './dlg-alterar-setup/dlg-alterar-setup.component';
 
 
 @NgModule({
   declarations: [
     ItensProgramadosFormComponent,
-    DlgDetalheItemComponent
+    DlgDetalheItemComponent,
+    DlgAlterarSetupComponent
   ],
   imports: [
     CommonModule,
     ItensProgramadosRoutingModule,
     MatDialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatExpansionModule,
+    MatTooltipModule,
   ],
   exports: [
     ItensProgramadosFormComponent,

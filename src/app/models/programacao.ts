@@ -25,4 +25,5 @@ export class Programacao{
     cdEntrada: any;
     valorPrevisto: any;
     sequencia: number | undefined;
+    setup: number | undefined;
 }

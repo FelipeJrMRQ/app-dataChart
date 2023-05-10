@@ -12,6 +12,9 @@ import { ControleExibicaoService } from 'src/app/services/permissoes-componentes
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable'
 import { ItensLinha } from './itens-linha';
+import { DglConfirmacaoComponent } from 'src/app/shared/dialog/dgl-confirmacao/dgl-confirmacao.component';
+import { Setup } from './setup';
+import { DlgAlterarSetupComponent } from '../dlg-alterar-setup/dlg-alterar-setup.component';
 
 
 @Component({
@@ -42,6 +45,9 @@ export class ItensProgramadosFormComponent implements OnInit {
   turnoVisualizacao: any;
   itemSelecionadoVisualizacao: any;
   atualizarExibicao: boolean = false;
+  intervalo: any;
+  panelOpenState = false;
+  sequenciaSetup: Setup[] = [];
 
   constructor(
     private programacaoService: ProgramacaoService,
@@ -67,16 +73,27 @@ export class ItensProgramadosFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.consultarLinhasDeProducao();
-    //this.consultarTurnoDeTrabalho();
     this.consultarItensProgramadosAguardando();
     this.controleExibicaoService.registrarLog('ACESSOU A TELA ITENS PROGRAMADOS');
+  }
+
+  /**
+   * Método utilizado para conseguir atualizar todos usuários sobre
+   * alterações realizadas na programação.
+   * 
+   */
+  veriricarAtualizacoesPorIntervalo() {
+    clearInterval(this.intervalo);
+    this.intervalo = setInterval(() => {
+      this.atualizarExibicao = true;
+      this.consultarItensProgramadosAguardando();
+    }, 2000);
   }
 
   public visualizarDetalhesDoItem(item: Programacao) {
     let dialogo = this.dialog.open(DlgDetalheItemComponent, {
       data: item,
-      height:'97%'
+      maxHeight: '95%'
     });
 
     /**
@@ -87,17 +104,27 @@ export class ItensProgramadosFormComponent implements OnInit {
       next: (res) => {
         if (res.data) {
           this.atualizarExibicao = true;
-          this.consultarItensProgramadosAguardando();
+          this.alterarSequenciaDeExibicaoDosItensDoSetUp(item.setup);
         }
       }
-    })
+    });
+  }
+
+  private alterarSequenciaDeExibicaoDosItensDoSetUp(setup: any) {
+    let index = this.sequenciaSetup.findIndex(s => s.setup == setup);
+    this.programacaoService.consultarPorSetupData(setup, moment().format('yyyy-MM-DD')).subscribe({
+      next: (res) => {
+        this.sequenciaSetup[index].nomeBeneficiamento = res[0].nomeBeneficiamento;
+        this.sequenciaSetup[index].itensProgramados = res;
+      }
+    });
   }
 
   /**
    * Realiza uma consulta dos itens programados no banco de dados com status de Aguardando
    */
   public consultarItensProgramadosAguardando() {
-    this.programacaoService.consultarPorDataStatus(this.dataProgramacao).subscribe({
+    this.programacaoService.consultarPorDataStatus(this.dataProgramacao, 'AGUARDANDO').subscribe({
       next: (res) => {
         this.itensProgramados = res;
       },
@@ -105,6 +132,59 @@ export class ItensProgramadosFormComponent implements OnInit {
         this.colocarItensNaLista();
       }
     });
+  }
+
+  public alterarSetup(setupAltual: Setup) {
+    let dialogo = this.dialog.open(DlgAlterarSetupComponent, {
+
+    });
+
+    dialogo.afterClosed().subscribe(res=>{
+      this.verificaExistenciaDeSetupCadastrado(res.data, setupAltual);
+    });
+  }
+
+  private verificaExistenciaDeSetupCadastrado(setupFuturo: number, setupAtual: Setup){
+    let setupTemp: any = new Setup();
+     if(this.setupEstaCadastrado(setupFuturo)){
+      setupTemp = this.sequenciaSetup.find((s: Setup)=> s.setup == setupFuturo);
+      this.alterarSetupAtual(setupFuturo, setupAtual);
+      this.alterarSetupExistente(setupTemp, setupAtual.setup);
+     }else{
+      console.log('Não existe setup');
+     }
+  }
+
+  private alterarSetupAtual(setupFuturo: number, setupAtual: Setup){
+      setupAtual.itensProgramados.forEach(s=>{
+        s.setup = setupFuturo;
+        this.programacaoService.salvar(s).subscribe({
+          next:(res)=>{
+            console.log(res);
+          },
+          complete:()=>{
+            this.alterarSequenciaDeExibicaoDosItensDoSetUp(setupFuturo);
+          }
+        });
+      });
+  }
+
+  private alterarSetupExistente(setup: Setup, setupAtual: any){
+    setup.itensProgramados.forEach((i: Programacao)=>{
+      i.setup = setupAtual;
+       this.programacaoService.salvar(i).subscribe({
+        next:(res)=>{
+          console.log(res);
+        },
+        complete:()=>{
+          this.alterarSequenciaDeExibicaoDosItensDoSetUp(setupAtual);
+        } 
+       });
+    });
+  }
+
+  private setupEstaCadastrado(setupFuturo: number): boolean{
+    return this.sequenciaSetup.some(s=> s.setup == setupFuturo);
   }
 
   /**
@@ -179,7 +259,7 @@ export class ItensProgramadosFormComponent implements OnInit {
           this.atualizarExibicao = false;
           break;
         case 'TARDE':
-          itens= this.itensLinhaTurno2.filter(i => i.linhaDeProducao.id == this.itemSelecionadoVisualizacao.linhaDeProducao.id);
+          itens = this.itensLinhaTurno2.filter(i => i.linhaDeProducao.id == this.itemSelecionadoVisualizacao.linhaDeProducao.id);
           this.exibirItensProgramados(itens[0]);
           this.atualizarExibicao = false;
           break;
@@ -191,7 +271,7 @@ export class ItensProgramadosFormComponent implements OnInit {
         default:
           break;
       }
-     }
+    }
   }
 
   public consultarLinhasDeProducao() {
@@ -215,8 +295,20 @@ export class ItensProgramadosFormComponent implements OnInit {
   }
 
   public exibirItensProgramados(itens: ItensLinha) {
-    this.itemSelecionadoVisualizacao = itens;
-    this.itensLinhaVisualizacao = itens.itensProgramados;
+    this.sequenciaSetup = [];
+    itens.itensProgramados.forEach(item => {
+      if (!this.sequenciaSetup.find(s => s.setup == item.setup)) {
+        let st = new Setup();
+        st.nomeBeneficiamento  = item.nomeBeneficiamento;
+        st.setup = item.setup;
+        st.itensProgramados.push(item);
+        this.sequenciaSetup.push(st);
+      } else {
+        let index = this.sequenciaSetup.findIndex(s => s.setup == item.setup);
+        this.sequenciaSetup[index].itensProgramados.push(item);
+      }
+    });
+    this.totalTbQtde = 0;
     this.nomeLinhaVisualizacao = itens.linhaDeProducao.nome;
     switch (itens.turno.id) {
       case 1:
@@ -233,7 +325,7 @@ export class ItensProgramadosFormComponent implements OnInit {
     }
     itens.itensProgramados.forEach(e => {
       this.totalTbQtde += e.qtdeProgramada;
-    })
+    });
   }
 
   public visualizarDetalhes(item: Programacao) {
@@ -290,28 +382,36 @@ export class ItensProgramadosFormComponent implements OnInit {
     // this.docPdf.save("A");
   }
 
-
-  public iniciarProgramacao(item: Programacao){
+  public iniciarProgramacao(item: Programacao) {
     item.status = "INICIADO";
     item.inicioProducao = new Date();
+    // let dialogo= this.dialog.open(DglConfirmacaoComponent, {
+
+    // });
+
+    // dialogo.afterClosed().subscribe(res=>{
+    //   if(res.data){
+
+    //   }
+    // })
     this.programacaoService.salvar(item).subscribe({
-      next:(res)=>{
+      next: (res) => {
 
       },
-      complete:()=>{
+      complete: () => {
         this.atualizarVisualizacaoAposAlteracao();
       }
     })
   }
 
-  public finalizaProgramacao(item: Programacao){
+  public finalizaProgramacao(item: Programacao) {
     item.status = "FINALIZADO";
     item.fimProducao = new Date();
     this.programacaoService.salvar(item).subscribe({
-      next:(res)=>{
+      next: (res) => {
 
       },
-      complete:()=>{
+      complete: () => {
         this.atualizarVisualizacaoAposAlteracao();
       }
     })

@@ -54,8 +54,6 @@ export class DlgFatMensalProdutoComponent implements OnInit {
   }
 
 
-
-
   public iniciarNoTopo() {
     window.scrollTo(0, 0);
     this.consultaPrecoProduto();

@@ -52,6 +52,8 @@ export class ProgramacaoFormComponent implements OnInit {
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
   programarItens: boolean = false;
+  sequencia: any;
+  setup: any;
   private dataExport: ItensNaoRetornadosExport[];
   processo1: any;
   processo2: any;
@@ -156,6 +158,8 @@ export class ProgramacaoFormComponent implements OnInit {
     this.itensFiltro.forEach(item => {
       if (item.programacaoColetiva && !item.programado) {
         this.programacao = new Programacao();
+        this.programacao.setup = this.setup;
+        this.programacao.sequencia = this.sequencia;
         this.programacao.responsavel = this.usuario.nome?.toUpperCase();
         this.programacao.espessura = item.espessura;
         this.programacao.cdCliente = item.cdCliente;
