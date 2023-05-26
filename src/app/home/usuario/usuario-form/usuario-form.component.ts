@@ -93,7 +93,7 @@ export class UsuarioFormComponent implements OnInit {
     this.controleExibicaoService.registrarLog('CADASTROU TELAS PARA USUÁRIO');
   }
 
-  exibirIconeDeRemocao(componente: ComponenteTela) {
+  public exibirIconeDeRemocao(componente: ComponenteTela) {
     let i = this.elementRef.nativeElement.querySelector(`#icone_${componente.id}`);
     this.renderer.removeClass(i, 'fa-check');
     this.renderer.removeClass(i, 'text-success');
@@ -101,14 +101,13 @@ export class UsuarioFormComponent implements OnInit {
     this.renderer.addClass(i, 'text-danger');
   }
 
-  exibirIconeVinculo(componente: ComponenteTela) {
+  public exibirIconeVinculo(componente: ComponenteTela) {
     let i = this.elementRef.nativeElement.querySelector(`#icone_${componente.id}`);
     this.renderer.addClass(i, 'fa-check');
     this.renderer.addClass(i, 'text-success');
     this.renderer.removeClass(i, 'fa-trash-alt');
     this.renderer.removeClass(i, 'text-danger');
   }
-
 
   public removerTela(tela: TelaUsuario) {
     this.telaUsuarioService.excluirTela(tela).subscribe({
@@ -122,7 +121,7 @@ export class UsuarioFormComponent implements OnInit {
       complete: () => {
         this.consultarTelasUsuario(this.usuario);
       }
-    })
+    });
   }
 
   public selecionarTodas(event: any, tela: TelaSistema) {
@@ -188,15 +187,24 @@ export class UsuarioFormComponent implements OnInit {
     }
   }
 
-  consultarTelasDoSistema() {
+  public consultarTelasDoSistema() {
     this.telaService.consultarTelas().subscribe({
       next: (res) => {
         this.telasDoSistema = res;
+      },
+      complete:()=>{
+        this.verificaTelasQueOUsuarioPossui();
       }
     });
   }
 
-  selecionarComponentes(event: any, componente: ComponenteTela) {
+  public verificaTelasQueOUsuarioPossui(){
+    this.telasDoSistema.forEach(t=>{
+      
+    });
+  }
+
+  public selecionarComponentes(event: any, componente: ComponenteTela) {
     if (event.target.checked === true && componente.nome == event.target.defaultValue) {
       if (this.componentesSelecionados.length != 0) {
         if (this.novoComponente(componente)) {
@@ -252,11 +260,7 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   private novoComponente(componente: ComponenteTela) {
-    let verificador = true;
-    if (this.componentesSelecionados.find(c => c.id == componente.id)) {
-      verificador = false;
-    }
-    return verificador;
+    return this.componentesSelecionados.some(c => c.id == componente.id);
   }
 
   private novaTela(nomeTela: any): boolean {

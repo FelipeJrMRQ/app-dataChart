@@ -3,7 +3,7 @@
 </header>
 <section>
     <div class="row">
-        
+
         <div class="col-12 col-lg-6">
             <div class="mb-2">
                 <a [href]="urlImagem" target="_blank">
@@ -25,26 +25,34 @@
         <div class="col-12 col-lg-6">
             <form>
                 <label for="" class="form-label">Data</label>
-                <input type="date" class="form-control" name="dataProgramacao" [(ngModel)]="data.data" [value]="data.data">
+                <input type="date" class="form-control" name="dataProgramacao" [(ngModel)]="data.data"
+                    [value]="data.data">
 
                 <label for="" class="form-label mt-2">Quantidade programada</label>
-                <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="data.qtdeProgramada" [value]="data.qtdeProgramada">
-                
+                <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="data.qtdeProgramada"
+                    [value]="data.qtdeProgramada">
+
                 <label for="" class="form-label mt-2">Linha</label>
-                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao">
+                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao" (change)="verificaAlteracaoLinhaTurnoPrioridade()">
                     <option selected [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
                 </select>
 
                 <label for="" class="form-label mt-2">Turno</label>
-                <select class="form-select" name="turn" [(ngModel)]="idTurno">
+                <select class="form-select" name="turn" [(ngModel)]="idTurno" (change)="verificaAlteracaoLinhaTurnoPrioridade()">
                     <option selected [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
                 </select>
 
-                <label for="" class="form-label mt-2">Sequência</label>
-                <input type="number" class="form-control" name="sequencia" [(ngModel)]="data.sequencia">
+
+                <div *ngIf="exibirSequencia">
+                    <label for="" class="form-label mt-2">Sequência</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" name="sequencia" [(ngModel)]="sequencia">
+                        <button class="btn btn-primary" (click)="alterarSequencia()">Alterar</button>
+                    </div>
+                </div>
 
                 <label for="" class="form-label mt-2">Prioridade</label>
-                <select class="form-select" name="prioridade" [(ngModel)]="prioridade">
+                <select class="form-select" name="prioridade" [(ngModel)]="prioridade" (click)="verificaAlteracaoLinhaTurnoPrioridade()">
                     <option value="3">BAIXA</option>
                     <option selected value="2">NORMAL</option>
                     <option value="1">ALTA</option>
@@ -52,14 +60,16 @@
                 </select>
 
                 <label for="" class="mt-2 form-label">Observação</label>
-                <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao" [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
-               
+                <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao"
+                    [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
+
                 <div class="row">
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-4" *ngIf="!exibirSequencia">
                         <button class="btn btn-primary mt-2 form-control" (click)="alterarProgramacao()">Alterar</button>
                     </div>
                     <div class="col-12 col-lg-4" *ngIf="data.status =='AGUARDANDO'">
-                        <button class="btn btn-warning mt-2 form-control" (click)="excluirProgramacao(data.id)">Excluir</button>
+                        <button class="btn btn-warning mt-2 form-control"
+                            (click)="excluirProgramacao(data.id)">Excluir</button>
                     </div>
                     <div class="col-12 col-lg-4">
                         <button class="btn btn-danger mt-2 form-control" (click)="fecharDialogo(false)">Fechar</button>

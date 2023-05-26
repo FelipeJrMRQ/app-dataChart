@@ -26,4 +26,5 @@ export class ItemNaoRetornado{
     dataProgramacao: string | undefined;
     programado: boolean | undefined;
     programacaoColetiva: boolean | undefined;
+    setup: any;
 }

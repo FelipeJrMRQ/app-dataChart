@@ -179,20 +179,21 @@
                 <label for="" class="bold ms-2">{{nomeLinhaVisualizacao}} - {{turnoVisualizacao}}</label>
             </div>
         </div>
-        
 
         <mat-accordion >
-            <mat-expansion-panel *ngFor="let st of sequenciaSetup">
+            <mat-expansion-panel *ngFor="let st of sequenciaSetup" [expanded]="step == st.nomeBeneficiamento" (opened)="setStep(st.nomeBeneficiamento)" hideToggle>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        <label for="" class="bold">SETUP {{st.setup}} - {{st.nomeBeneficiamento}}</label>
+                        <label for="" class="bold me-2" *ngIf="st.sequenciaSetup != 0">{{st.sequenciaSetup }} -</label>
+                        <label for="" class="bold" *ngIf="st.setup == 0"> SETUP MISTO</label>
+                        <label for="" class="bold" *ngIf="st.setup != 0">{{st.nomeBeneficiamento}}</label>
                     </mat-panel-title>
                     <!-- <mat-panel-description>
                         <label for="">Teste</label>
                     </mat-panel-description> -->
                 </mat-expansion-panel-header>
                 <div class="table mt-1 mb-5">
-                    <table class="table table-striped table-sm font-11">
+                    <table class="table table-striped table-sm font-11 table-hover">
                         <thead>
                             <tr>
                                 <th>SEQ.</th>
@@ -211,7 +212,7 @@
                         <tbody>
                             <tr *ngFor="let produto of st.itensProgramados">
                                 <td class="c-pointer" (click)="visualizarDetalhesDoItem(produto)">{{produto.sequencia}}</td>
-                                <td class="text-center">
+                                <td class="text-center" (click)="visualizarDetalhesDoItem(produto)">
                                     <i class="fas fa-exclamation-circle text-danger" *ngIf="produto.prioridade == 0"></i>
                                     <i class="fas fa-exclamation text-primary" *ngIf="produto.prioridade == 1"></i>
                                 </td>
@@ -225,7 +226,7 @@
                                 <td class="c-pointer" (click)="visualizarDetalhesDoItem(produto)">{{produto.status}}</td>
                                 <td class="text-center "> 
                                     <a class="text-danger c-pointer" *ngIf="produto.status == 'AGUARDANDO'" (click)="iniciarProgramacao(produto)"><i class="fas fa-stop"></i></a>
-                                    <a class="text-success c-pointer" *ngIf="produto.status == 'INICIADO'" (click)="finalizaProgramacao(produto)"><i class="fas fa-play"></i></a>
+                                    <a class="text-success c-pointer" *ngIf="produto.status == 'PRODUZINDO'" (click)="finalizaProgramacao(produto)"><i class="fas fa-play"></i></a>
                                     <i class="fas fa-check-double text-success" *ngIf="produto.status == 'FINALIZADO'"></i>
                                 </td>
                             </tr>
@@ -245,10 +246,10 @@
                         </tfoot>
                     </table>
                     <div class="text-end">
-                        <button class="btn btn-primary btn-sm" (click)="alterarSetup(st)">Alterar setup</button>
+                        <button class="btn btn-primary btn-sm" (click)="alterarSetup(st)">Alterar sequência</button>
+                        <button class="btn btn-sm btn-danger ms-2" (click)="excluirSetup(st.itensProgramados)">Excluir setup</button>
                     </div>
                 </div>
-
             </mat-expansion-panel>
         </mat-accordion>
        

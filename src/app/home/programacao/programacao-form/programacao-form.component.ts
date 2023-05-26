@@ -20,6 +20,9 @@ import { Programacao } from 'src/app/models/programacao';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ItensNaoRetornadosExport } from 'src/app/models/exports/itens-nao-retornados';
+import { forkJoin } from 'rxjs';
+import { SequenciaSetup } from './sequencia-setup';
+import { DlgConfirmaSetupMistoComponent } from '../dlg-confirma-setup-misto/dlg-confirma-setup-misto.component';
 
 @Component({
   selector: 'app-progamacao-form',
@@ -41,22 +44,26 @@ export class ProgramacaoFormComponent implements OnInit {
   paginaFiltro = 1;
   itensPaginaFiltro = 30;
   listaProgramacao: any = [];
-  data: any;
+  dataProgramacao: any;
   imagem: any;
   idLinha: any = 1;
   idTurno: any = 1;
   linhas: LinhaDeProducao[];
   turnos: Turno[];
   turno: Turno;
-  usuario: Usuario;
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
   programarItens: boolean = false;
-  sequencia: any;
-  setup: any;
+  sequencia: any = 1;
+  sequenciaSetup: any = 999;
+  setups: SequenciaSetup[] = [];
+  setupMisto: any = false;
   private dataExport: ItensNaoRetornadosExport[];
   processo1: any;
   processo2: any;
+  cdBeneficiamento: number | undefined;
+  btnSetup: any = 'Habilitar';
+  setupClass: any = 'col-lg-4';
 
   constructor(
     private itemNaoRetornadoService: ItemNaoRetornadoService,
@@ -74,7 +81,6 @@ export class ProgramacaoFormComponent implements OnInit {
     this.listaProgramacao = [];
     this.linhas = [];
     this.turnos = [];
-    this.usuario = new Usuario();
     this.turno = new Turno();
     this.itensProgramados = [];
     this.programacao = new Programacao();
@@ -82,7 +88,7 @@ export class ProgramacaoFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.data = moment().format("yyyy-MM-DD");
+    this.dataProgramacao = moment().format("yyyy-MM-DD");
     this.consultarItensNaoRetornados();
     this.consultarLinhasDeProducao();
     this.consultarTurnoDeTrabalho();
@@ -93,7 +99,27 @@ export class ProgramacaoFormComponent implements OnInit {
     this.controleExibicaoService.registrarLog('ACESSOU A TELA DE PROGRAMAÇÃO');
   }
 
-  consultaProgramacaoPorData() {
+  public habilitarSetupMisto() {
+    //Desabilita o setup misto
+    if (this.setupMisto) {
+      this.setupMisto = false;
+      this.btnSetup = 'Habilitar';
+      this.setupClass = 'col-lg-4';
+    } else {
+      //Habilita o setup misto
+      this.controleExibicaoService.registrarLog('HABILITOU SETUP MISTO');
+      let dialogo = this.dialog.open(DlgConfirmaSetupMistoComponent, {});
+      dialogo.afterClosed().subscribe(res => {
+        if (res.data) {
+          this.setupMisto = true;
+          this.setupClass = 'col-lg-2'
+          this.btnSetup = 'Desabilitar';
+        }
+      });
+    }
+  }
+
+  public consultaProgramacaoPorData() {
     this.programacaoService.consultarPorData(moment().format('yyyy-MM-DD')).subscribe({
       next: (res) => {
         this.itensProgramados = res;
@@ -101,8 +127,8 @@ export class ProgramacaoFormComponent implements OnInit {
       error: (e) => {
         console.log(e);
       },
-      complete:()=>{
-        this.marcarItemProgramados();
+      complete: () => {
+        this.marcarItensProgramados();
       }
     });
   }
@@ -111,26 +137,34 @@ export class ProgramacaoFormComponent implements OnInit {
     this.itemNaoRetornadoService.consultarItensNaoRetornados().subscribe({
       next: (res) => {
         this.itens = res;
-        let nfTemp: any;
-        res.forEach((e) => {
-          nfTemp = e.nf?.replace('  000', '-');
-          this.processo1 = e.nomeBeneficiamento?.split('+')[0];
-          if(e.nomeBeneficiamento?.split('+')[1] != undefined){
-            this.processo2 = e.nomeBeneficiamento.split('+')[1]?.replace('PINTURA', '');
-          }
-          e.nf = (nfTemp);
-        });
       },
       error: (e) => {
         console.log(e);
       },
       complete: () => {
-       this.consultaProgramacaoPorData();
+        this.alterarExibicaoNfe();
+        this.consultaProgramacaoPorData();
       }
     });
   }
 
-  public marcarItemProgramados() {
+  private alterarExibicaoNfe(){
+    let nfTemp: any;
+    this.itens.forEach((e) => {
+      nfTemp = e.nf?.replace('  000', '-');
+      e.nf = (nfTemp);
+      this.separarNomeProcesso(e.nomeBeneficiamento!);
+    });
+  }
+
+  private separarNomeProcesso(nomeBeneficiamento: string){
+    this.processo1 = nomeBeneficiamento?.split('+')[0];
+    if (nomeBeneficiamento?.split('+')[1] != undefined) {
+      this.processo2 = nomeBeneficiamento.split('+')[1]?.replace('PINTURA', '');
+    }
+  }
+
+  public marcarItensProgramados() {
     this.itens.forEach(item => {
       this.itensProgramados.forEach(res => {
         if (res.cdEntrada == item.cdEntrada && item.item == res.item) {
@@ -143,53 +177,55 @@ export class ProgramacaoFormComponent implements OnInit {
     this.filtrar();
   }
 
-  public consutarReponsavelProgramacao(){
-       this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')).subscribe({
-      next:(res)=>{
-        this.usuario = res[0];
-      },
-      complete:()=>{
-        this.programarItensSelecionados();
-      }
-    });
-  }
-
-  private programarItensSelecionados() {
+  public programarItensSelecionados() {
+    this.sequencia = 0;
     this.itensFiltro.forEach(item => {
       if (item.programacaoColetiva && !item.programado) {
-        this.programacao = new Programacao();
-        this.programacao.setup = this.setup;
-        this.programacao.sequencia = this.sequencia;
-        this.programacao.responsavel = this.usuario.nome?.toUpperCase();
-        this.programacao.espessura = item.espessura;
-        this.programacao.cdCliente = item.cdCliente;
-        this.programacao.nomeCliente = item.nomeCliente;
-        this.programacao.cdProduto = item.cdProduto;
-        this.programacao.cdEntrada = item.cdEntrada;
-        this.programacao.item = item.item;
-        this.programacao.nomeProduto = item.nomeProduto;
-        this.programacao.cdBeneficiamento = item.cdBeneficiamento;
-        this.programacao.nomeBeneficiamento = item.nomeBeneficiamento;
-        this.programacao.status = "AGUARDANDO";
-        this.programacao.linhaDeProducao.id = this.idLinha;
-        this.programacao.turno.id = this.idTurno;
-        this.programacao.qtdeProgramada = item.saldoRetorno;
-        this.programacao.data = moment(this.data).format('yyyy-MM-DD');
-        this.programacao.prioridade = 2;
-        this.programacao.valorPrevisto = item.valorPrevisto;
-        this.programacaoService.salvar(this.programacao).subscribe({
+        forkJoin({
+          s0: this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')),
+          s1: this.programacaoService.consultaSequenciaSetup(moment(this.dataProgramacao).format('yyyy-MM-DD'), item.cdBeneficiamento, this.idLinha, this.idTurno),
+        }).subscribe({
           next: (res) => {
-            this.controleExibicaoService.registrarLog(`COLOCOU NA PROGRAMAÇÃO O ITEM: [${item.cdProduto} - ${item.nomeProduto}]`);
+            this.sequenciaSetup = res.s1? res.s1.sequenciaSetup! : 0;
+            let programacao = new Programacao();
+            programacao.sequencia = 0;
+            programacao.sequenciaSetup = this.sequenciaSetup;
+            programacao.setup = (this.setupMisto ? 0: item.cdBeneficiamento); 
+            programacao.responsavel = res.s0[0].nome;
+            programacao.espessura = item.espessura;
+            programacao.cdCliente = item.cdCliente;
+            programacao.nomeCliente = item.nomeCliente;
+            programacao.cdProduto = item.cdProduto;
+            programacao.cdEntrada = item.cdEntrada;
+            programacao.item = item.item;
+            programacao.nomeProduto = item.nomeProduto;
+            programacao.cdBeneficiamento = item.cdBeneficiamento;
+            programacao.nomeBeneficiamento = item.nomeBeneficiamento;
+            programacao.status = "AGUARDANDO";
+            programacao.linhaDeProducao.id = this.idLinha;
+            programacao.turno.id = this.idTurno;
+            programacao.qtdeProgramada = item.saldoRetorno;
+            programacao.data = moment(this.dataProgramacao).format('yyyy-MM-DD');
+            programacao.prioridade = 2;
+            programacao.valorPrevisto = item.valorPrevisto;
+            this.programacaoService.salvar(programacao).subscribe({
+              next: (res) => {
+                this.controleExibicaoService.registrarLog(`COLOCOU NA PROGRAMAÇÃO O ITEM: [${programacao.cdProduto} - ${programacao.nomeProduto}]`);
+              },
+              error: (e) => {
+                this.openSnackBar("Falha ao programar item!", this.snackBarErro);
+                return;
+              },
+            });
           },
-          error: (e) => {
-            this.openSnackBar("Falha ao programar item!", this.snackBarErro);
-          }
         });
       }
     });
     this.consultarItensNaoRetornados();
     this.openSnackBar("Itens programados com sucesso!", this.snackBarSucesso);
+  }
 
+  public atribuirSequeciamentoParaSetups(item: any){
   }
 
   public selecionarTodas() {
@@ -202,14 +238,13 @@ export class ProgramacaoFormComponent implements OnInit {
     });
   }
 
-
   public gerarArquivo() {
-    this.itens.forEach(item=>{
+    this.itens.forEach(item => {
       let i = new ItensNaoRetornadosExport();
       let processos: any = [];
       processos = item.nomeBeneficiamento?.split('+');
       console.log(processos[1]);
-      i.ENTRADA = `${moment(item.dataEntrada).format('DD/MM/yyyy').toString()} ${item.hora}` ;
+      i.ENTRADA = `${moment(item.dataEntrada).format('DD/MM/yyyy').toString()} ${item.hora}`;
       i.NF = item.nf;
       i.CONTROLE = item.cdEntrada;
       i.ITEM = item.item;
@@ -217,7 +252,7 @@ export class ProgramacaoFormComponent implements OnInit {
       i.CLIENTE = item.nomeCliente;
       i.PRODUTO = item.nomeProduto;
       i.PROCESSO1 = processos[0];
-      if(processos.length >= 1){
+      if (processos.length >= 1) {
         i.PROCESSO2 = processos[1];
         i.PROCESSO2 = i.PROCESSO2?.replace('PINTURA ', '')
       }
@@ -256,7 +291,6 @@ export class ProgramacaoFormComponent implements OnInit {
     this.nomeProduto = '';
     this.nomeCliente = '';
     this.nomeBeneficiamento = '';
-    this.itensFiltro = [];
   }
 
   public filtrar() {
@@ -268,6 +302,7 @@ export class ProgramacaoFormComponent implements OnInit {
       if (this.nomeCliente != '') {
         if (e.nomeCliente?.includes(this.nomeCliente.toUpperCase())) {
           this.itensFiltro.push(e);
+          return
         }
       } else if (this.nomeProduto != '') {
         if (e.nomeProduto?.includes(this.nomeProduto.toUpperCase())) {
@@ -277,20 +312,23 @@ export class ProgramacaoFormComponent implements OnInit {
         if (e.nomeBeneficiamento?.includes(this.nomeBeneficiamento.toUpperCase())) {
           this.itensFiltro.push(e);
         }
-      }
-      else {
-        this.itensFiltro = [];
-        this.itens;
+      } else if (this.cdBeneficiamento != undefined) {
+        if (e.cdBeneficiamento == this.cdBeneficiamento) {
+          this.itensFiltro.push(e);
+        }
+      } else {
+        this.itensFiltro = []
       }
     });
-    
+
   }
 
   public iniciarProgramacao(item: ItemNaoRetornado) {
     item.qtdeProgramada = item.saldoRetorno;
     item.linhaDeProducao = this.idLinha;
     item.turno = this.idTurno;
-    item.dataProgramacao = this.data;
+    item.dataProgramacao = this.dataProgramacao;
+    item.setup = item.cdBeneficiamento;
 
     let dlg = this.dialog.open(DlgProgramacaoComponent, {
       data: item,
@@ -305,14 +343,6 @@ export class ProgramacaoFormComponent implements OnInit {
       }
     });
   }
-
-  // public adicionarProgramacao(nome: any) {
-  //   if (nome) {
-  //     this.listaProgramacao.push(nome);
-  //   }
-  //   return this.listaProgramacao;
-  // }
-
 
   public sort(sort: Sort) {
     const data = this.itens.slice();
@@ -404,14 +434,14 @@ export class ProgramacaoFormComponent implements OnInit {
     });
     dlg.afterClosed().subscribe(res => {
       this.consultarTurnoDeTrabalho();
-    })
+    });
   }
 
-  drop(event: CdkDragDrop<any>) {
+  public drop(event: CdkDragDrop<any>) {
     moveItemInArray(this.listaProgramacao, event.previousIndex, event.currentIndex);
   }
 
-  openSnackBar(mensagem: string, tipo: string) {
+  public openSnackBar(mensagem: string, tipo: string) {
     this.snackBar.open(mensagem, "X", {
       duration: 6000,
       panelClass: [tipo],

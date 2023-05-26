@@ -125,9 +125,7 @@ export class TblEntradasDiariaComponent implements OnInit, OnDestroy {
 
   public calcularTotalEntradaDia() {
     this.valorTotalEntradas = 0;
-    this.listaEntradas.forEach((e) => {
-      this.valorTotalEntradas += e.valor;
-    });
+    this.valorTotalEntradas = this.listaEntradas.reduce((valorTotalEntradas, b)=> valorTotalEntradas+b.valor, 0); 
   }
 
   public gerarArquivoExportacao() {

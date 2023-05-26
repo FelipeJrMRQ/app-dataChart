@@ -8,24 +8,23 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class DglConfirmacaoComponent implements OnInit {
 
+  mensagem: any = '';
+
   constructor(
-    //@Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialogRef<DglConfirmacaoComponent>,
   ) { }
 
   ngOnInit(): void {
+    this.mensagem = this.data.mensagem;
   }
 
-  public iniciarProgramacao(){
-    this.dialog.close(
-      {data: true}
-    )
+  public sim(){
+    this.dialog.close({data: true});
   }
 
-  public fechar(){
-    this.dialog.close({
-      data: false
-    })
+  public nao(){
+    this.dialog.close({data: false});
   }
 
 }

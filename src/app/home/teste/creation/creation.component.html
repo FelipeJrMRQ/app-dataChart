@@ -1,26 +1,16 @@
 <header class="bold card-label d-flex between align-middle">
-    <label class="color-text">HISTÓRICO DE ATIVIDES DO USUÁRIO</label>
+    <label class="color-text">PÁGINA DE TESTE DE DESENVOLVIMENTO</label>
 </header>
 
 <section class="mt-3">
-    <label for="" class="bold">SEGUNDA-FERIA - 10/02/2023</label>
-    <ul>
-        <li>10:09:01 - USUARIO ANTENTICADO</li>
-        <li>10:09:02 - ACESSOU DASHBOARD SINTETICO</li>
-        <li>10:10:31 - ACESSOU DASHBOARD ANALITICO</li>
-        <li>10:10:31 - ACESSOU A TELA DETALHES POR BENEFICIAMENTO EM FATURAMENTO DIARIO</li>
-    </ul>
-    <label for="" class="bold">TERÇA-FERIA - 10/02/2023</label>
-    <ul>
-        <li>10:09:01 - USUARIO ANTENTICADO</li>
-        <li>10:09:02 - ACESSOU DASHBOARD SINTETICO</li>
-        <li>10:10:31 - ACESSOU DASHBOARD ANALITICO</li>
-    </ul>
-    <label for="" class="bold">QUARTA-FERIA - 10/02/2023</label>
-    <ul>
-        <li>10:09:01 - USUARIO ANTENTICADO</li>
-        <li>10:09:02 - ACESSOU DASHBOARD SINTETICO</li>
-        <li>10:10:31 - ACESSOU DASHBOARD ANALITICO</li>
-    </ul>
+
+    <div class="row ms-5" *ngFor="let item of testes" >
+        <div class="col-6" (click)="abrirDialogo(item)">
+            <div class="bloco"  draggable="true">
+                <label for="">S{{item.sequencia}} -</label>
+                <label for="">{{item.nome}}</label>
+            </div>
+        </div>
+    </div>
 
 </section>

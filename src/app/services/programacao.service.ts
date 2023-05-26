@@ -24,6 +24,14 @@ export class ProgramacaoService {
     return this.http.get<Programacao[]>(`${this.urlApi}/${idLinha}/${idTurno}/${data}/${status}`);
   }
 
+  public consultaUltimoNumeroSequencia(data: string, setup: any, idLinha: any, idTurno: any):Observable<Programacao>{
+    return this.http.get<Programacao>(`${this.urlApi}/sequencia/${data}/${setup}/${idLinha}/${idTurno}`)
+  }
+
+  public consultaSequenciaSetup(data: string, setup: any, idLinha: any, idTurno: any):Observable<Programacao>{
+    return this.http.get<Programacao>(`${this.urlApi}/sequencia-setup/${data}/${setup}/${idLinha}/${idTurno}`)
+  }
+
   public consultarPorDataStatus(data: String, status: string): Observable<Programacao[]> {
     return this.http.get<Programacao[]>(`${this.urlApi}/${data}/${status}`);
   }

@@ -26,4 +26,5 @@ export class Programacao{
     valorPrevisto: any;
     sequencia: number | undefined;
     setup: number | undefined;
+    sequenciaSetup: number | undefined;
 }

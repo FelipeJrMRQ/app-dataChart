@@ -1,8 +1,7 @@
 <div class="row mb-2 nao-imprime">
     <div class="col-12 col-lg-4">
         <label for="" class="form-label">Cliente</label>
-        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeCliente"
-            (focus)="limpar()">
+        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeCliente">
     </div>
     <div class="col-12 col-lg-4">
         <label for="" class="form-label">Produto</label>
@@ -10,23 +9,27 @@
             (focus)="limpar()">
     </div>
     <div class="col-12 col-lg-4">
-        <label for="" class="form-label">Beneficiamento</label>
-        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeBeneficiamento"
-            (focus)="limpar()">
+        <div class="row">
+            <div class="col-3">
+                <label for="" class="form-label">Código</label>
+                <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="cdBeneficiamento">
+            </div>
+            <div class="col-9">
+                <label for="" class="form-label">Beneficiamento</label>
+                <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeBeneficiamento"
+                    (focus)="limpar()">
+            </div>
+        </div>
     </div>
 </div>
 <div class="row mb-4">
-    <div class="col-12 col-lg-1">
-        <label for="" class="form-label">Setup</label>
-        <input type="number" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="setup">
-    </div>
-    <div class="col-12 col-lg-1">
-        <label for="" class="form-label">Sequência</label>
-        <input type="number" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="sequencia">
-    </div>
-    <div class="col-12 col-lg-2">
+    <div class="col-12" [ngClass]="setupClass">
         <label for="" class="form-label">Data</label>
-        <input type="date" class="form-control upper-case" [(ngModel)]="data">
+        <input type="date" class="form-control upper-case" [(ngModel)]="dataProgramacao">
+    </div>
+    <div class="col-12 col-lg-2" *ngIf="setupMisto">
+        <label for="" class="form-label">Setup Misto</label>
+        <input class="form-control upper-case" placeholder="HABILITADO" disabled="true">
     </div>
     <div class="col-12 col-lg-4">
         <label for="" class="form-label">Turno</label>
@@ -39,7 +42,7 @@
             </button>
         </div>
     </div>
-    <div class="col-12 col-lg-4">
+    <div class="col-12 col-lg-3">
         <label for="" class="form-label">Linha</label>
         <div class="input-group">
             <select class="form-select" name="turn" [(ngModel)]="idLinha">
@@ -49,6 +52,10 @@
                 <i class="fas fa-plus"></i>
             </button>
         </div>
+    </div>
+    <div class="col-12 col-lg-1">
+        <label for="" class="form-label">Setup Misto</label>
+        <button class="form-control btn btn-primary" tabindex="-1" (click)="habilitarSetupMisto()">{{btnSetup}}</button>
     </div>
 </div>
 
@@ -72,8 +79,7 @@
                     <th scope="col" class="color-text nao-imprime" mat-sort-header="item">ITEM</th>
                     <th scope="col" class="color-text" mat-sort-header="cliente">CLIENTE</th>
                     <th scope="col" class="color-text" mat-sort-header="produto">PRODUTO</th>
-                    <th scope="col" class="color-text" mat-sort-header="beneficiamento">PROCESSO 1</th>
-                    <th scope="col" class="color-text" mat-sort-header="beneficiamento2">PROCESSO 2</th>
+                    <th scope="col" class="color-text" mat-sort-header="beneficiamento">PROCESSO</th>
                     <th scope="col" class="color-text" mat-sort-header="espessura">ESPESSURA</th>
                     <th scope="col" class="color-text" mat-sort-header="saldo">SALDO</th>
                     <th scope="col" class="color-text" mat-sort-header="valor">VALOR</th>
@@ -89,8 +95,7 @@
                     <td class="nao-imprime" (click)="iniciarProgramacao(item)">{{item.item}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeCliente}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeProduto}}</td>
-                    <td (click)="iniciarProgramacao(item)">{{processo1}}</td>
-                    <td (click)="iniciarProgramacao(item)">{{processo2}}</td>
+                    <td (click)="iniciarProgramacao(item)"> {{item.cdBeneficiamento}} - {{item.nomeBeneficiamento}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.espessura}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.saldoRetorno | number}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.valorPrevisto | currency: 'BRL'}}</td>
@@ -100,7 +105,8 @@
     </div>
     <div class="row mb-4">
         <div class="col-10 nao-imprime">
-            <pagination-controls id="itensNaoRetornados" (pageChange)="pagina =$event" nextLabel="" previousLabel="" [maxSize]="10"></pagination-controls>
+            <pagination-controls id="itensNaoRetornados" (pageChange)="pagina =$event" nextLabel="" previousLabel=""
+                [maxSize]="10"></pagination-controls>
         </div>
         <div class="col-2  p-1 text-center text-success c-pointer nao-imprime align-middle mb-5"
             (click)="gerarArquivo()">
@@ -112,7 +118,7 @@
 
 <div class="row" *ngIf="itensFiltro.length > 0">
     <div class="table font-11">
-        <table class="table table-sm col-12 table-striped table-hover " matSort (matSortChange)="sortFiltro($event)">
+        <table class="table table-sm col-12 table-striped table-hover" matSort (matSortChange)="sortFiltro($event)">
             <thead>
                 <tr>
                     <th scope="col" class="color-text" mat-sort-header="programados">PG</th>
@@ -141,7 +147,7 @@
                     <td (click)="iniciarProgramacao(item)">{{item.item}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeCliente}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.nomeProduto}}</td>
-                    <td (click)="iniciarProgramacao(item)">{{item.nomeBeneficiamento}}</td>
+                    <td (click)="iniciarProgramacao(item)">{{item.cdBeneficiamento}} - {{item.nomeBeneficiamento}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.espessura}}</td>
                     <td (click)="iniciarProgramacao(item)">{{item.saldoRetorno |number}} </td>
                     <td (click)="iniciarProgramacao(item)">{{item.valorPrevisto | currency: 'BRL'}}</td>
@@ -156,7 +162,7 @@
         </div>
         <div class="col-12 col-lg-3 text-end">
             <button class="btn btn-sm btn-success" (click)="selecionarTodas()">Selecionar todas</button>
-            <button class="btn btn-primary btn-sm ms-2" (click)="consutarReponsavelProgramacao()">Programar</button>
+            <button class="btn btn-primary btn-sm ms-2" (click)="programarItensSelecionados()">Programar</button>
         </div>
     </div>
 </div>

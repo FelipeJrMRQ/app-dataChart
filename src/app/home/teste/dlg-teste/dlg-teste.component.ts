@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment.prod';
 
 @Component({
@@ -10,11 +10,13 @@ import { environment } from 'src/environments/environment.prod';
 export class DlgTesteComponent implements OnInit {
 
   version:any;
+  sequencia: any;
 
   
 
   constructor(
-    private dialogRef:MatDialog
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef:MatDialogRef<DlgTesteComponent>
   ) {
     this.version = environment.versaoApp;
    }
@@ -25,6 +27,8 @@ export class DlgTesteComponent implements OnInit {
 
 
   fechar():void{
-    this.dialogRef.closeAll();
+    this.dialogRef.close({
+        data: {'sequencia': this.sequencia, 'item': this.data}
+    });
   }
 }

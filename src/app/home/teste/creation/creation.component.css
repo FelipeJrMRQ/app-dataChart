@@ -1,78 +1,9 @@
-.card-label {
-    border: 1px solid rgb(173, 173, 173);
-    margin: 0.5em 0em 0.5em 0em;
-    padding: 10px;
-    text-align: center;
-    font-size: 15px;
-    border-radius: 0.2em;
-    box-shadow: 2px 2px 3px;
-    /* border-left: 5px solid rgba(221, 146, 76, 0.767); */
-    border-left: 5px solid   rgb(2, 78, 218);
-}
-
-.cartao {
-    border: 1px solid rgb(173, 173, 173);
-    border-radius: 7px;
-    min-width: 350px;
-    max-width: 400px;
-    box-shadow: 2px 2px 3px;
-}
-
-.header-cartao {
-    background-color: rgb(2, 78, 218);
-    border-radius: 7px 7px 0 0;
-    padding: 7px;
-}
-
-.bold {
-    font-weight: bold;
-}
-
-.c-1 {
+.bloco{
+    width: 60px;
+    height: 60px;
+    background-color: gray;
     display: flex;
     justify-content: center;
-    height: 125px;
-    overflow: hidden;
+    align-items: center;
+    margin: 5px 0px;
 }
-
-.cht-1 {
-    height: 250px;
-    width: 250px;
-    border-top: 30px solid rgb(199, 199, 199);
-    border-left: 30px solid rgb(199, 199, 199);
-    border-bottom: 30px solid rgb(0, 128, 0);
-    border-right: 30px solid rgb(0, 128, 0);
-    border-radius: 50%;
-    border-style: double;
-    transition: 5s;
-    rotate: 45deg;
-}
-
-.cht-vl {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    margin-top: 95px;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.font-12{
-    font-size: 12px;
-}
-
-
-.arrow {
-    animation: upDown 1s infinite alternate;
-}
-
-@keyframes upDown {
-    0% {
-        transform: translateY(-25%);
-    }
-
-    100% {
-        transform: translateY(25%);
-    }
-}
-

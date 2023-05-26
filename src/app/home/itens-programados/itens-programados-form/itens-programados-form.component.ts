@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { LinhaDeProducao } from 'src/app/models/linha-de-producao';
@@ -15,6 +15,9 @@ import { ItensLinha } from './itens-linha';
 import { DglConfirmacaoComponent } from 'src/app/shared/dialog/dgl-confirmacao/dgl-confirmacao.component';
 import { Setup } from './setup';
 import { DlgAlterarSetupComponent } from '../dlg-alterar-setup/dlg-alterar-setup.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ManipuladorArrayService } from 'src/app/utils/manipulador-array.service';
+import { DlgExclusaoComponent } from 'src/app/shared/dialog/dlg-exclusao/dlg-exclusao.component';
 
 
 @Component({
@@ -22,7 +25,7 @@ import { DlgAlterarSetupComponent } from '../dlg-alterar-setup/dlg-alterar-setup
   templateUrl: './itens-programados-form.component.html',
   styleUrls: ['./itens-programados-form.component.css']
 })
-export class ItensProgramadosFormComponent implements OnInit {
+export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
 
   itensLinha: ItensLinha[];
   itensLinhaTurno1: ItensLinha[];
@@ -40,14 +43,17 @@ export class ItensProgramadosFormComponent implements OnInit {
   itensIniciados: Programacao[];
   docPdf: jsPDF;
   dataProgramacao: string = moment().format("yyyy-MM-DD");
-  itensLinhaVisualizacao: Programacao[];
+  itensLinhaVisualizacao: ItensLinha;
   nomeLinhaVisualizacao: any;
   turnoVisualizacao: any;
-  itemSelecionadoVisualizacao: any;
-  atualizarExibicao: boolean = false;
+  linhaSelecionadaVisualizacao: any;
+  atualizarExibica: boolean = false;
   intervalo: any;
   panelOpenState = false;
   sequenciaSetup: Setup[] = [];
+  snackBarErro = 'my-snack-bar-erro';
+  snackBarSucesso = 'my-snack-bar-sucesso';
+  step: any;
 
   constructor(
     private programacaoService: ProgramacaoService,
@@ -55,6 +61,8 @@ export class ItensProgramadosFormComponent implements OnInit {
     private linhaService: LinhaDeProducaoService,
     private turnoService: TurnoService,
     private controleExibicaoService: ControleExibicaoService,
+    private snackBar: MatSnackBar,
+    private arrayService: ManipuladorArrayService
   ) {
     this.itensProgramados = [];
     this.itensIniciados = [];
@@ -64,7 +72,7 @@ export class ItensProgramadosFormComponent implements OnInit {
     this.itensLinhaTurno3 = [];
     this.linhas = [];
     this.turnos = [];
-    this.itensLinhaVisualizacao = [];
+    this.itensLinhaVisualizacao = new ItensLinha();
     this.docPdf = new jsPDF(
       {
         orientation: "landscape",
@@ -77,23 +85,28 @@ export class ItensProgramadosFormComponent implements OnInit {
     this.controleExibicaoService.registrarLog('ACESSOU A TELA ITENS PROGRAMADOS');
   }
 
+  ngOnDestroy(): void {
+    clearInterval(this.intervalo);
+  }
+
   /**
    * Método utilizado para conseguir atualizar todos usuários sobre
    * alterações realizadas na programação.
    * 
    */
-  veriricarAtualizacoesPorIntervalo() {
+  public veriricarAtualizacoesPorIntervalo() {
     clearInterval(this.intervalo);
     this.intervalo = setInterval(() => {
-      this.atualizarExibicao = true;
       this.consultarItensProgramadosAguardando();
-    }, 2000);
+    }, 5000);
   }
 
   public visualizarDetalhesDoItem(item: Programacao) {
     let dialogo = this.dialog.open(DlgDetalheItemComponent, {
       data: item,
-      maxHeight: '95%'
+      height: '95%',
+      maxHeight: '95%',
+      disableClose: true,
     });
 
     /**
@@ -102,21 +115,160 @@ export class ItensProgramadosFormComponent implements OnInit {
      */
     dialogo.afterClosed().subscribe({
       next: (res) => {
-        if (res.data) {
-          this.atualizarExibicao = true;
-          this.alterarSequenciaDeExibicaoDosItensDoSetUp(item.setup);
+        switch (res.data.retorno) {
+          case 'alterar_sequencia':
+            this.alterarSequenciaDeExibicaoDosItensDoSetUp(res.data.item, res.data.nova_sequencia);
+            break;
+          case 'alterar_linha_turno':
+            this.alterarLinhaOuTurno(res);
+            break;
+          case 'alterar_prioridade':
+            this.alterarPrioridade(res.data.item);
+            break;
+          default:
+            break;
         }
       }
     });
   }
 
-  private alterarSequenciaDeExibicaoDosItensDoSetUp(setup: any) {
-    let index = this.sequenciaSetup.findIndex(s => s.setup == setup);
-    this.programacaoService.consultarPorSetupData(setup, moment().format('yyyy-MM-DD')).subscribe({
+  public alterarPrioridade(item: Programacao) {
+    this.programacaoService.salvar(item).subscribe({
       next: (res) => {
-        this.sequenciaSetup[index].nomeBeneficiamento = res[0].nomeBeneficiamento;
-        this.sequenciaSetup[index].itensProgramados = res;
       }
+    });
+  }
+
+  public alterarLinhaOuTurno(dados: any) {
+    this.programacaoService.consultaUltimoNumeroSequencia(
+      moment(this.dataProgramacao).format('yyyy-MM-DD'),
+      dados.data.item.cdBeneficiamento,
+      dados.data.linhaDeProducao,
+      dados.data.turno
+    ).subscribe({
+      next: (res) => {
+        if (res == null) {
+          this.cadastrarNovoSetup(dados);
+        } else {
+          this.atribuirSequenciaAoSetupExistente(res, dados);
+        }
+      }
+      , complete: () => {
+        this.limpar();
+        setTimeout(() => {
+          this.consultarItensProgramadosAguardando();
+        }, 100);
+      }
+    });
+  }
+
+  public cadastrarNovoSetup(dados: any) {
+    dados.data.item.sequencia = 0;
+    dados.data.item.sequenciaSetup = 0;
+    dados.data.item.turno.id = dados.data.turno;
+    dados.data.item.linhaDeProducao.id = dados.data.linhaDeProducao;
+    this.programacaoService.salvar(dados.data.item).subscribe({
+      next: (res) => {},
+      error: (e) => {console.log(e);}
+    });
+  }
+
+  public atribuirSequenciaAoSetupExistente(resultado: any, dados: any) {
+    dados.data.item.sequencia = 0;
+    dados.data.item.setup = resultado.setup;
+    dados.data.item.turno.id = dados.data.turno;
+    dados.data.item.linhaDeProducao.id = dados.data.linhaDeProducao;
+    this.programacaoService.salvar(dados.data.item).subscribe({
+      next: (res) => {},
+      error: (e) => {console.log(e);}
+    });
+  }
+
+  private alterarSequenciaDeExibicaoDosItensDoSetUp(item: Programacao, novaSequencia: any) {
+    let setupIndex = this.sequenciaSetup.findIndex(s => s.setup == item.setup);
+    let itens = this.sequenciaSetup[setupIndex].itensProgramados;
+
+    // Localiza o indece de destino do array
+    let destino = itens.findIndex(t => t.sequencia == novaSequencia);
+    let origem = itens.findIndex(t => t.sequencia == item.sequencia);
+
+    if (destino == -1) {
+      this.openSnackBar("Sequência não permitida!", this.snackBarErro);
+      return;
+    }
+
+    itens = this.arrayService.alterarPosicaoDoElementoNoArray(origem, destino, itens);
+
+    let sequencia = 0;
+
+    itens.forEach(i => {
+      i.sequencia = ++sequencia;
+      this.programacaoService.salvar(i).subscribe({
+      });
+    });
+    this.openSnackBar('Sequencia alterada com sucesso!', this.snackBarSucesso);
+
+  }
+
+  public alterarSetup(setupAltual: Setup) {
+    let dialogo = this.dialog.open(DlgAlterarSetupComponent, { disableClose: true,});
+    dialogo.afterClosed().subscribe(res => {
+      if (res) {
+        this.alterarSequenciaDoSetUp(res.data, setupAltual);
+      }
+    });
+  }
+
+  /**
+   * Realiza a troca de ordem do setup de acordo com sequência escolhida pelo usuário
+   * para isso é necessário saber qual a sequencia escolhida pelo usuário e em qual
+   * o setup que será modificado
+   * 
+   * @param sequenciaEscolhida 
+   * @param setupAltual 
+   */
+  private alterarSequenciaDoSetUp(sequenciaEscolhida: any, setupAltual: Setup) {
+    let origem = this.sequenciaSetup.findIndex(s => s.setup == setupAltual.setup);
+    let destino = this.sequenciaSetup.findIndex(s => s.sequenciaSetup == sequenciaEscolhida);
+    //Verifica de há um destino existente para troca de posição
+    if (destino = -1) {
+      this.criarSequenciaInicialParaSetup();
+      destino = this.sequenciaSetup.findIndex(s => s.sequenciaSetup == sequenciaEscolhida);
+    }
+    this.sequenciaSetup = this.arrayService.alterarPosicaoDoElementoNoArray(origem, destino, this.sequenciaSetup);
+    let sequecia = 0;
+    this.sequenciaSetup.forEach(s => {
+      s.sequenciaSetup = ++sequecia;
+      this.salvarNovoSetup(s.itensProgramados, s.sequenciaSetup);
+    });
+  }
+
+  /**
+   * Quando o setup for criado com o padrão do sistema será necessario criar
+   * uma sequência inicial para este setup antes de alteralo se isto no não feito
+   * será imposível encontrar o posição de destino e o sequenciamento apresentará
+   * comportamento estranho
+   *   
+   */
+  private criarSequenciaInicialParaSetup() {
+    let sequencia = 0;
+    this.sequenciaSetup.forEach(s => {
+      s.sequenciaSetup = ++sequencia;
+      this.salvarNovoSetup(s.itensProgramados, s.sequenciaSetup);
+    });
+  }
+
+  public salvarNovoSetup(itensProgramados: Programacao[], sequenciaSetup: any) {
+    itensProgramados.forEach(item => {
+      item.sequenciaSetup = sequenciaSetup;
+      this.programacaoService.salvar(item).subscribe({
+        next: (res) => {
+
+        },
+        complete: () => {
+          this.consultarItensProgramadosAguardando();
+        }
+      })
     });
   }
 
@@ -132,59 +284,6 @@ export class ItensProgramadosFormComponent implements OnInit {
         this.colocarItensNaLista();
       }
     });
-  }
-
-  public alterarSetup(setupAltual: Setup) {
-    let dialogo = this.dialog.open(DlgAlterarSetupComponent, {
-
-    });
-
-    dialogo.afterClosed().subscribe(res=>{
-      this.verificaExistenciaDeSetupCadastrado(res.data, setupAltual);
-    });
-  }
-
-  private verificaExistenciaDeSetupCadastrado(setupFuturo: number, setupAtual: Setup){
-    let setupTemp: any = new Setup();
-     if(this.setupEstaCadastrado(setupFuturo)){
-      setupTemp = this.sequenciaSetup.find((s: Setup)=> s.setup == setupFuturo);
-      this.alterarSetupAtual(setupFuturo, setupAtual);
-      this.alterarSetupExistente(setupTemp, setupAtual.setup);
-     }else{
-      console.log('Não existe setup');
-     }
-  }
-
-  private alterarSetupAtual(setupFuturo: number, setupAtual: Setup){
-      setupAtual.itensProgramados.forEach(s=>{
-        s.setup = setupFuturo;
-        this.programacaoService.salvar(s).subscribe({
-          next:(res)=>{
-            console.log(res);
-          },
-          complete:()=>{
-            this.alterarSequenciaDeExibicaoDosItensDoSetUp(setupFuturo);
-          }
-        });
-      });
-  }
-
-  private alterarSetupExistente(setup: Setup, setupAtual: any){
-    setup.itensProgramados.forEach((i: Programacao)=>{
-      i.setup = setupAtual;
-       this.programacaoService.salvar(i).subscribe({
-        next:(res)=>{
-          console.log(res);
-        },
-        complete:()=>{
-          this.alterarSequenciaDeExibicaoDosItensDoSetUp(setupAtual);
-        } 
-       });
-    });
-  }
-
-  private setupEstaCadastrado(setupFuturo: number): boolean{
-    return this.sequenciaSetup.some(s=> s.setup == setupFuturo);
   }
 
   /**
@@ -249,58 +348,25 @@ export class ItensProgramadosFormComponent implements OnInit {
     this.atualizarVisualizacaoAposAlteracao();
   }
 
-  public atualizarVisualizacaoAposAlteracao() {
-    if (this.atualizarExibicao) {
-      let itens: any;
-      switch (this.itemSelecionadoVisualizacao.turno.nome) {
-        case 'MANHÃ':
-          itens = this.itensLinhaTurno1.filter(i => i.linhaDeProducao.id == this.itemSelecionadoVisualizacao.linhaDeProducao.id);
-          this.exibirItensProgramados(itens[0]);
-          this.atualizarExibicao = false;
-          break;
-        case 'TARDE':
-          itens = this.itensLinhaTurno2.filter(i => i.linhaDeProducao.id == this.itemSelecionadoVisualizacao.linhaDeProducao.id);
-          this.exibirItensProgramados(itens[0]);
-          this.atualizarExibicao = false;
-          break;
-        case 'NOITE':
-          itens = this.itensLinhaTurno3.filter(i => i.linhaDeProducao.id == this.itemSelecionadoVisualizacao.linhaDeProducao.id);
-          this.exibirItensProgramados(itens[0]);
-          this.atualizarExibicao = false;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  public consultarLinhasDeProducao() {
-    this.linhaService.consultar().subscribe({
-      next: (res) => {
-        this.linhas = res;
-      }, error: (e) => {
-        console.log(e);
-      }
-    });
-  }
-
-  public consultarTurnoDeTrabalho() {
-    this.turnoService.consultar().subscribe({
-      next: (res) => {
-        this.turnos = res;
-      }, error: (e) => {
-        console.log(e);
-      }
-    });
+  /**
+   * Matem a aba do painel expansível aberta de acordo com o setup selecionado 
+   * 
+   * @param nomeSetup
+   */
+  public setStep(nomeSetup: any) {
+    this.veriricarAtualizacoesPorIntervalo();
+    this.step = nomeSetup;
   }
 
   public exibirItensProgramados(itens: ItensLinha) {
+    this.linhaSelecionadaVisualizacao = itens;
     this.sequenciaSetup = [];
     itens.itensProgramados.forEach(item => {
       if (!this.sequenciaSetup.find(s => s.setup == item.setup)) {
         let st = new Setup();
-        st.nomeBeneficiamento  = item.nomeBeneficiamento;
+        st.nomeBeneficiamento = item.nomeBeneficiamento;
         st.setup = item.setup;
+        st.sequenciaSetup = item.sequenciaSetup;
         st.itensProgramados.push(item);
         this.sequenciaSetup.push(st);
       } else {
@@ -325,6 +391,51 @@ export class ItensProgramadosFormComponent implements OnInit {
     }
     itens.itensProgramados.forEach(e => {
       this.totalTbQtde += e.qtdeProgramada;
+    });
+  }
+
+  public atualizarVisualizacaoAposAlteracao() {
+    if (this.linhaSelecionadaVisualizacao) {
+      let itens: any;
+      switch (this.linhaSelecionadaVisualizacao.turno.nome) {
+        case 'MANHÃ':
+          itens = this.itensLinhaTurno1.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
+          this.exibirItensProgramados(itens[0]);
+          //this.atualizarExibicao = false;
+          break;
+        case 'TARDE':
+          itens = this.itensLinhaTurno2.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
+          this.exibirItensProgramados(itens[0]);
+          //this.atualizarExibicao = false;
+          break;
+        case 'NOITE':
+          itens = this.itensLinhaTurno3.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
+          this.exibirItensProgramados(itens[0]);
+          //this.atualizarExibicao = false;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  public consultarLinhasDeProducao() {
+    this.linhaService.consultar().subscribe({
+      next: (res) => {
+        this.linhas = res;
+      }, error: (e) => {
+        console.log(e);
+      }
+    });
+  }
+
+  public consultarTurnoDeTrabalho() {
+    this.turnoService.consultar().subscribe({
+      next: (res) => {
+        this.turnos = res;
+      }, error: (e) => {
+        console.log(e);
+      }
     });
   }
 
@@ -383,37 +494,82 @@ export class ItensProgramadosFormComponent implements OnInit {
   }
 
   public iniciarProgramacao(item: Programacao) {
-    item.status = "INICIADO";
-    item.inicioProducao = new Date();
-    // let dialogo= this.dialog.open(DglConfirmacaoComponent, {
-
-    // });
-
-    // dialogo.afterClosed().subscribe(res=>{
-    //   if(res.data){
-
-    //   }
-    // })
-    this.programacaoService.salvar(item).subscribe({
-      next: (res) => {
-
-      },
-      complete: () => {
-        this.atualizarVisualizacaoAposAlteracao();
+    let dialogo = this.dialog.open(DglConfirmacaoComponent, { data: { mensagem: 'DESEJA INICIAR A PRODUÇÃO DESTE ITEM?' } });
+    dialogo.afterClosed().subscribe(res => {
+      if (res.data) {
+        item.status = "PRODUZINDO";
+        item.inicioProducao = new Date();
+        this.programacaoService.salvar(item).subscribe({
+          next: (res) => { },
+          complete: () => {
+            this.atualizarVisualizacaoAposAlteracao();
+          }
+        })
       }
-    })
+    });
   }
 
   public finalizaProgramacao(item: Programacao) {
-    item.status = "FINALIZADO";
-    item.fimProducao = new Date();
-    this.programacaoService.salvar(item).subscribe({
-      next: (res) => {
-
-      },
-      complete: () => {
-        this.atualizarVisualizacaoAposAlteracao();
+    let dialogo = this.dialog.open(DglConfirmacaoComponent, { data: { mensagem: 'DESEJA FINALIZAR A PRODUÇÃO DESTE ITEM?' } });
+    dialogo.afterClosed().subscribe(res => {
+      if (res.data) {
+        item.status = "FINALIZADO";
+        item.inicioProducao = new Date();
+        this.programacaoService.salvar(item).subscribe({
+          next: (res) => { },
+          complete: () => {
+            this.atualizarVisualizacaoAposAlteracao();
+          }
+        })
       }
-    })
+    });
+  }
+
+  public excluirSetup(itens: Programacao[]) {
+    let dialogo = this.dialog.open(DlgExclusaoComponent, { disableClose: true,});
+    dialogo.afterClosed().subscribe({
+      next: (res) => {
+        if (itens.some(i => i.status != 'AGUARDANDO')) {
+          this.openSnackBar('Impossível excluir a programação com itens em produção!', this.snackBarErro);
+          return;
+        }
+        if (res.data) {
+          itens.forEach(i => {
+            this.programacaoService.excluirProgramacao(i.id!).subscribe({
+              next: (res) => {
+                console.log();
+              },
+              complete: () => {
+                this.limpar();
+                this.consultarItensProgramadosAguardando();
+                this.openSnackBar('Setup excluido com sucesso!', this.snackBarSucesso)
+              }
+            });
+          });
+        }
+      }
+    });
+  }
+
+  openSnackBar(mensagem: string, tipo: string) {
+    this.snackBar.open(mensagem, "X", {
+      duration: 6000,
+      panelClass: [tipo],
+      horizontalPosition: "right",
+      verticalPosition: "top",
+    });
+  }
+
+  limpar() {
+    this.itensProgramados = [];
+    this.itensIniciados = [];
+    this.itensLinha = [];
+    this.itensLinhaTurno1 = [];
+    this.itensLinhaTurno2 = [];
+    this.itensLinhaTurno3 = [];
+    this.linhas = [];
+    this.turnos = [];
+    this.itensLinhaVisualizacao = new ItensLinha();
+    this.sequenciaSetup = [];
   }
 }

@@ -14,6 +14,7 @@ import { DlgCadTurnoComponent } from '../dlg-cad-turno/dlg-cad-turno.component';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dlg-programacao',
@@ -54,12 +55,12 @@ export class DlgProgramacaoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.programacao.sequencia = 999;
     this.programacao.prioridade = 2;
     this.idTurno = this.data.turno;
     this.idLinhaDeProducao = this.data.linhaDeProducao;
     this.qtdeProgramada = this.data.qtdeProgramada;
     this.programacao.data = moment(this.data.dataProgramacao).format('yyyy-MM-DD');
+    this.programacao.setup = this.data.setup;
     this.alterarValorPrevisto(this.data);
     this.consultarImagem();
     this.consultarLinhasDeProducao();
@@ -72,46 +73,46 @@ export class DlgProgramacaoComponent implements OnInit {
     });
   }
 
+
   public salvarProgramacao(){
-     this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')).subscribe({
-      next:(res)=>{
-        if(this.qtdeProgramada > this.data.saldoRetorno){
-          this.openSnackBar(`A quantidade não pode ser maior que o saldo que é de ${this.data.saldoRetorno}`, this.snackBarErro);
-          return;
-        }
-        if(this.qtdeProgramada <= 0){
-          this.openSnackBar(`A quantidade não pode ser menor ou igual a zero!`, this.snackBarErro);
-          return;
-        }
-        this.programacao.dataInclusao = new Date();
-        this.programacao.responsavel = res[0].nome.toUpperCase();
-        this.programacao.espessura = this.data.espessura;
-        this.programacao.cdCliente = this.data.cdCliente;
-        this.programacao.nomeCliente = this.data.nomeCliente;
-        this.programacao.cdProduto = this.data.cdProduto;
-        this.programacao.nomeProduto = this.data.nomeProduto;
-        this.programacao.cdEntrada = this.data.cdEntrada;
-        this.programacao.item = this.data.item;
-        this.programacao.cdBeneficiamento = this.data.cdBeneficiamento;
-        this.programacao.nomeBeneficiamento = this.data.nomeBeneficiamento;
-        this.programacao.status = "AGUARDANDO";
-        this.programacao.turno.id = this.idTurno;
-        this.programacao.linhaDeProducao.id = this.idLinhaDeProducao;
-        this.programacao.data = moment(this.data).format('yyyy-MM-DD');
-        this.programacao.qtdeProgramada = this.qtdeProgramada;
-        this.programacaoService.salvar(this.programacao).subscribe({
-            next:(res)=>{
-              this.controleExibicaoService.registrarLog(`COLOCOU NA PROGRAMAÇÃO O ITEM: [${this.data.cdProduto} - ${this.data.nomeProduto}]`);
-              this.openSnackBar("Item programado com sucesso!", this.snackBarSucesso);
-              this.fechar(true);
-            },
-            error:(e)=>{
-              this.openSnackBar("Falha ao programar item!", this.snackBarErro);
-              this.fechar(false);
-            }
-        });
-      }
-     })
+    forkJoin({
+      s1: this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')),
+    }).subscribe(({s1})=>{
+      this.programacao.sequenciaSetup = 999;
+      this.programacao.sequencia = 999;
+      this.programacao.setup = this.data.cdBeneficiamento;
+      this.programacao.dataInclusao = new Date();
+      this.programacao.responsavel = s1[0].nome.toUpperCase();
+      this.programacao.espessura = this.data.espessura;
+      this.programacao.cdCliente = this.data.cdCliente;
+      this.programacao.nomeCliente = this.data.nomeCliente;
+      this.programacao.cdProduto = this.data.cdProduto;
+      this.programacao.nomeProduto = this.data.nomeProduto;
+      this.programacao.cdEntrada = this.data.cdEntrada;
+      this.programacao.item = this.data.item;
+      this.programacao.cdBeneficiamento = this.data.cdBeneficiamento;
+      this.programacao.nomeBeneficiamento = this.data.nomeBeneficiamento;
+      this.programacao.status = "AGUARDANDO";
+      this.programacao.turno.id = this.idTurno;
+      this.programacao.linhaDeProducao.id = this.idLinhaDeProducao;
+      this.programacao.data = moment(this.data).format('yyyy-MM-DD');
+      this.programacao.qtdeProgramada = this.qtdeProgramada;
+  
+      this.programacaoService.salvar(this.programacao).subscribe({
+          next:(res)=>{
+            this.controleExibicaoService.registrarLog(`COLOCOU NA PROGRAMAÇÃO O ITEM: [${this.data.cdProduto} - ${this.data.nomeProduto}]`);
+            this.openSnackBar("Item programado com sucesso!", this.snackBarSucesso);
+            this.fechar(true);
+          },
+          error:(e)=>{
+            this.openSnackBar("Falha ao programar item!", this.snackBarErro);
+            this.fechar(false);
+          }
+      });
+    });
+   
+       
+
   }
 
   public alterarValorPrevisto(item: any){

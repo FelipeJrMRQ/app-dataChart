@@ -8,8 +8,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class DlgAlterarSetupComponent implements OnInit {
 
-  setup: number | undefined;
-
+  sequeciaSetup: number  = 1;
   constructor(
     private dialogRef: MatDialogRef<DlgAlterarSetupComponent>
   ) { }
@@ -20,7 +19,7 @@ export class DlgAlterarSetupComponent implements OnInit {
 
   public alterarSetup(){
     this.dialogRef.close({
-      data: this.setup
+      data: this.sequeciaSetup
     })
   }
 
