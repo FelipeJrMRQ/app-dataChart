@@ -148,7 +148,7 @@ export class ProgramacaoFormComponent implements OnInit {
     });
   }
 
-  private alterarExibicaoNfe(){
+  private alterarExibicaoNfe() {
     let nfTemp: any;
     this.itens.forEach((e) => {
       nfTemp = e.nf?.replace('  000', '-');
@@ -157,7 +157,7 @@ export class ProgramacaoFormComponent implements OnInit {
     });
   }
 
-  private separarNomeProcesso(nomeBeneficiamento: string){
+  private separarNomeProcesso(nomeBeneficiamento: string) {
     this.processo1 = nomeBeneficiamento?.split('+')[0];
     if (nomeBeneficiamento?.split('+')[1] != undefined) {
       this.processo2 = nomeBeneficiamento.split('+')[1]?.replace('PINTURA', '');
@@ -186,11 +186,11 @@ export class ProgramacaoFormComponent implements OnInit {
           s1: this.programacaoService.consultaSequenciaSetup(moment(this.dataProgramacao).format('yyyy-MM-DD'), item.cdBeneficiamento, this.idLinha, this.idTurno),
         }).subscribe({
           next: (res) => {
-            this.sequenciaSetup = res.s1? res.s1.sequenciaSetup! : 0;
+            this.sequenciaSetup = res.s1 ? res.s1.sequenciaSetup! : 0;
             let programacao = new Programacao();
             programacao.sequencia = 0;
             programacao.sequenciaSetup = this.sequenciaSetup;
-            programacao.setup = (this.setupMisto ? 0: item.cdBeneficiamento); 
+            programacao.setup = (this.setupMisto ? 0 : item.cdBeneficiamento);
             programacao.responsavel = res.s0[0].nome;
             programacao.espessura = item.espessura;
             programacao.cdCliente = item.cdCliente;
@@ -225,7 +225,7 @@ export class ProgramacaoFormComponent implements OnInit {
     this.openSnackBar("Itens programados com sucesso!", this.snackBarSucesso);
   }
 
-  public atribuirSequeciamentoParaSetups(item: any){
+  public atribuirSequeciamentoParaSetups(item: any) {
   }
 
   public selecionarTodas() {
@@ -328,7 +328,9 @@ export class ProgramacaoFormComponent implements OnInit {
     item.linhaDeProducao = this.idLinha;
     item.turno = this.idTurno;
     item.dataProgramacao = this.dataProgramacao;
-    item.setup = item.cdBeneficiamento;
+    console.log(this.setupMisto);
+    item.setup = (this.setupMisto ? 0 : item.cdBeneficiamento);
+    console.log(item.setup);
 
     let dlg = this.dialog.open(DlgProgramacaoComponent, {
       data: item,

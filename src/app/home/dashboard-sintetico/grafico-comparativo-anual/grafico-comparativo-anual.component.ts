@@ -108,7 +108,7 @@ export class GraficoComparativoAnualComponent implements OnInit {
     }
   }
 
-
+  delayed : any;
   public gerarGraficoFaturamentoMensal() {
     this.elementChart = document.getElementById('myChartBarComp');
     this.chartBarComparativo = new Chart(this.elementChart, {
@@ -132,6 +132,16 @@ export class GraficoComparativoAnualComponent implements OnInit {
       options: {
         animation: {
           duration: 3500,
+          onComplete:()=>{
+            this.delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !this.delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
         },
         scales: {
           y: {

@@ -124,6 +124,7 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
     }
   }
 
+  delayed: any;
   public gerarGraficoFaturamentoDia() {
     this.elementChart = document.getElementById('myChartBarDia');
     this.chartBarDay = new Chart(this.elementChart, {
@@ -145,7 +146,17 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
       },
       options: {
         animation: {
-          duration: 3500
+          duration: 3500,
+          onComplete:()=>{
+            this.delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !this.delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
         },
         scales: {
           y: {

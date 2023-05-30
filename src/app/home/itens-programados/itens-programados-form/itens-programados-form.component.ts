@@ -95,10 +95,11 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
    * 
    */
   public veriricarAtualizacoesPorIntervalo() {
+    console.log('3020')
     clearInterval(this.intervalo);
     this.intervalo = setInterval(() => {
       this.consultarItensProgramadosAguardando();
-    }, 5000);
+    }, 20000);
   }
 
   public visualizarDetalhesDoItem(item: Programacao) {
@@ -212,9 +213,15 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
 
   public alterarSetup(setupAltual: Setup) {
     let dialogo = this.dialog.open(DlgAlterarSetupComponent, { disableClose: true,});
-    dialogo.afterClosed().subscribe(res => {
-      if (res) {
-        this.alterarSequenciaDoSetUp(res.data, setupAltual);
+    dialogo.afterClosed().subscribe({
+      next:(res)=>{
+        if (res) {
+          clearInterval(this.intervalo);
+          this.alterarSequenciaDoSetUp(res.data, setupAltual);
+        }
+      },
+      complete:()=>{
+        this.veriricarAtualizacoesPorIntervalo();
       }
     });
   }
@@ -262,14 +269,10 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     itensProgramados.forEach(item => {
       item.sequenciaSetup = sequenciaSetup;
       this.programacaoService.salvar(item).subscribe({
-        next: (res) => {
-
-        },
-        complete: () => {
-          this.consultarItensProgramadosAguardando();
-        }
-      })
+        next: (res) => {},
+      });
     });
+    this.consultarItensProgramadosAguardando();
   }
 
   /**
@@ -354,7 +357,6 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
    * @param nomeSetup
    */
   public setStep(nomeSetup: any) {
-    this.veriricarAtualizacoesPorIntervalo();
     this.step = nomeSetup;
   }
 

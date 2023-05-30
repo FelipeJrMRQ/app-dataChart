@@ -73,8 +73,7 @@
                             </div>
                         </header>
                         <mat-accordion>
-                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
-                                *ngFor="let tela of telasDoSistema">
+                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let tela of telasDoSistema" (click)="marcarItensDoUsuario(tela.nome)">
                                 <mat-expansion-panel-header>
                                     <mat-panel-title>
                                         <label for="" class="bold">{{tela.nome}}</label>
@@ -114,8 +113,7 @@
             </section>
 
             <div>
-                <button class="btn btn-primary mt-2 mb-2" (click)="cadastrarUsuario()"
-                    *ngIf="!modoDeEdicao">Convidar</button>
+                <button class="btn btn-primary mt-2 mb-2" (click)="cadastrarUsuario()" *ngIf="!modoDeEdicao">Convidar</button>
                 <button class="btn btn-primary mt-2 mb-2" (click)="alterarUsuario()"
                     *ngIf="modoDeEdicao">Alterar</button>
                 <button class="btn btn-danger ms-2" (click)="limparDados()">Limpar</button>

@@ -78,9 +78,10 @@ export class DlgProgramacaoComponent implements OnInit {
     forkJoin({
       s1: this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')),
     }).subscribe(({s1})=>{
-      this.programacao.sequenciaSetup = 999;
-      this.programacao.sequencia = 999;
-      this.programacao.setup = this.data.cdBeneficiamento;
+      console.log(this.data.setup);
+      this.programacao.sequenciaSetup = 0;
+      this.programacao.sequencia = 0;
+      this.programacao.setup = this.data.setup;
       this.programacao.dataInclusao = new Date();
       this.programacao.responsavel = s1[0].nome.toUpperCase();
       this.programacao.espessura = this.data.espessura;

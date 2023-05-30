@@ -89,7 +89,7 @@
         <img class="bg-perfil" src="assets/asset-cover.jpg">
         <div class="picture" data-bs-toggle="tooltip" data-bs-placement="left" title="Alterar imagem">
             <label for="img-input">
-                <img class="img-perfil c-pointer" [src]="urlFoto">
+                <img class="img-perfil c-pointer" accept="image"  [src]="urlFoto">
             </label>
             <input type="file" id="img-input" (change)="alterarImagemPerfil($event)">
         </div>

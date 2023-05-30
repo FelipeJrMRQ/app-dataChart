@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ComponenteTela } from 'src/app/models/tela/componente-tela';
 import { TelaSistema } from 'src/app/models/tela/tela-sistema';
@@ -9,6 +10,7 @@ import { ControleExibicaoService } from 'src/app/services/permissoes-componentes
 import { TelaSistemaService } from 'src/app/services/telas/tela-sistema.service';
 import { TelaUsuarioService } from 'src/app/services/telas/tela-usuario.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { DlgLoadingComponent } from 'src/app/shared/dialog/dlg-loading/dlg-loading.component';
 
 @Component({
   selector: 'app-usuario-form',
@@ -49,6 +51,7 @@ export class UsuarioFormComponent implements OnInit {
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private controleExibicaoService: ControleExibicaoService,
+    private dialog: MatDialog
   ) {
     this.usuario = new Usuario();
     this.telaUsuario = new TelaUsuario();
@@ -59,6 +62,7 @@ export class UsuarioFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.registraLog();
+    this.consultarTelasDoSistema();
   }
 
   private registraLog(){
@@ -77,6 +81,22 @@ export class UsuarioFormComponent implements OnInit {
         this.consultarTelasDoSistema();
       }
     });
+  }
+
+  public marcarItensDoUsuario(nomeTela: any){
+  //  let telaSelecionada: TelaSistema = new TelaSistema();  
+  //  let telaUsuario: TelaSistema = new TelaSistema();  
+  //  telaSelecionada =  this.telasDoSistema.find(t=>t.nome == nomeTela)!;
+  //  if(this.telasDoUsuario.some(t=>t.nome === telaSelecionada.nome)){
+  //     telaUsuario = this.telasDoUsuario.find(t=>t.nome === telaSelecionada.nome)!;
+  //     console.log(telaSelecionada);
+  //     telaSelecionada.componentes.forEach(c=>{
+  //       if(telaUsuario.componentes.some(cu=>cu.nome === c.nome)){
+  //         let imput: any = this.elementRef.nativeElement.querySelector(`#cp_${c.id}`);
+  //         this.renderer.setProperty(imput, 'checked', true);
+  //       }
+  //     });
+  //  }
   }
 
   private salvarTelasUsuario() {
@@ -233,15 +253,25 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   public cadastrarUsuario() {
-    this.usuarioService.cadastrarUsuario(this.usuario).subscribe({
+    if(this.usuario.nome && this.usuario.username){
+      this.dialog.open(DlgLoadingComponent, {disableClose: true});
+      this.usuarioService.cadastrarUsuario(this.usuario).subscribe({
       next: (res) => {
-        this.limparDados();
         this.openSnackBar("Usuário cadastrado com sucesso!", this.snackBarSucesso);
       },
       error: (e) => {
         this.openSnackBar("Falha ao enviar convite por e-mail!", this.snackBarErro);
+        this.dialog.closeAll();
+      },
+      complete:()=>{
+        this.limparDados();
+        this.dialog.closeAll();
       }
     });
+    }else{
+      this.openSnackBar('Digite o nome e e-mail do usuário', this.snackBarErro);
+    }
+    
   }
 
   public limparDados() {

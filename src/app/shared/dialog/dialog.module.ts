@@ -9,6 +9,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DglConfirmacaoComponent } from './dgl-confirmacao/dgl-confirmacao.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DlgExclusaoComponent } from './dlg-exclusao/dlg-exclusao.component';
+import { DlgLoadingComponent } from './dlg-loading/dlg-loading.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -17,6 +19,7 @@ import { DlgExclusaoComponent } from './dlg-exclusao/dlg-exclusao.component';
     DlgUpdateSenhaComponent,
     DglConfirmacaoComponent,
     DlgExclusaoComponent,
+    DlgLoadingComponent,
   ],
   imports: [
     CommonModule,
@@ -24,6 +27,7 @@ import { DlgExclusaoComponent } from './dlg-exclusao/dlg-exclusao.component';
     FormsModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    MatProgressBarModule,
   ]
 })
 export class DialogModule { }

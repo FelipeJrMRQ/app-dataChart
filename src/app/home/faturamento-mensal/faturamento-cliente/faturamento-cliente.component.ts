@@ -79,6 +79,10 @@ export class FaturamentoClienteComponent implements OnInit {
     this.router.navigate([`faturamento-extrato-anual/cliente/${this.dataRecebida}/${this.cdCliente}/${this.nomeCliente}`])
   }
 
+  public navegarDetalhamentoCliente(){
+     this.router.navigate([`detalhamento-cliente`]); 
+  }
+
   public voltar() {
     this.router.navigate([`/faturamento-mensal/${this.dataRecebida}`]);
   }
