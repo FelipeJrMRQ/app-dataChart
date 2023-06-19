@@ -22,6 +22,7 @@
         </div>
     </div>
 </div>
+
 <div class="row mb-4">
     <div class="col-12" [ngClass]="setupClass">
         <label for="" class="form-label">Data</label>
@@ -37,7 +38,7 @@
             <select class="form-select" name="turn" [(ngModel)]="idTurno">
                 <option [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
             </select>
-            <button class="btn btn-outline-secondary" type="button" (click)="cadastrarTurno()">
+            <button *ngIf="btnCadastrarTurno" class="btn btn-outline-secondary" type="button" (click)="cadastrarTurno()">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -48,14 +49,14 @@
             <select class="form-select" name="turn" [(ngModel)]="idLinha">
                 <option [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
             </select>
-            <button class="btn btn-outline-secondary" type="button" (click)="cadastrarLinha()">
+            <button *ngIf="btnCadastrarLinha" class="btn btn-outline-secondary" type="button" (click)="cadastrarLinha()">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
     </div>
-    <div class="col-12 col-lg-1">
+    <div class="col-12 col-lg-1" *ngIf="btnHabilitarSetupMisto">
         <label for="" class="form-label">Setup Misto</label>
-        <button class="form-control btn btn-primary" tabindex="-1" (click)="habilitarSetupMisto()">{{btnSetup}}</button>
+        <button  class="form-control btn btn-primary" tabindex="-1" (click)="habilitarSetupMisto()">{{btnSetup}}</button>
     </div>
 </div>
 
@@ -160,7 +161,7 @@
             <pagination-controls id="itensNaoRetornadosFiltro" (pageChange)="paginaFiltro =$event" nextLabel=""
                 previousLabel="" [maxSize]="10"></pagination-controls>
         </div>
-        <div class="col-12 col-lg-3 text-end">
+        <div class="col-12 col-lg-3 text-end" *ngIf="btnProgramar">
             <button class="btn btn-sm btn-success" (click)="selecionarTodas()">Selecionar todas</button>
             <button class="btn btn-primary btn-sm ms-2" (click)="programarItensSelecionados()">Programar</button>
         </div>

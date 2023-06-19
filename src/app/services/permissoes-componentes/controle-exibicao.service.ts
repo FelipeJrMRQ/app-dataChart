@@ -27,6 +27,7 @@ export class ControleExibicaoService {
      * relação as suas telas e componentes
      * 
      * @param nomeComponente 
+     * @param nomeTela
      * @returns 
      */
   public verificaPermissaoDeAcesso(nomeComponente: string, nomeTela: string): Observable<boolean> {

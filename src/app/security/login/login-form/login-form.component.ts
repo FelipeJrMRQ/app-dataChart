@@ -73,9 +73,17 @@ export class LoginFormComponent implements OnInit {
       },
       complete:()=>{
         UsuarioService.usuarioAutenticado.emit(this.usuario);
-        this.router.navigate(['/dashboard-sintetico']);
+        this.verificaHomePageDoUsuario();
       }
-    })
+    });
+  }
+
+  private verificaHomePageDoUsuario(){
+    if(this.usuario.homePage){
+      this.router.navigate([`/${this.usuario.homePage}`]);
+    }else{
+      this.router.navigate(['/dashboard-sintetico']);
+    }
   }
 
   openSnackBar(mensagem: string, tipo: string) {

@@ -18,6 +18,9 @@ import { DlgAlterarSetupComponent } from '../dlg-alterar-setup/dlg-alterar-setup
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ManipuladorArrayService } from 'src/app/utils/manipulador-array.service';
 import { DlgExclusaoComponent } from 'src/app/shared/dialog/dlg-exclusao/dlg-exclusao.component';
+import { forkJoin } from 'rxjs';
+import { Sort } from '@angular/material/sort';
+import { LinhaSelecionadaVisualizacao } from './linha-selecionada';
 
 
 @Component({
@@ -43,10 +46,9 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   itensIniciados: Programacao[];
   docPdf: jsPDF;
   dataProgramacao: string = moment().format("yyyy-MM-DD");
-  itensLinhaVisualizacao: ItensLinha;
   nomeLinhaVisualizacao: any;
   turnoVisualizacao: any;
-  linhaSelecionadaVisualizacao: any;
+  linhaSelecionadaVisualizacao: LinhaSelecionadaVisualizacao;
   atualizarExibica: boolean = false;
   intervalo: any;
   panelOpenState = false;
@@ -54,6 +56,10 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
   step: any;
+  btnAlterarSequenciaSetup: any = false;
+  btnExcluirSetup: any = false;
+  btnIniciarProgramacao: any = false;
+  btnImprimirSetup: any = false;
 
   constructor(
     private programacaoService: ProgramacaoService,
@@ -64,6 +70,7 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private arrayService: ManipuladorArrayService
   ) {
+    this.linhaSelecionadaVisualizacao = new LinhaSelecionadaVisualizacao();
     this.itensProgramados = [];
     this.itensIniciados = [];
     this.itensLinha = [];
@@ -72,7 +79,6 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     this.itensLinhaTurno3 = [];
     this.linhas = [];
     this.turnos = [];
-    this.itensLinhaVisualizacao = new ItensLinha();
     this.docPdf = new jsPDF(
       {
         orientation: "landscape",
@@ -81,13 +87,30 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.consultarItensProgramadosAguardando();
     this.controleExibicaoService.registrarLog('ACESSOU A TELA ITENS PROGRAMADOS');
+    this.verificaPermissoesDeAcesso();
   }
 
   ngOnDestroy(): void {
     clearInterval(this.intervalo);
   }
+
+  private verificaPermissoesDeAcesso() {
+    forkJoin({
+      imprimir: this.controleExibicaoService.verificaPermissaoDeAcesso('imprimir_programacao', 'itens-programados'),
+      alterarSequenciaSetup: this.controleExibicaoService.verificaPermissaoDeAcesso('alterar_sequencia_setup','itens-programados'),
+      excluirSetup: this.controleExibicaoService.verificaPermissaoDeAcesso('excluir_setup','itens-programados'),
+      iniciarProgramacao: this.controleExibicaoService.verificaPermissaoDeAcesso('iniciar_finalizar_programacao','itens-programados')
+    }).subscribe(({ imprimir, alterarSequenciaSetup, excluirSetup, iniciarProgramacao}) => {
+      this.btnImprimirSetup = imprimir;
+      this.btnExcluirSetup = excluirSetup;
+      this.btnAlterarSequenciaSetup = alterarSequenciaSetup;
+      this.btnIniciarProgramacao = iniciarProgramacao;
+      this.consultarItensProgramadosAguardando();
+    });
+   
+  }
+
 
   /**
    * Método utilizado para conseguir atualizar todos usuários sobre
@@ -95,7 +118,6 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
    * 
    */
   public veriricarAtualizacoesPorIntervalo() {
-    console.log('3020')
     clearInterval(this.intervalo);
     this.intervalo = setInterval(() => {
       this.consultarItensProgramadosAguardando();
@@ -169,8 +191,8 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     dados.data.item.turno.id = dados.data.turno;
     dados.data.item.linhaDeProducao.id = dados.data.linhaDeProducao;
     this.programacaoService.salvar(dados.data.item).subscribe({
-      next: (res) => {},
-      error: (e) => {console.log(e);}
+      next: (res) => { },
+      error: (e) => { console.log(e); }
     });
   }
 
@@ -180,8 +202,8 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     dados.data.item.turno.id = dados.data.turno;
     dados.data.item.linhaDeProducao.id = dados.data.linhaDeProducao;
     this.programacaoService.salvar(dados.data.item).subscribe({
-      next: (res) => {},
-      error: (e) => {console.log(e);}
+      next: (res) => { },
+      error: (e) => { console.log(e); }
     });
   }
 
@@ -205,6 +227,10 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     itens.forEach(i => {
       i.sequencia = ++sequencia;
       this.programacaoService.salvar(i).subscribe({
+        next:(res)=>{},
+        error:(e)=>{},
+        complete:()=>{
+        }
       });
     });
     this.openSnackBar('Sequencia alterada com sucesso!', this.snackBarSucesso);
@@ -212,15 +238,15 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   }
 
   public alterarSetup(setupAltual: Setup) {
-    let dialogo = this.dialog.open(DlgAlterarSetupComponent, { disableClose: true,});
+    let dialogo = this.dialog.open(DlgAlterarSetupComponent, { disableClose: true, });
     dialogo.afterClosed().subscribe({
-      next:(res)=>{
+      next: (res) => {
         if (res) {
           clearInterval(this.intervalo);
           this.alterarSequenciaDoSetUp(res.data, setupAltual);
         }
       },
-      complete:()=>{
+      complete: () => {
         this.veriricarAtualizacoesPorIntervalo();
       }
     });
@@ -269,7 +295,7 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     itensProgramados.forEach(item => {
       item.sequenciaSetup = sequenciaSetup;
       this.programacaoService.salvar(item).subscribe({
-        next: (res) => {},
+        next: (res) => { },
       });
     });
     this.consultarItensProgramadosAguardando();
@@ -361,7 +387,6 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   }
 
   public exibirItensProgramados(itens: ItensLinha) {
-    this.linhaSelecionadaVisualizacao = itens;
     this.sequenciaSetup = [];
     itens.itensProgramados.forEach(item => {
       if (!this.sequenciaSetup.find(s => s.setup == item.setup)) {
@@ -399,21 +424,18 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   public atualizarVisualizacaoAposAlteracao() {
     if (this.linhaSelecionadaVisualizacao) {
       let itens: any;
-      switch (this.linhaSelecionadaVisualizacao.turno.nome) {
+      switch (this.linhaSelecionadaVisualizacao.nomeTurno) {
         case 'MANHÃ':
-          itens = this.itensLinhaTurno1.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
+          itens = this.itensLinhaTurno1.filter(i => i.linhaDeProducao.nome == this.linhaSelecionadaVisualizacao.nomeLinha);
           this.exibirItensProgramados(itens[0]);
-          //this.atualizarExibicao = false;
           break;
         case 'TARDE':
-          itens = this.itensLinhaTurno2.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
+          itens = this.itensLinhaTurno2.filter(i => i.linhaDeProducao.nome == this.linhaSelecionadaVisualizacao.nomeLinha);
           this.exibirItensProgramados(itens[0]);
-          //this.atualizarExibicao = false;
           break;
         case 'NOITE':
-          itens = this.itensLinhaTurno3.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
+          itens = this.itensLinhaTurno3.filter(i => i.linhaDeProducao.nome == this.linhaSelecionadaVisualizacao.nomeLinha);
           this.exibirItensProgramados(itens[0]);
-          //this.atualizarExibicao = false;
           break;
         default:
           break;
@@ -528,7 +550,7 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   }
 
   public excluirSetup(itens: Programacao[]) {
-    let dialogo = this.dialog.open(DlgExclusaoComponent, { disableClose: true,});
+    let dialogo = this.dialog.open(DlgExclusaoComponent, { disableClose: true, });
     dialogo.afterClosed().subscribe({
       next: (res) => {
         if (itens.some(i => i.status != 'AGUARDANDO')) {
@@ -553,6 +575,43 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  public sort(sort: Sort, setup: Setup) {
+    let itens = setup.itensProgramados;
+    const data = itens.slice();
+    console.log(sort.direction);
+    if (!sort.active || sort.direction === '') {
+      itens = data;
+      return;
+    }
+    itens = data.sort((a, b) => {
+      const isAsc = sort.direction == 'asc';
+      switch (sort.active) {
+        case 'espessura':
+          return this.compare(a.espessura, b.espessura, isAsc);
+        default:
+          return 0;
+      }
+    });
+    let conntador = 0;
+    itens.forEach(i=>{
+      this.linhaSelecionadaVisualizacao.nomeLinha = i.linhaDeProducao.nome;
+      this.linhaSelecionadaVisualizacao.nomeSetup = i.nomeBeneficiamento;
+      this.linhaSelecionadaVisualizacao.nomeTurno = i.turno.nome;
+      i.sequencia =0;
+      i.sequencia =++conntador;
+      this.programacaoService.salvar(i).subscribe({
+        next:(res)=>{},
+        error:(e)=>{console.log(e)},
+        complete:()=>{}
+      });
+    });
+    this.consultarItensProgramadosAguardando();
+  }
+  
+  public compare(a: any, b: any, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
   openSnackBar(mensagem: string, tipo: string) {
     this.snackBar.open(mensagem, "X", {
       duration: 6000,
@@ -571,7 +630,6 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     this.itensLinhaTurno3 = [];
     this.linhas = [];
     this.turnos = [];
-    this.itensLinhaVisualizacao = new ItensLinha();
     this.sequenciaSetup = [];
   }
 }

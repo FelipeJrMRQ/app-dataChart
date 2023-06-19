@@ -95,7 +95,7 @@ export class GraficoEvolucaoCarteiraComponent implements OnInit {
     }
     const totalDuration = 35000;
     const delayBetweenPoints = totalDuration / data.length;
-    const previousY = (ctx:any) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+    const previousY = (ctx:any) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(50) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
     this.animacao = {
       x: {
         type: 'number',

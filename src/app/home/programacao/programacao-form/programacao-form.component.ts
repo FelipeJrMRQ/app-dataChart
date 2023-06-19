@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { ItemNaoRetornado } from 'src/app/models/itens-nao-retornados';
 import { ItemNaoRetornadoService } from 'src/app/services/item-nao-retornado.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { DlgProgramacaoComponent } from '../dlg-programacao/dlg-programacao.component';
 import { LinhaDeProducaoService } from 'src/app/services/linha-de-producao.service';
@@ -12,7 +11,6 @@ import { LinhaDeProducao } from 'src/app/models/linha-de-producao';
 import { Turno } from 'src/app/models/turno';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
-import { Usuario } from 'src/app/models/usuario';
 import { DlgCadLinhaComponent } from '../dlg-cad-linha/dlg-cad-linha.component';
 import { DlgCadTurnoComponent } from '../dlg-cad-turno/dlg-cad-turno.component';
 import { ProgramacaoService } from 'src/app/services/programacao.service';
@@ -65,6 +63,12 @@ export class ProgramacaoFormComponent implements OnInit {
   btnSetup: any = 'Habilitar';
   setupClass: any = 'col-lg-4';
 
+  //Controle de botôes
+  btnCadastrarLinha: any = false;
+  btnCadastrarTurno: any = false;
+  btnHabilitarSetupMisto: any = false;
+  btnProgramar: any = false;
+
   constructor(
     private itemNaoRetornadoService: ItemNaoRetornadoService,
     private excelService: ExcelService,
@@ -88,11 +92,26 @@ export class ProgramacaoFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.verificarPermissaoDeAcesso();
     this.dataProgramacao = moment().format("yyyy-MM-DD");
     this.consultarItensNaoRetornados();
     this.consultarLinhasDeProducao();
     this.consultarTurnoDeTrabalho();
     this.resgistrarLog();
+  }
+
+  private verificarPermissaoDeAcesso() {
+    forkJoin({
+      cadastrarLinha: this.controleExibicaoService.verificaPermissaoDeAcesso('cadastrar_linha_producao', 'programacao'),
+      cadastrarTurno: this.controleExibicaoService.verificaPermissaoDeAcesso('cadastrar_turno_trabalho', 'programacao'),
+      programar: this.controleExibicaoService.verificaPermissaoDeAcesso('programar_itens', 'programacao'),
+      setupMisto: this.controleExibicaoService.verificaPermissaoDeAcesso('programar_itens', 'programacao'),
+    }).subscribe(({ cadastrarLinha, cadastrarTurno, programar, setupMisto }) => {
+      this.btnCadastrarLinha = cadastrarLinha;
+      this.btnCadastrarTurno = cadastrarTurno;
+      this.btnProgramar = programar;
+      this.btnHabilitarSetupMisto = setupMisto;
+    });
   }
 
   private resgistrarLog() {
@@ -147,6 +166,7 @@ export class ProgramacaoFormComponent implements OnInit {
       }
     });
   }
+
 
   private alterarExibicaoNfe() {
     let nfTemp: any;
@@ -243,7 +263,6 @@ export class ProgramacaoFormComponent implements OnInit {
       let i = new ItensNaoRetornadosExport();
       let processos: any = [];
       processos = item.nomeBeneficiamento?.split('+');
-      console.log(processos[1]);
       i.ENTRADA = `${moment(item.dataEntrada).format('DD/MM/yyyy').toString()} ${item.hora}`;
       i.NF = item.nf;
       i.CONTROLE = item.cdEntrada;
@@ -328,10 +347,7 @@ export class ProgramacaoFormComponent implements OnInit {
     item.linhaDeProducao = this.idLinha;
     item.turno = this.idTurno;
     item.dataProgramacao = this.dataProgramacao;
-    console.log(this.setupMisto);
     item.setup = (this.setupMisto ? 0 : item.cdBeneficiamento);
-    console.log(item.setup);
-
     let dlg = this.dialog.open(DlgProgramacaoComponent, {
       data: item,
       maxHeight: '80vh',
@@ -437,10 +453,6 @@ export class ProgramacaoFormComponent implements OnInit {
     dlg.afterClosed().subscribe(res => {
       this.consultarTurnoDeTrabalho();
     });
-  }
-
-  public drop(event: CdkDragDrop<any>) {
-    moveItemInArray(this.listaProgramacao, event.previousIndex, event.currentIndex);
   }
 
   public openSnackBar(mensagem: string, tipo: string) {

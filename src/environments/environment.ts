@@ -6,8 +6,10 @@ export const environment = {
   production: false,
   urlApi: "http://125.67.2.20:8083/api",
   obterToken: "http://125.67.2.20:8083/login",
-  versaoApp: '1.29.17'
+  versaoApp: '1.30.17'
 };
+
+// Chave API Google Maps - AIzaSyARse-Sm7KLNFYk9c7QYOuzScm89VA3b9Y
 
 /**
  * ########## --------- Historico de altualizações ---------- ############ 
@@ -44,6 +46,13 @@ export const environment = {
  * Alteração de linha de produção ou turno so setup existente.
  * 
  * Correção do bug de redirecionamento no botação voltar na tela de cofiguração de metas
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.30.17
+ * Alteração no modulo de itens programados para permitir o sequenciamento por espessura
+ * Alteração no modulo de itens programados para controle de acesso de acordo com as permissões do usuário
+ * Alteração no modulo de programação para controle de acesso de acordo com as permissões do usuário
+ * 
  * 
  */
 

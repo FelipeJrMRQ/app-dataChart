@@ -146,7 +146,7 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
       },
       options: {
         animation: {
-          duration: 3500,
+          duration: 3000,
           onComplete:()=>{
             this.delayed = true;
           },

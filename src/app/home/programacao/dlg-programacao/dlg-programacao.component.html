@@ -33,7 +33,7 @@
                 <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao">
                     <option selected [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
                 </select>
-                <button class="btn btn-outline-secondary" type="button" (click)="cadastrarLinha()">
+                <button class="btn btn-outline-secondary" *ngIf="btnCadastroLinha" type="button" (click)="cadastrarLinha()">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
@@ -43,7 +43,7 @@
                 <select class="form-select" name="turn" [(ngModel)]="idTurno">
                     <option selected [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
                 </select>
-                <button class="btn btn-outline-secondary" type="button" (click)="cadastrarTurno()">
+                <button class="btn btn-outline-secondary" *ngIf="btnCadastroTurno" type="button" (click)="cadastrarTurno()">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
@@ -60,7 +60,7 @@
             <input type="date" name="data" class="form-control" [(ngModel)]="programacao.data">
             <label for="" class="mt-2 form-label">Observação</label>
             <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao" [(ngModel)]="programacao.observacao"></textarea>
-            <button class="btn btn-primary mt-2 me-2" (click)="salvarProgramacao()" [disabled]="data.programado">Programar</button>
+            <button class="btn btn-primary mt-2 me-2" *ngIf="btnProgramar" (click)="salvarProgramacao()" [disabled]="data.programado">Programar</button>
             <button class="btn btn-danger mt-2" (click)="fechar(false)">Fechar</button>
            </form>
         </div>

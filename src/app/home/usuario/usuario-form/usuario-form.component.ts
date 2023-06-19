@@ -70,6 +70,7 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   public consultarTelasUsuario(usuario: Usuario) {
+    console.log(usuario);
     this.telaUsuarioService.consultarTelas(usuario).subscribe({
       next: (res) => {
         this.telasDoUsuario = res;

@@ -33,7 +33,9 @@ export class DlgProgramacaoComponent implements OnInit {
   snackBarSucesso = 'my-snack-bar-sucesso';
   public urlImagem: any;
   public qtdeProgramada: any;
-
+  public btnCadastroLinha: any = false;
+  public btnCadastroTurno: any = false;
+  public btnProgramar: any = false;
   
   constructor(
     private programacaoService: ProgramacaoService,
@@ -55,6 +57,7 @@ export class DlgProgramacaoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.verificarPermissaoDeAcesso();
     this.programacao.prioridade = 2;
     this.idTurno = this.data.turno;
     this.idLinhaDeProducao = this.data.linhaDeProducao;
@@ -72,13 +75,23 @@ export class DlgProgramacaoComponent implements OnInit {
       this.consultarTurnoDeTrabalho();
     });
   }
+  private verificarPermissaoDeAcesso() {
+    forkJoin({
+      cadastrarLinha: this.controleExibicaoService.verificaPermissaoDeAcesso('cadastrar_linha_producao', 'programacao'),
+      cadastrarTurno: this.controleExibicaoService.verificaPermissaoDeAcesso('cadastrar_turno_trabalho', 'programacao'),
+      programar: this.controleExibicaoService.verificaPermissaoDeAcesso('programar_itens', 'programacao'),
+    }).subscribe(({ cadastrarLinha, cadastrarTurno, programar }) => {
+      this.btnCadastroLinha = cadastrarLinha;
+      this.btnCadastroTurno = cadastrarTurno;
+      this.btnProgramar = programar;
+    });
+  }
 
 
   public salvarProgramacao(){
     forkJoin({
       s1: this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')),
     }).subscribe(({s1})=>{
-      console.log(this.data.setup);
       this.programacao.sequenciaSetup = 0;
       this.programacao.sequencia = 0;
       this.programacao.setup = this.data.setup;

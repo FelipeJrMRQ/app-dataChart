@@ -44,6 +44,7 @@ import { ProdutoService } from './services/produto.service';
 import { ConfigTelaModule } from './home/config/config-tela/config-tela.module';
 import { TelaSistemaService } from './services/telas/tela-sistema.service';
 import { DashboardModule } from './home/dashboard-analitico/dashboard-analitico.module';
+import { LocalizacaoService } from './services/localizacao.service';
 
 
 registerLocaleData(ptBr);
@@ -101,6 +102,7 @@ registerLocaleData(ptBr);
     UsuarioService,
     ProdutoService,
     TelaSistemaService,
+    LocalizacaoService
   ],
   bootstrap: [AppComponent]
 })
