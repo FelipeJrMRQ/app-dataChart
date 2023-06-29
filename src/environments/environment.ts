@@ -44,8 +44,18 @@ export const environment = {
  * Alteração de linha de produção ou turno so setup existente.
  * 
  * Correção do bug de redirecionamento no botação voltar na tela de cofiguração de metas
- * 
+ * -------------------------------------------------------------------------------------------------------------------
  * 
  * Versão 1.30.18
+ * Criação da tela de detalhes do cliente com informativo completo sobre 
+ * Entradas
+ * Faturamento
+ * Medias
+ * Historicos completos do ano sobre um cliente
+ * 
+ * Correção do bug do valor de faturamento que só considerava notas fiscais com produtos
+ * A partir desta versão o sistema considera outras formas de futuramento
+ * 
+ * Exemplo: Nota fiscal de venda de máquinas
  */
 
