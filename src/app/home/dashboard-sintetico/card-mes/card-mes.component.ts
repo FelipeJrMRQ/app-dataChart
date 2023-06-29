@@ -8,6 +8,7 @@ import { ParametrosMetaService } from 'src/app/services/parametros-meta.service'
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 import { forkJoin } from 'rxjs';
+import { FaturamentoMensalService } from 'src/app/services/faturamento-mensal.service';
 
 @Component({
   selector: 'app-card-mes',
@@ -30,7 +31,7 @@ export class CardMesComponent implements OnInit {
   private nomeTela = "dashboard-sintetico";
 
   constructor(
-    private faturamentoService: FaturamentoService,
+    private faturamentoService: FaturamentoMensalService,
     private dateService: DateControllerService,
     private parametrosService: ParametrosMetaService,
     private router: Router,
@@ -57,24 +58,15 @@ export class CardMesComponent implements OnInit {
   }
 
   public consultaValorFaturamento() {
-    this.faturamentoService.consultaValorFaturamento(
-      this.modeloDeConsulta.getInstance(
-        this.dateService.getInicioDoMes(moment(this.dataRecebida).format('yyyy-MM-DD')),
-        this.dataRecebida,
-        '',
-        '',
-        undefined
-      )).subscribe({
-        next: (res) => {
-          this.valorFaturamento = res.valorFaturamento;
+
+    this.faturamentoService.consultaTotalFaturamentoPorMes(this.dateService.getInicioDoMes(moment(this.dataRecebida).format('yyyy-MM-DD')), this.dataRecebida).subscribe({
+        next:(res)=>{
+          this.valorFaturamento = res[0].valor;
         },
-        error: (e) => {
-          console.log(e);
-        },
-        complete: () => {
+        complete:()=>{
           this.consultaParametrosMeta();
         }
-      });
+    });
   }
 
   public consultaParametrosMeta() {

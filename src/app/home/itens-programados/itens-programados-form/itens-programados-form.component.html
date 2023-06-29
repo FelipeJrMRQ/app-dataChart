@@ -54,7 +54,7 @@
                             <label for="" class="bold">IMP</label>
                             <br>
                             <div *ngFor="let linha of itensLinhaTurno1" class="mt-1">
-                                <a class="c-pointer" (click)="gerarPdfProgramacao(linha)" *ngIf="btnImprimirSetup">
+                                <a class="c-pointer" (click)="gerarPdfProgramacao(linha)">
                                     <i class="fas fa-print"></i>
                                 </a>
                             </div>
@@ -193,11 +193,11 @@
                     </mat-panel-description> -->
                 </mat-expansion-panel-header>
                 <div class="text-end mb-3">
-                    <button class="btn btn-primary btn-sm" (click)="alterarSetup(st)" *ngIf="btnAlterarSequenciaSetup">Alterar sequência</button>
-                    <button class="btn btn-sm btn-danger ms-2" (click)="excluirSetup(st.itensProgramados)" *ngIf="btnExcluirSetup">Excluir setup</button>
+                    <button class="btn btn-primary btn-sm" (click)="alterarSetup(st)">Alterar sequência</button>
+                    <button class="btn btn-sm btn-danger ms-2" (click)="excluirSetup(st.itensProgramados)">Excluir setup</button>
                 </div>
                 <div class="table mt-1 mb-5">
-                    <table class="table table-striped table-sm font-11 table-hover" matSort (matSortChange)="sort($event, st)">
+                    <table class="table table-striped table-sm font-11 table-hover">
                         <thead>
                             <tr>
                                 <th>SEQ.</th>
@@ -206,7 +206,7 @@
                                 <th>ITEM</th>
                                 <th>CLIENTE</th>
                                 <th>PRODUTO</th>
-                                <th scope="col" mat-sort-header="espessura">ESP.</th>
+                                <th>ESP.</th>
                                 <th>BENEFICIAMENTO</th>
                                 <th>QTDE</th>
                                 <th>SITUAÇÃO</th>
@@ -229,11 +229,9 @@
                                 <td class="c-pointer" (click)="visualizarDetalhesDoItem(produto)">{{produto.qtdeProgramada}}</td>
                                 <td class="c-pointer" (click)="visualizarDetalhesDoItem(produto)">{{produto.status}}</td>
                                 <td class="text-center "> 
-                                    <div *ngIf="btnIniciarProgramacao">
-                                        <a class="text-danger c-pointer" *ngIf="produto.status == 'AGUARDANDO'" (click)="iniciarProgramacao(produto)"><i class="fas fa-stop"></i></a>
-                                        <a class="text-success c-pointer" *ngIf="produto.status == 'PRODUZINDO'" (click)="finalizaProgramacao(produto)"><i class="fas fa-play"></i></a>
-                                        <i class="fas fa-check-double text-success" *ngIf="produto.status == 'FINALIZADO'"></i>
-                                    </div>
+                                    <a class="text-danger c-pointer" *ngIf="produto.status == 'AGUARDANDO'" (click)="iniciarProgramacao(produto)"><i class="fas fa-stop"></i></a>
+                                    <a class="text-success c-pointer" *ngIf="produto.status == 'PRODUZINDO'" (click)="finalizaProgramacao(produto)"><i class="fas fa-play"></i></a>
+                                    <i class="fas fa-check-double text-success" *ngIf="produto.status == 'FINALIZADO'"></i>
                                 </td>
                             </tr>
                         </tbody>

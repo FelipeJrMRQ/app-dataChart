@@ -6,5 +6,4 @@ export class Usuario{
     password: string | undefined;
     nome: string | undefined;
     contaAtiva: boolean = false;
-    homePage: string | undefined;
 }

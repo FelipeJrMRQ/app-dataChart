@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'itens-programados', loadChildren: () => import('./home/itens-programados/itens-programados.module').then(i => i.ItensProgramadosModule), canActivate: [AuthGuardService] },
   { path: 'configurar-telas', loadChildren: () => import('./home/config/config-tela/config-tela.module').then(i => i.ConfigTelaModule), canActivate: [AuthGuardService] },
   { path: 'dashboard-sintetico', loadChildren: () => import('./home/dashboard-sintetico/dashboard-sintetico.module').then(i => i.DashboardSinteticoModule), canActivate: [AuthGuardService]},
-  { path: 'detalhamento-cliente', loadChildren:()=> import('./home/detalhamento-cliente/detalhamento-cliente.module').then(i=>i.DetalhamentoClienteModule)}
+  { path: 'detalhamento-cliente/:cdCliente/:nomeCliente/:data', loadChildren:()=> import('./home/detalhamento-cliente/detalhamento-cliente.module').then(i=>i.DetalhamentoClienteModule)}
 ];
 
 @NgModule({

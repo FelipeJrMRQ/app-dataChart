@@ -85,7 +85,7 @@ export class FaturamentoDatalheComponent implements OnInit {
   //METODOS PARA MUDANÇA DE ROTA 
 
   public detalheCliente(cdCliente: any, nomeCliente: any) {
-    this.router.navigate([`faturamento-mensal/cliente/${cdCliente}/${nomeCliente}/${this.dataRecebida}`]);
+    this.router.navigate([`detalhamento-cliente/${cdCliente}/${nomeCliente}/${this.dataRecebida}`]);
   }
 
   public detalheBeneficiamento(cdBenficiamento: any, nomeBeneficiamento: any) {

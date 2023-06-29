@@ -1,17 +1,9 @@
-<section>
-    <div class="row">
-        <div class="col-8 col-md-4 col-lg-4 mt-1">
-            <div class="input-group">
-                <input type="date" class="form-control bgInput text-center" />
-                <button class="input-group-text btn btn-primary">
-                    <i class="fas fa-search-dollar"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</section>
-
 <section class="mt-2">
+    <section>
+        <div class="bold card-label d-flex between align-middle">
+            <label clas="color-text">DETALHES DO CLIENTE - {{nomeCliente}}</label>
+        </div>
+    </section>
     <div class="row">
         <div class="col-12 col-lg-3 mt-2">
             <app-card-entradas></app-card-entradas>
@@ -23,7 +15,7 @@
             <app-card-medias></app-card-medias>
         </div>
         <div class="col-12 col-lg-3 mt-2">
-           <app-card-outros></app-card-outros>
+            <app-card-outros></app-card-outros>
         </div>
     </div>
 </section>
@@ -41,3 +33,20 @@
         </div>
     </div>
 </section>
+
+<section class="mt-2">
+    <div class="row">
+        <div class="col-12 col-lg-5">
+            <app-tbl-faturamento-benef></app-tbl-faturamento-benef>
+        </div>
+        <div class="col-12 col-lg-7">
+            <app-tbl-faturamento-prod></app-tbl-faturamento-prod>
+        </div>
+    </div>
+</section>
+
+
+<div class="mb-5 mt-5">
+    <button class="btn btn-danger me-2"(click)="voltar()">Voltar</button>
+    <button class="btn btn-primary" (click)="navegarPerspectivaAnual()">Histórico anual</button>
+</div>

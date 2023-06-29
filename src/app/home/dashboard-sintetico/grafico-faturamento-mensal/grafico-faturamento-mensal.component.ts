@@ -92,14 +92,14 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
         this.metaMes = [];
         this.parametrosMeta.forEach(p => {
           this.metaMes.push(p.valorMetaMensal);
-        });
+        })
         this.atualizaGrafico();
       }
     })
   }
 
   public atualizaGrafico() {
-    if (this.chartBarMonth) {
+    if (this.elementChart) {
       this.chartBarMonth.data.datasets[0].data = this.valor;
       this.chartBarMonth.data.datasets[1].data = this.metaMes;
       this.chartBarMonth.update();
@@ -108,7 +108,7 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
     }
   }
 
-  delayed: any;
+delayed: any;
   public gerarGraficoFaturamentoMensal() {
     this.elementChart = document.getElementById('myChartBarMes');
     this.chartBarMonth = new Chart(this.elementChart, {
@@ -130,7 +130,7 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
       },
       options: {
         animation: {
-          duration: 3000,
+          duration: 3500,
           onComplete:()=>{
             this.delayed = true;
           },
@@ -162,6 +162,7 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
         maintainAspectRatio: true,
       }
     });
+    this.atualizaGrafico();
   }
 
 }

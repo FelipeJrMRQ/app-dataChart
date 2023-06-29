@@ -1,0 +1,26 @@
+<div class="bold card-label d-flex between align-middle">
+    <label class="color-text">FATURAMENTO POR BENEFICIAMENTO</label>
+</div>
+<div class="table">
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>BENEFICIAMENTO</th>
+                <th>VALOR</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let faturamento of faturamentos | paginate: {itemsPerPage: itensPagina, currentPage:pagina, id:'tblFatBen'}">
+                <td>{{faturamento.nomeBeneficiamento}}</td>
+                <td>{{faturamento.valor | currency : 'BRL'}}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>TOTAL</td>
+                <td>{{valorTotal | currency : 'BRL'}}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<pagination-controls class="col-11" id="tblFatBen" (pageChange)="pagina =$event" nextLabel="" previousLabel="" [maxSize]="5"></pagination-controls>

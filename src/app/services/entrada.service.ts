@@ -23,6 +23,10 @@ export class EntradaService {
     return this.http.post<any>(`${this.urlApi}/clientes`, modeloConsulta);
   }
 
+  public consultaEntradasPorClienteData(modeloConsulta: ModeloConsulta): Observable<any> {
+    return this.http.post<any>(`${this.urlApi}/cliente-periodo`, modeloConsulta);
+  }
+
   public consultaEntradasPorBeneficiamento(modeloConsulta: ModeloConsulta): Observable<any> {
     return this.http.post<any>(`${this.urlApi}/beneficiamentos`, modeloConsulta);
   }

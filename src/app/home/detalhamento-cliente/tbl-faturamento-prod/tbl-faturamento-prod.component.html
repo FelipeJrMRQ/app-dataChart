@@ -1,0 +1,29 @@
+<div class="bold card-label d-flex between align-middle">
+    <label class="color-text">FATURAMENTO POR PRODUTO</label>
+</div>
+<div class="table">
+    <table class="table table-sm table-striped table-hover">
+        <thead>
+            <tr>
+                <th>PRODUTO</th>
+                <th>BENEFICIAMENTO</th>
+                <th>VALOR</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let produto of faturamentos | paginate: {itemsPerPage: itensPagina, currentPage:pagina, id:'tblFatProd'}">
+                <td>{{produto.nomeProduto}}</td>
+                <td>{{produto.nomeBeneficiamento}}</td>
+                <td>{{produto.valor | currency : 'BRL'}}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>TOTAL</td>
+                <td></td>
+                <td>{{valorTotal | currency : 'BRL'}}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<pagination-controls class="col-11" id="tblFatProd" (pageChange)="pagina =$event" nextLabel="" previousLabel="" [maxSize]="5"></pagination-controls>

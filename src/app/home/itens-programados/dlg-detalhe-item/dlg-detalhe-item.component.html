@@ -29,7 +29,8 @@
                     [value]="data.data">
 
                 <label for="" class="form-label mt-2">Quantidade programada</label>
-                <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="data.qtdeProgramada" [value]="data.qtdeProgramada">
+                <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="data.qtdeProgramada"
+                    [value]="data.qtdeProgramada">
 
                 <label for="" class="form-label mt-2">Linha</label>
                 <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao" (change)="verificaAlteracaoLinhaTurnoPrioridade()">
@@ -42,7 +43,7 @@
                 </select>
 
 
-                <div *ngIf="exibirSequencia && btnAlterarSequeciaItem">
+                <div *ngIf="exibirSequencia">
                     <label for="" class="form-label mt-2">Sequência</label>
                     <div class="input-group">
                         <input type="number" class="form-control" name="sequencia" [(ngModel)]="sequencia">
@@ -62,10 +63,10 @@
                     [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
 
                 <div class="row">
-                    <div class="col-12 col-lg-4" *ngIf="btnAlterar">
+                    <div class="col-12 col-lg-4" *ngIf="!exibirSequencia">
                         <button class="btn btn-primary mt-2 form-control" (click)="alterarProgramacao()">Alterar</button>
                     </div>
-                    <div class="col-12 col-lg-4" *ngIf="btnExcluir &&  data.status =='AGUARDANDO'">
+                    <div class="col-12 col-lg-4" *ngIf="data.status =='AGUARDANDO'">
                         <button class="btn btn-warning mt-2 form-control"
                             (click)="excluirProgramacao(data.id)">Excluir</button>
                     </div>

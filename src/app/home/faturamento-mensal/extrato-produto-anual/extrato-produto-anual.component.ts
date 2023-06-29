@@ -538,7 +538,7 @@ export class ExtratoProdutoAnualComponent implements OnInit {
   }
 
   public voltar() {
-    this.router.navigate([`faturamento-mensal/cliente/${this.cdCliente}/${this.nomeCliente}/${this.dataRecebida}`]);
+    this.router.navigate([`detalhamento-cliente/${this.cdCliente}/${this.nomeCliente}/${this.dataRecebida}`]);
   }
 
   /**

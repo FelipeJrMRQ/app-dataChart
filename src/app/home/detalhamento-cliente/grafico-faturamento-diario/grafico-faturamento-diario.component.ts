@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Chart } from 'chart.js';
+import * as moment from 'moment';
+import { EntradaDoDiaDTO } from 'src/app/models/detalhamento-cliente/entrada-dia-dto';
+import { FaturamentoDiarioDTO } from 'src/app/models/detalhamento-cliente/faturamento-diario-dto';
+import { ModeloConsulta } from 'src/app/models/modelo-consulta';
+import { DetalhamentoClienteService } from 'src/app/services/detalhamento-cliente.service';
+import { DateControllerService } from 'src/app/utils/date-controller.service';
 
 @Component({
   selector: 'app-grafico-faturamento-diario',
@@ -10,41 +17,74 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
 
   elementChart: any;
   chartBarDay: any;
+  dataRecebida: any;
+  cdCliente: any;
+  nomeCliente: any;
+  faturamentos: FaturamentoDiarioDTO[];
+  entradadas: EntradaDoDiaDTO[];
+  valoresFaturamento: any = [];
+  datasFaturamento: any = [];
 
-  constructor() { }
+  private modelo: ModeloConsulta;
+
+  constructor(
+    private detalhamentoService: DetalhamentoClienteService,
+    private dataService: DateControllerService,
+    private activeRoute: ActivatedRoute,
+  ) {
+    this.modelo = new ModeloConsulta();
+    this.faturamentos = [];
+    this.entradadas = [];
+  }
 
   ngOnInit(): void {
-    this.gerarRelatorio();
+    this.activeRoute.params.subscribe((res:any)=>{
+      this.dataRecebida = res.data;
+      this.cdCliente = res.cdCliente;
+      this.nomeCliente= res.nomeCliente;
+      this.consultaFaturamentoDiarioDoCliente();
+    });
   }
 
 
+  private consultaFaturamentoDiarioDoCliente(){
+    this.detalhamentoService.consultarFaturamentoDiarioDoCliente(this.dataService.getInicioDoMes(this.dataRecebida), this.dataRecebida, this.cdCliente).subscribe({
+      next:(res)=>{
+        this.faturamentos = res;
+      },
+      complete:()=>{
+        this.organizarValoresFaturamentoParaExibicao();
+      }
+    });
+  }
+
+  private organizarValoresFaturamentoParaExibicao(){
+    this.valoresFaturamento = [];
+    this.datasFaturamento = [];
+    this.faturamentos.forEach(e=>{
+      this.valoresFaturamento.push(e.valor);
+      this.datasFaturamento.push(moment(e.data).date())
+    });
+    this.gerarGrafico();
+  }
+
   delayed: any;
-  public gerarRelatorio(){
+  public gerarGrafico() {
     this.elementChart = document.getElementById('myChartBarDia');
     this.chartBarDay = new Chart(this.elementChart, {
       type: 'bar',
       data: {
-        labels: [1,2,3,4,5,6,7],
+        labels: this.datasFaturamento,
         datasets: [{
-          label: `Realizado`,
-          data: [10,35,15,25,27,26, 13],
-          backgroundColor: 'rgb(0, 128, 0)',
+          label: `Faturamento diário`,
+          data: this.valoresFaturamento,
+          backgroundColor: 'rgba(0, 128, 0, 0.800)',
         },
         ]
       },
       options: {
         animation: {
-          duration: 4000,
-          onComplete:()=>{
-            this.delayed = true;
-          },
-          delay: (context) => {
-            let delay = 0;
-            if (context.type === 'data' && context.mode === 'default' && !this.delayed) {
-              delay = context.dataIndex * 300 + context.datasetIndex * 100;
-            }
-            return delay;
-          },
+          duration: 3500
         },
         scales: {
           y: {

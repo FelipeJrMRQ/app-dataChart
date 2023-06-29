@@ -1,28 +1,20 @@
 Telas
-	componentes
-	
+
 atualizar-informacoes
-
 cadastro-usuario
-
 carteira-beneficiamento
 	exportar_dados
 	visualizar_detalhes_produto
-
 carteira-cliente
 	exportar_dados
 	visualizar_detalhes_produto
-
 configurar-meta
-
 configurar-telas
-
 dashboard-analitico
 	exportar_dados_carteira_cliente
 	exportar_dados_carteira_beneficiamento
 	exportar_dados_entrada
 	exportar_dados_faturamento
-
 dashboard-sintetico
 	grafico_diario
 	grafico_mensal
@@ -41,39 +33,19 @@ dashboard-sintetico
 	grafico_faturamento_ano_anterior
 	grafico_comparativo_ano_anterior
 	grafico_evolucao_carteira
-
 entrada
 	exportar_dados
 	visualizar_detalhes_produto
-
 entrada-extrato-anual
 	exportar_dados
 	visualizar_detalhes_produto
-
 faturamento-extrato-anual
 	exportar_dados
 	visualizar_detalhes_produto
-
 faturamento-diario
 	exportar_dados
 	visualizar_detalhes_produto
-
 faturamento-mensal
-
-programacao
-	cadastrar_linha_producao
-	cadastrar_turno_trabalho
-	programar_itens
-	habilitar_setup_misto
-
 itens-programados
-	alterar_item_setup
-	alterar_sequencia_setup
-	excluir_setup
-	iniciar_finalizar_programacao
-	alterar_sequencia_item
-	excluir_item_setup
-	imprimir_programaca
-
 produtos
 	visualizar_preco

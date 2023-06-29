@@ -3,7 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as moment from 'moment';
-import { forkJoin } from 'rxjs';
 import { LinhaDeProducao } from 'src/app/models/linha-de-producao';
 import { Turno } from 'src/app/models/turno';
 import { ImageService } from 'src/app/services/image.service';
@@ -32,9 +31,6 @@ export class DlgDetalheItemComponent implements OnInit {
   sequencia: any = undefined;
   nomeTurno: any;
   exibirSequencia: boolean = true;
-  btnAlterar: any  = false;
-  btnExcluir: any = false;
-  btnAlterarSequeciaItem: any = false;
 
 
   constructor(
@@ -54,26 +50,13 @@ export class DlgDetalheItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.verificaPermissoesDeAcesso();
-  }
-
-  private verificaPermissoesDeAcesso() {
-    forkJoin({
-      alterarSequenciaItem: this.controleExibicaoService.verificaPermissaoDeAcesso('alterar_sequencia_item','itens-programados'),
-      excluir: this.controleExibicaoService.verificaPermissaoDeAcesso('excluir_item_setup','itens-programados'),
-      alterar: this.controleExibicaoService.verificaPermissaoDeAcesso('alterar_item_setup','itens-programados'),
-    }).subscribe(({alterarSequenciaItem, alterar, excluir}) => {
-       this.btnAlterar = alterar;
-       this.btnAlterarSequeciaItem = alterarSequenciaItem;
-       this.btnExcluir = excluir; 
-       this.quantidade = this.data.qtdeProgramada;
-       this.sequencia = this.data.sequencia;
-       this.consultarImagem();
-       this.consultarLinhasDeProducao();
-       this.consultarTurnoDeTrabalho();
-       this.controleExibicaoService.registrarLog(`VISUALIZOU DETALHES DO ITEM PROGRAMADO: [${this.data.nomeProduto}]`);
-    });
-   
+    //Captura a quantidade programada do item antes de qualquer alteração
+    this.quantidade = this.data.qtdeProgramada;
+    this.sequencia = this.data.sequencia;
+    this.consultarImagem();
+    this.consultarLinhasDeProducao();
+    this.consultarTurnoDeTrabalho();
+    this.controleExibicaoService.registrarLog(`VISUALIZOU DETALHES DO ITEM PROGRAMADO: [${this.data.nomeProduto}]`);
   }
 
   public consultarImagem() {
@@ -178,13 +161,11 @@ export class DlgDetalheItemComponent implements OnInit {
       this.openSnackBar('A quantidade programada não pode ser maior que o saldo!', this.snackBarErro);
       return;
     }
-
-    if (this.idTurno != this.data.turno.id || this.idLinhaDeProducao != this.data.linhaDeProducao.id || this.data.observacao == "" || this.data.observacao) {
+    if (this.idTurno != this.data.turno.id || this.idLinhaDeProducao != this.data.linhaDeProducao.id) {
       this.dialogRef.close({
         data: {'retorno': 'alterar_linha_turno' ,'item': this.data, 'turno': this.idTurno, 'linhaDeProducao': this.idLinhaDeProducao}
       });
     }
-
     if(this.prioridade != this.data.prioridade){
       this.data.prioridade = this.prioridade;
       this.dialogRef.close({

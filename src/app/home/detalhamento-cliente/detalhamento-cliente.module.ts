@@ -10,6 +10,9 @@ import { CardOutrosComponent } from './card-outros/card-outros.component';
 import { GraficoFaturamentoDiarioComponent } from './grafico-faturamento-diario/grafico-faturamento-diario.component';
 import { GraficoFaturamentoMensalComponent } from './grafico-faturamento-mensal/grafico-faturamento-mensal.component';
 import { GraficoEvolucaoCarteiraComponent } from './grafico-evolucao-carteira/grafico-evolucao-carteira.component';
+import { TblFaturamentoProdComponent } from './tbl-faturamento-prod/tbl-faturamento-prod.component';
+import { TblFaturamentoBenefComponent } from './tbl-faturamento-benef/tbl-faturamento-benef.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -21,11 +24,14 @@ import { GraficoEvolucaoCarteiraComponent } from './grafico-evolucao-carteira/gr
     CardOutrosComponent,
     GraficoFaturamentoDiarioComponent,
     GraficoFaturamentoMensalComponent,
-    GraficoEvolucaoCarteiraComponent
+    GraficoEvolucaoCarteiraComponent,
+    TblFaturamentoProdComponent,
+    TblFaturamentoBenefComponent,
   ],
   imports: [
     CommonModule,
-    DetalhamentoClienteRoutingModule
+    DetalhamentoClienteRoutingModule,
+    NgxPaginationModule
   ]
 })
 export class DetalhamentoClienteModule { }

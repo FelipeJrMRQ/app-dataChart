@@ -5,7 +5,6 @@ import { FaturamentoService } from 'src/app/services/faturamento.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import * as bootstrap from 'bootstrap';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
-import { LocalizacaoService } from 'src/app/services/localizacao.service';
 
 @Component({
   selector: 'app-content',
@@ -23,9 +22,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
-    private renderer: Renderer2,
+    private renderer : Renderer2,
     private controleExibicaoService: ControleExibicaoService,
-    private localizacaoService: LocalizacaoService,
   ) {
 
   }
@@ -39,17 +37,12 @@ export class ContentComponent implements OnInit, OnDestroy {
     var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition((position)=>{
-            
-      });
-    }
-    window.scroll(0, 0);
+    window.scroll(0,0);
     this.consultaPorIntervalo();
     this.registraLog();
   }
 
-  private registraLog() {
+  private registraLog(){
     this.controleExibicaoService.registrarLog('ACESSOU A TELA DASHBOARD SINTETICO');
   }
 

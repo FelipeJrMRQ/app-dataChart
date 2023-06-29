@@ -1,28 +1,9 @@
-.card-informativo{
-    width: 180px;
-    height: 85px;
-    /* background-color: #D9D9D9; */
-    background-color: rgb(2, 78, 218, 250);
-    border-radius: 10px;
-    margin-top: 10px;
-    box-shadow: 2px 2px 3px;
-}
-
-.card-header{
-    text-align: center;
-    padding: 15px;
-    font-weight: bold;
-    font-size: 16px;
-    color: white;
-}
-
-.card-content{
-    text-align: center;
-    font-weight: bold;
-    font-size: 16px;
-    color: white;
-}
-
-.font-table{
-    font-size: 11px;
+.bloco{
+    width: 60px;
+    height: 60px;
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0px;
 }

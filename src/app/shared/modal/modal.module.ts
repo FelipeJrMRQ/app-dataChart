@@ -20,7 +20,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatFormFieldModule,
     FormsModule,
     MatSnackBarModule
-
   ]
 })
 export class ModalModule { 

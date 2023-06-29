@@ -9,7 +9,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DlgAlterarSetupComponent } from './dlg-alterar-setup/dlg-alterar-setup.component';
-import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -26,7 +25,6 @@ import { MatSortModule } from '@angular/material/sort';
     ReactiveFormsModule,
     MatExpansionModule,
     MatTooltipModule,
-    MatSortModule,
   ],
   exports: [
     ItensProgramadosFormComponent,

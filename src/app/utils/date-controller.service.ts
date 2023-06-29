@@ -164,6 +164,11 @@ export class DateControllerService {
     return observable;
   }
 
+  /**
+   * Realiza a contagem de todos os dias úteis do mês a partir de uma determinada data
+   * @param data 
+   * @returns 
+   */
   private somaDiaUteisDoMes(data: any): number {
     this.diasUteisDoMes = 0;
     for (let i = moment(data).date(); i <= moment(data).daysInMonth(); ++i) {
@@ -198,12 +203,31 @@ export class DateControllerService {
     return sabadosMes;
   }
 
+  /**
+   * Identifica se o dia da semana é sábado e retorna o boolean
+   * @param data 
+   * @returns 
+   */
   public sabado(data: any): boolean {
     return (moment(data).weekday() == 6 ? true : false);
   }
 
+  /**
+   * A partir de uma determinada data consegue identificar e retornar o inicio do mês
+   * @param data 
+   * @returns 
+   */
   public getInicioDoMes(data: any) {
     return moment(`${moment(data).format('yyyy-MM')}-01`).format('yyyy-MM-DD');
+  }
+
+  /**
+   * A partir de uma determinada data consegue identificar e retornar o inicio do ano
+   * @param data 
+   * @returns 
+   */
+  public getInicioDoAno(data: any) {
+    return moment(data).startOf('year').format('yyyy-MM-DD');
   }
 
 }

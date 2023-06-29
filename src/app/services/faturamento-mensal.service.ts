@@ -23,6 +23,10 @@ export class FaturamentoMensalService {
       return this.http.get<FaturamentoMensalCliente[]>(`${this.urlApi}/clientes/${dataInicial}/${dataFinal}`);
   }
 
+  public consultaFaturamentoMensalDoCliente(dataInicial: any, dataFinal: any, cdCliente: any){
+    return this.http.get<FaturamentoMensalCliente>(``)
+  }
+
   public consultaFaturamentoMensalBeneficiamento(dataInicial: any, dataFinal: any): Observable<FaturamentoMensalBeneficiamento[]>{
     return this.http.get<FaturamentoMensalBeneficiamento[]>(`${this.urlApi}/beneficiamentos/${dataInicial}/${dataFinal}`);
   }
