@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ModeloConsulta } from '../models/modelo-consulta';
-import { ModeloRetorno } from '../models/modelo-retorno';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +16,6 @@ export class BeneficiamentoService {
   constructor(
     private http: HttpClient
   ) { }
-
-
 
   public consultarCarteiraPorBeneficiamento(modeloConsulta:ModeloConsulta): Observable<any>{
     return this.http.post<ModeloConsulta>(`${this.urlApi}/carteira-beneficiamento`,modeloConsulta);

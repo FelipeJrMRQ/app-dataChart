@@ -208,7 +208,6 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
       });
     });
     this.openSnackBar('Sequencia alterada com sucesso!', this.snackBarSucesso);
-
   }
 
   public alterarSetup(setupAltual: Setup) {

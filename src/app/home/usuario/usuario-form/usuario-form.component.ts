@@ -5,7 +5,7 @@ import { ComponenteTela } from 'src/app/models/tela/componente-tela';
 import { TelaSistema } from 'src/app/models/tela/tela-sistema';
 import { TelaUsuario } from 'src/app/models/tela/tela-usuario';
 import { Usuario } from 'src/app/models/usuario';
-import { UsuuarioDTO } from 'src/app/models/usuario-dto';
+import { UsuarioDTO } from 'src/app/models/usuario-dto';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { TelaSistemaService } from 'src/app/services/telas/tela-sistema.service';
 import { TelaUsuarioService } from 'src/app/services/telas/tela-usuario.service';
@@ -26,7 +26,7 @@ export class UsuarioFormComponent implements OnInit {
   administrador: boolean = false;
   programacao: boolean = false;
   email: string = "";
-  usuarios: UsuuarioDTO[] = [];
+  usuarios: UsuarioDTO[] = [];
   modoDeEdicao: boolean = false;
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
@@ -39,7 +39,7 @@ export class UsuarioFormComponent implements OnInit {
   telasDoUsuario: TelaUsuario[];
   telaUsuario: TelaUsuario;
   componentesSelecionados: ComponenteTela[];
-  iconeRemocao:boolean = false; 
+  iconeRemocao: boolean = false;
   editar = false;
   public toolTip = [];
 
@@ -65,7 +65,7 @@ export class UsuarioFormComponent implements OnInit {
     this.consultarTelasDoSistema();
   }
 
-  private registraLog(){
+  private registraLog() {
     this.controleExibicaoService.registrarLog('ACESSOU CADASTRO DE USUÁRIOS')
   }
 
@@ -83,20 +83,20 @@ export class UsuarioFormComponent implements OnInit {
     });
   }
 
-  public marcarItensDoUsuario(nomeTela: any){
-  //  let telaSelecionada: TelaSistema = new TelaSistema();  
-  //  let telaUsuario: TelaSistema = new TelaSistema();  
-  //  telaSelecionada =  this.telasDoSistema.find(t=>t.nome == nomeTela)!;
-  //  if(this.telasDoUsuario.some(t=>t.nome === telaSelecionada.nome)){
-  //     telaUsuario = this.telasDoUsuario.find(t=>t.nome === telaSelecionada.nome)!;
-  //     console.log(telaSelecionada);
-  //     telaSelecionada.componentes.forEach(c=>{
-  //       if(telaUsuario.componentes.some(cu=>cu.nome === c.nome)){
-  //         let imput: any = this.elementRef.nativeElement.querySelector(`#cp_${c.id}`);
-  //         this.renderer.setProperty(imput, 'checked', true);
-  //       }
-  //     });
-  //  }
+  public marcarItensDoUsuario(nomeTela: any) {
+    //  let telaSelecionada: TelaSistema = new TelaSistema();  
+    //  let telaUsuario: TelaSistema = new TelaSistema();  
+    //  telaSelecionada =  this.telasDoSistema.find(t=>t.nome == nomeTela)!;
+    //  if(this.telasDoUsuario.some(t=>t.nome === telaSelecionada.nome)){
+    //     telaUsuario = this.telasDoUsuario.find(t=>t.nome === telaSelecionada.nome)!;
+    //     console.log(telaSelecionada);
+    //     telaSelecionada.componentes.forEach(c=>{
+    //       if(telaUsuario.componentes.some(cu=>cu.nome === c.nome)){
+    //         let imput: any = this.elementRef.nativeElement.querySelector(`#cp_${c.id}`);
+    //         this.renderer.setProperty(imput, 'checked', true);
+    //       }
+    //     });
+    //  }
   }
 
   private salvarTelasUsuario() {
@@ -212,15 +212,15 @@ export class UsuarioFormComponent implements OnInit {
       next: (res) => {
         this.telasDoSistema = res;
       },
-      complete:()=>{
+      complete: () => {
         this.verificaTelasQueOUsuarioPossui();
       }
     });
   }
 
-  public verificaTelasQueOUsuarioPossui(){
-    this.telasDoSistema.forEach(t=>{
-      
+  public verificaTelasQueOUsuarioPossui() {
+    this.telasDoSistema.forEach(t => {
+
     });
   }
 
@@ -253,25 +253,25 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   public cadastrarUsuario() {
-    if(this.usuario.nome && this.usuario.username){
-      this.dialog.open(DlgLoadingComponent, {disableClose: true});
+    if (this.usuario.nome && this.usuario.username) {
+      this.dialog.open(DlgLoadingComponent, { disableClose: true });
       this.usuarioService.cadastrarUsuario(this.usuario).subscribe({
-      next: (res) => {
-        this.openSnackBar("Usuário cadastrado com sucesso!", this.snackBarSucesso);
-      },
-      error: (e) => {
-        this.openSnackBar("Falha ao enviar convite por e-mail!", this.snackBarErro);
-        this.dialog.closeAll();
-      },
-      complete:()=>{
-        this.limparDados();
-        this.dialog.closeAll();
-      }
-    });
-    }else{
+        next: (res) => {
+          this.openSnackBar("Usuário cadastrado com sucesso!", this.snackBarSucesso);
+        },
+        error: (e) => {
+          this.openSnackBar("Falha ao enviar convite por e-mail!", this.snackBarErro);
+          this.dialog.closeAll();
+        },
+        complete: () => {
+          this.limparDados();
+          this.dialog.closeAll();
+        }
+      });
+    } else {
       this.openSnackBar('Digite o nome e e-mail do usuário', this.snackBarErro);
     }
-    
+
   }
 
   public limparDados() {
@@ -305,7 +305,7 @@ export class UsuarioFormComponent implements OnInit {
     return verificador;
   }
 
-  public editarUsuario(usuario: UsuuarioDTO) {
+  public editarUsuario(usuario: UsuarioDTO) {
     this.controleExibicaoService.registrarLog(`SELECIONOU O USUÁRIO [${usuario.email}]`);
     this.editar = true;
     window.scroll(0, 0);
@@ -333,6 +333,31 @@ export class UsuarioFormComponent implements OnInit {
       },
     });
   }
+
+  public notificarUsuarios() {
+    this.usuarioService.consultarTodos().subscribe({
+      next: (res) => {
+        this.prepararParaNotificacao(res);
+      }
+    });
+  }
+
+  private prepararParaNotificacao(dto: UsuarioDTO[]) {
+    dto.forEach(e => {
+      let u = new Usuario();
+      u.contaAtiva = e.contaAtiva
+      u.id = e.id;
+      u.nome = e.nome;
+      u.notificacao = true;
+      u.username = e.email;
+      this.usuarioService.alterarUsuario(u).subscribe({
+         next:(res)=>{} 
+      });
+    });
+    this.openSnackBar('Notificações atualizadas com sucesso!', this.snackBarSucesso);
+  }
+
+
 
   public bloquearUsuario(id: any) {
     this.usuarioService.bloquearUsuario(id).subscribe({

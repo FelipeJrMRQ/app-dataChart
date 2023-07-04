@@ -48,11 +48,18 @@ export const environment = {
  * Faturamento
  * Medias
  * Historicos completos do ano sobre um cliente
+ * Criação do sistema de notificação dashbot
  * 
  * Correção do bug do valor de faturamento que só considerava notas fiscais com produtos
  * A partir desta versão o sistema considera outras formas de futuramento
  * 
  * Exemplo: Nota fiscal de venda de máquinas
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.31.18
+ * Criação do modelo de notificação do usuário via web 
+ * 
+ * 
  * 
  * 
  */

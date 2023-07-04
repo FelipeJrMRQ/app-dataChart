@@ -16,8 +16,7 @@ export class CardFaturamentoComponent implements OnInit {
   faturamentoDia: number = 0;
   faturamentoMes: number = 0;
   faturamentoAno: number = 0;
-  dataInicial: any;
-  dataFinal: any;
+  dataRecebida: any;
   cdCliente: any;
 
   constructor(
@@ -29,8 +28,17 @@ export class CardFaturamentoComponent implements OnInit {
   ngOnInit(): void {
     this.activeRoute.params.subscribe((res: any) => {
       this.cdCliente = res.cdCliente;
-      this.dataInicial = res.data;
-      this.dataFinal = res.data
+      this.consultaFaturamentoDoDia();
+      this.consultarFaturamentoDoMes();
+      this.consultarFaturamentoDoAno();
+    });
+    this.receberDataPorEvento();
+  }
+
+  
+  private receberDataPorEvento(){
+    DetalhamentoClienteService.event.subscribe(res=>{ 
+      this.dataRecebida = res
       this.consultaFaturamentoDoDia();
       this.consultarFaturamentoDoMes();
       this.consultarFaturamentoDoAno();
@@ -38,29 +46,35 @@ export class CardFaturamentoComponent implements OnInit {
   }
 
   public consultaFaturamentoDoDia() {
-    this.detalhamentoService.consultarFaturamentoDiarioDoCliente(this.dataInicial, this.dataFinal, this.cdCliente).subscribe({
+    this.detalhamentoService.consultarFaturamentoDiarioDoCliente(this.dataRecebida, this.dataRecebida, this.cdCliente).subscribe({
       next: (res) => {
-        this.faturamentoDia = res[0].valor;
+        try {
+          this.faturamentoDia = res[0].valor;
+        } catch (error) {
+          
+        }
       }
     });
   }
 
   public consultarFaturamentoDoMes() {
     this.detalhamentoService.consultarFaturamentoMensalDoCliente(
-        this.dateService.getInicioDoMes(this.dataInicial),
-       this.dataFinal,
+        this.dateService.getInicioDoMes(this.dataRecebida),
+       this.dataRecebida,
         this.cdCliente)
       .subscribe({
         next: (res) => {
-          this.faturamentoMes = res[0].valor;
+          try {
+            this.faturamentoMes = res[0].valor;
+          } catch (error) {}
         }
       });
   }
 
   public consultarFaturamentoDoAno() {
     this.detalhamentoService.consultarFaturamentoMensalDoCliente(
-        this.dateService.getInicioDoAno(this.dataInicial),
-       this.dataFinal,
+        this.dateService.getInicioDoAno(this.dataRecebida),
+       this.dataRecebida,
         this.cdCliente)
       .subscribe({
         next: (res) => {
@@ -72,7 +86,9 @@ export class CardFaturamentoComponent implements OnInit {
   private somaFaturamentoDoAno(faturamentosDoMes: FaturamentoMensalDTO[]){
     this.faturamentoAno = 0;
     faturamentosDoMes.forEach(e=>{
-      this.faturamentoAno +=e.valor;
+      try {
+        this.faturamentoAno +=e.valor;
+      } catch (error) {}
     });
   }
 

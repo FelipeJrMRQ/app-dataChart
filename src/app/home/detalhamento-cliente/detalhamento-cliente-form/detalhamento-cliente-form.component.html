@@ -4,6 +4,18 @@
             <label clas="color-text">DETALHES DO CLIENTE - {{nomeCliente}}</label>
         </div>
     </section>
+    <section>
+        <div class="row">
+            <div class="col-8 col-md-4 col-lg-4 mt-1">
+              <div class="input-group">
+                <input type="date" name="dataRecebida" class="form-control bgInput text-center" [(ngModel)]="dataRecebida" />
+                <button class="input-group-text btn btn-primary" (click)="emitirData()">
+                  <i class="fas fa-search-dollar"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+    </section>
     <div class="row">
         <div class="col-12 col-lg-3 mt-2">
             <app-card-entradas></app-card-entradas>

@@ -6,6 +6,7 @@ import { EntradaDoDiaDTO } from 'src/app/models/detalhamento-cliente/entrada-dia
 import { FaturamentoDiarioDTO } from 'src/app/models/detalhamento-cliente/faturamento-diario-dto';
 import { ModeloConsulta } from 'src/app/models/modelo-consulta';
 import { DetalhamentoClienteService } from 'src/app/services/detalhamento-cliente.service';
+import { ExcelService } from 'src/app/services/excel.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 
 @Component({
@@ -31,6 +32,7 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
     private detalhamentoService: DetalhamentoClienteService,
     private dataService: DateControllerService,
     private activeRoute: ActivatedRoute,
+    private exportService: ExcelService,
   ) {
     this.modelo = new ModeloConsulta();
     this.faturamentos = [];
@@ -44,8 +46,15 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
       this.nomeCliente= res.nomeCliente;
       this.consultaFaturamentoDiarioDoCliente();
     });
+    this.receberDataPorEvento();
   }
 
+  private receberDataPorEvento(){
+    DetalhamentoClienteService.event.subscribe(res=>{ 
+      this.dataRecebida = res;
+      this.consultaFaturamentoDiarioDoCliente();
+    });
+  }
 
   private consultaFaturamentoDiarioDoCliente(){
     this.detalhamentoService.consultarFaturamentoDiarioDoCliente(this.dataService.getInicioDoMes(this.dataRecebida), this.dataRecebida, this.cdCliente).subscribe({
@@ -65,7 +74,17 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
       this.valoresFaturamento.push(e.valor);
       this.datasFaturamento.push(moment(e.data).date())
     });
-    this.gerarGrafico();
+    this.atualizarGrafico();
+  }
+
+  public atualizarGrafico(){
+    if(this.elementChart){
+      this.chartBarDay.data.labels = this.datasFaturamento;
+      this.chartBarDay.data.datasets[0].data = this.valoresFaturamento;
+      this.chartBarDay.update();
+    }else{
+      this.gerarGrafico();
+    }
   }
 
   delayed: any;
@@ -106,6 +125,10 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
         maintainAspectRatio: true,
       }
     });
+  }
+
+  public exportarDados(){
+    this.exportService.geradorExcell(this.faturamentos, `faturamento_diario`);
   }
 
 }

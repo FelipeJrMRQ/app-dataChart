@@ -7,10 +7,10 @@ import { DlgUpdateSenhaComponent } from './dlg-update-senha/dlg-update-senha.com
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DglConfirmacaoComponent } from './dgl-confirmacao/dgl-confirmacao.component';
-import { MatDialogModule } from '@angular/material/dialog';
 import { DlgExclusaoComponent } from './dlg-exclusao/dlg-exclusao.component';
 import { DlgLoadingComponent } from './dlg-loading/dlg-loading.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NotificacaoComponent } from './notificacao/notificacao.component';
 
 
 @NgModule({
@@ -20,6 +20,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     DglConfirmacaoComponent,
     DlgExclusaoComponent,
     DlgLoadingComponent,
+    NotificacaoComponent,
   ],
   imports: [
     CommonModule,

@@ -16,6 +16,8 @@ import { GraficoComparativoAnualComponent } from './grafico-comparativo-anual/gr
 import { GraficoEntradasMesComponent } from './grafico-entradas-mes/grafico-entradas-mes.component';
 import { GraficoFaturamentoAnoAnteriorComponent } from './grafico-faturamento-ano-anterior/grafico-faturamento-ano-anterior.component';
 import { GraficoEvolucaoCarteiraComponent } from './grafico-evolucao-carteira/grafico-evolucao-carteira.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogModule } from 'src/app/shared/dialog/dialog.module';
 
 
 @NgModule({
@@ -38,7 +40,9 @@ import { GraficoEvolucaoCarteiraComponent } from './grafico-evolucao-carteira/gr
     CommonModule,
     DashboardSinteticoRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule,
+    DialogModule,
   ]
 })
 export class DashboardSinteticoModule { }

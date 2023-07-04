@@ -28,6 +28,15 @@ export class CardMediasComponent implements OnInit {
       this.consultarEntradaDiaria();
       this.consultarFaturamentoDiario();
     });
+    this.receberDataPorEvento();
+  }
+
+  private receberDataPorEvento(){
+    DetalhamentoClienteService.event.subscribe(res=>{ 
+      this.dataRecebida = res
+      this.consultarEntradaDiaria();
+      this.consultarFaturamentoDiario();
+    });
   }
 
   private consultarFaturamentoDiario() {

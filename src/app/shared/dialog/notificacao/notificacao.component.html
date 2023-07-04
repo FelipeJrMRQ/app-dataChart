@@ -1,0 +1,25 @@
+<section>
+    <div class="row d-flex">
+        <div class="col-sm-4 col-md-2 align-middle">
+            <img src="assets/dashbot.png" alt="Dashbot">
+        </div>
+        <div class="col-sm-8 col-md-10 text-start align-middle mt-2">
+            <h1>Olá sou DashBot</h1>
+            <h3>Seu assistente virtual</h3>
+        </div>
+    </div>
+</section>
+<hr>
+<section>
+    <div class="bold" [innerHTML]="msg"></div>
+    <hr>
+    <div class="row align-middle">
+        <div class="col-6">
+            <button *ngIf="contador ==0" class="btn btn-sm btn-primary" [disabled]="btnClose" tabindex="-1" (click)="fecharDialogo()">Fechar</button>
+            <label class="ms-3 bold" *ngIf="contador != 0">{{contador}}</label>
+        </div>
+        <div class="col-6 bold text-end mt-1">
+            <label>{{versaoApp}}</label>
+        </div>
+    </div>
+</section>

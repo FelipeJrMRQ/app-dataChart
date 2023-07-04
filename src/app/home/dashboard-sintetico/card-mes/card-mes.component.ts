@@ -61,7 +61,9 @@ export class CardMesComponent implements OnInit {
 
     this.faturamentoService.consultaTotalFaturamentoPorMes(this.dateService.getInicioDoMes(moment(this.dataRecebida).format('yyyy-MM-DD')), this.dataRecebida).subscribe({
         next:(res)=>{
+         try {
           this.valorFaturamento = res[0].valor;
+         } catch (error) {}
         },
         complete:()=>{
           this.consultaParametrosMeta();
@@ -72,8 +74,10 @@ export class CardMesComponent implements OnInit {
   public consultaParametrosMeta() {
     this.parametrosService.consultarParamentrosMeta(moment(this.dataRecebida).format('yyyy-MM-DD')).subscribe({
       next: (res) => {
+       try {
         this.metaFaturamentoDoMes = res.valorMetaMensal;
         this.parametrosMeta = res;
+       } catch (error) {}
       },
       error: (e) => {
         console.log(e);

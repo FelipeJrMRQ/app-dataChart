@@ -13,6 +13,7 @@ import { GraficoEvolucaoCarteiraComponent } from './grafico-evolucao-carteira/gr
 import { TblFaturamentoProdComponent } from './tbl-faturamento-prod/tbl-faturamento-prod.component';
 import { TblFaturamentoBenefComponent } from './tbl-faturamento-benef/tbl-faturamento-benef.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -31,7 +32,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
   imports: [
     CommonModule,
     DetalhamentoClienteRoutingModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class DetalhamentoClienteModule { }

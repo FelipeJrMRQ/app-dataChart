@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   urlApi: "http://125.67.2.20:8083/api",
   obterToken: "http://125.67.2.20:8083/login",
-  versaoApp: '1.30.18'
+  versaoApp: '1.31.18'
 };
 
 /**
@@ -44,18 +44,24 @@ export const environment = {
  * Alteração de linha de produção ou turno so setup existente.
  * 
  * Correção do bug de redirecionamento no botação voltar na tela de cofiguração de metas
- * -------------------------------------------------------------------------------------------------------------------
  * 
+ * -------------------------------------------------------------------------------------------------------------------
  * Versão 1.30.18
  * Criação da tela de detalhes do cliente com informativo completo sobre 
  * Entradas
  * Faturamento
  * Medias
  * Historicos completos do ano sobre um cliente
+ * Criação do sistema de notificação dashbot
  * 
  * Correção do bug do valor de faturamento que só considerava notas fiscais com produtos
  * A partir desta versão o sistema considera outras formas de futuramento
  * 
  * Exemplo: Nota fiscal de venda de máquinas
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.31.18
+ * Criação do modelo de notificação do usuário via web 
+ * 
  */
 

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FaturamentoDiarioDTO } from '../models/detalhamento-cliente/faturamento-diario-dto';
@@ -13,6 +13,7 @@ import { CarteiraDoClienteDTO } from '../models/detalhamento-cliente/carteira-cl
 })
 export class DetalhamentoClienteService {
 
+  static event = new EventEmitter<any>();
   private urlApi: any = `${environment.urlApi}/detalhamento-cliente`
 
   constructor(

@@ -54,19 +54,18 @@ export class FaturamentoBeneficiamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('certo')
-    // this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR BENEFICIAMENTO EM FATURAMENTO MENSAL');
-    // this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
-    // var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
-    //   return new bootstrap.Tooltip(tooltipTriggerEl);
-    // });
-    // this.activeRoute.params.subscribe((param: any) => {
-    //   this.cdBeneficiamento = param.cdBeneficiamento;
-    //   this.nomeBeneficiamento = param.nomeBeneficiamento;
-    //   this.dataRecebida = param.data;
-    // });
-    // this.consultaDetalhesDoCliente();
-    // this.consultaDetalhesDoProduto();
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR BENEFICIAMENTO EM FATURAMENTO MENSAL');
+    this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
+    var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    this.activeRoute.params.subscribe((param: any) => {
+      this.cdBeneficiamento = param.cdBeneficiamento;
+      this.nomeBeneficiamento = param.nomeBeneficiamento;
+      this.dataRecebida = param.data;
+    });
+    this.consultaDetalhesDoCliente();
+    this.consultaDetalhesDoProduto();
   }
 
   //METODOS DE ROTAS 

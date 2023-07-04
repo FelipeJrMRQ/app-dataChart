@@ -4,6 +4,7 @@ import { Usuario } from '../models/usuario';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { UsuarioDTO } from '../models/usuario-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,10 @@ export class UsuarioService {
 
   public acessoNegado() {
     this.router.navigate(['/']);
+  }
+
+  public consultarTodos(): Observable<UsuarioDTO[]>{
+    return this.http.get<UsuarioDTO[]>(this.urlApi);
   }
 
   public alterarSenha(email: any , senha: any, nSenha: any):Observable<any>{

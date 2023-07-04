@@ -36,12 +36,24 @@ export class CardEntradasComponent implements OnInit {
       this.consultarEntradasDoAno();
       this.consultaEntradaDiaria();
     });
+    this.receberDataPorEvento();
+  }
+
+  private receberDataPorEvento(){
+    DetalhamentoClienteService.event.subscribe(res=>{ 
+      this.dataRecebida = res
+      this.consultarEntradasDoMes();
+      this.consultarEntradasDoAno();
+      this.consultaEntradaDiaria();
+    });
   }
 
   public consultaEntradaDiaria(){
       this.datalhamentoService.consultaEntradaDoDiaDoCliente(this.dataRecebida, this.dataRecebida, this.cdCliente).subscribe({
           next:(res)=>{
-            this.vlEntradaDia = res[0].valor;
+            try {
+              this.vlEntradaDia = res[0].valor;
+            } catch (error) {}
           }
       });
   } 

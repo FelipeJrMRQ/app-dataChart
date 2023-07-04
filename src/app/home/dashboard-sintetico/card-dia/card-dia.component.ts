@@ -61,15 +61,15 @@ export class CardDiaComponent implements OnInit {
 
   private verificaPermissaoDeAcesso() {
     forkJoin({
-      s1 : this.controleDeExibicao.verificaPermissaoDeAcesso('grafico_diario', this.nomeTela),
-    }).subscribe(({s1})=>{
-        if(s1){
-           this.consultaValorFaturamento();
-           return;
-        }
-        this.valorFaturamentoDia = 0;
-        this.percentualFaturamento = 0;
-        this.gapDoDia = 0;
+      s1: this.controleDeExibicao.verificaPermissaoDeAcesso('grafico_diario', this.nomeTela),
+    }).subscribe(({ s1 }) => {
+      if (s1) {
+        this.consultaValorFaturamento();
+        return;
+      }
+      this.valorFaturamentoDia = 0;
+      this.percentualFaturamento = 0;
+      this.gapDoDia = 0;
     });
   }
 
@@ -110,10 +110,14 @@ export class CardDiaComponent implements OnInit {
   public consultaParametrosMeta() {
     this.parametrosService.consultarParamentrosMeta(moment(this.dataRecebida).format('yyyy-MM-DD')).subscribe({
       next: (res) => {
-        this.metaFaturamentoDoMes = res.valorMetaMensal;
-        this.parametrosMeta = res;
+        try {
+          this.metaFaturamentoDoMes = res.valorMetaMensal;
+          this.parametrosMeta = res;
+        } catch (error) {
+
+        }
       },
-      error: (e) => {},
+      error: (e) => { },
       complete: () => { this.consultaMetaDoDia() }
     });
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FaturamentoMensalBeneficiamento } from 'src/app/models/faturamento/faturamento-mensal-beneficiamento';
+import { DetalhamentoClienteService } from 'src/app/services/detalhamento-cliente.service';
 import { FaturamentoMensalService } from 'src/app/services/faturamento-mensal.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 
@@ -29,6 +30,14 @@ export class TblFaturamentoBenefComponent implements OnInit {
         this.cdCliente = res.cdCliente;
         this.dataRecebida = res.data;
         this.consultarFaturamentoDoClientePorBeneficiamento();
+    });
+    this.receberDataPorEvento();
+  }
+
+  private receberDataPorEvento(){
+    DetalhamentoClienteService.event.subscribe(res=>{ 
+      this.dataRecebida = res;
+      this.consultarFaturamentoDoClientePorBeneficiamento();
     });
   }
 

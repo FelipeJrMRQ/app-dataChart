@@ -12,7 +12,6 @@ import { LinhaDeProducao } from 'src/app/models/linha-de-producao';
 import { Turno } from 'src/app/models/turno';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
-import { Usuario } from 'src/app/models/usuario';
 import { DlgCadLinhaComponent } from '../dlg-cad-linha/dlg-cad-linha.component';
 import { DlgCadTurnoComponent } from '../dlg-cad-turno/dlg-cad-turno.component';
 import { ProgramacaoService } from 'src/app/services/programacao.service';

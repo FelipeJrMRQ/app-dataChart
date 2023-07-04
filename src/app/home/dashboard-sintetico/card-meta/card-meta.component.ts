@@ -58,6 +58,7 @@ export class CardMetaComponent implements OnInit {
         this.parametrosMeta = res;
       },
       complete: () => {
+       try {
         if (this.exibirValorOrcamento) {
           this.valorOrcamento = this.parametrosMeta.valorOrcamento;
         }
@@ -67,6 +68,9 @@ export class CardMetaComponent implements OnInit {
         if (this.exibirMetaSabado) {
           this.metaPorSabado = this.parametrosMeta.valorPorSabado;
         }
+       } catch (error) {
+        
+       }
       }
     });
   }

@@ -31,6 +31,14 @@ export class GraficoEvolucaoCarteiraComponent implements OnInit {
       this.cdCliente = res.cdCliente;
       this.consultaEvolucaoCarteiraDoCliente();
     });
+    this.receberDataPorEvento();
+  }
+
+  private receberDataPorEvento(){
+    DetalhamentoClienteService.event.subscribe(res=>{ 
+      this.dataRecebida = res;
+      this.consultaEvolucaoCarteiraDoCliente();
+    });
   }
 
   private consultaEvolucaoCarteiraDoCliente() {
@@ -42,13 +50,24 @@ export class GraficoEvolucaoCarteiraComponent implements OnInit {
   }
 
   private organizarDadosParaExibicao(dadosCarteira: FaturamentoDiarioDTO[]) {
+    this.valores = [];
+    this.datas = [];
     dadosCarteira.forEach(e => {
       this.valores.push(e.valor);
       this.datas.push(moment(e.data).format('DD-MM'));
     });
-    this.gerarRelatorio();
+    this.atualizaValoresDoGrafico();
   }
 
+  public atualizaValoresDoGrafico(){
+    if(this.elementChart){
+      this.chartBarDay.data.labels = this.datas;
+      this.chartBarDay.data.datasets[0].data = this.valores;
+      this.chartBarDay.update();
+    }else{
+      this.gerarRelatorio();
+    }
+  }
 
   delayed: any;
   public gerarRelatorio() {

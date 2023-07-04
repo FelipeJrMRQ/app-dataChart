@@ -1,0 +1,94 @@
+
+<section class="mb-2">
+    <div class="bold card-label d-flex between align-middle">
+        <label class="color-text bold">DESENVOLVIMENTO DO MODELO DE NOTIFICAÇÃO</label>
+    </div>
+</section>
+<div class="row">
+    <div class="col-lg-6 mb-5">
+        <section>
+            <label class="form-label">Digite o código html</label>
+            <textarea class="form-control" cols="60" rows="15" [(ngModel)]="notificacao.mensagem">
+            </textarea>
+        </section>
+        <button class="btn btn-primary btn-sm mt-3" (click)="salvarNotificacao()">Salvar notificação</button>
+    </div>
+    <div class="col-lg-6">
+        <label for="" class="form-label">Resultado</label>
+        <div class="form-control">
+            <section>
+                <div class="row ">
+                    <div class="col-sm-3 col-md-2 align-middle">
+                        <img src="assets/dashbot.png" alt="Dashbot">
+                    </div>
+                    <div class="col-sm-9 col-md-10 text-start align-middle mt-2">
+                        <h1>Olá sou DashBot</h1>
+                        <h3>Seu assistente virtual</h3>
+                    </div>
+                </div>
+            </section>
+            <hr>
+            <section>
+                <div class="bold" [innerHTML]="notificacao.mensagem"></div>
+                <hr>
+                <div class="row align-middle">
+                    <div class="col-6">
+                        <button  class="btn btn-sm btn-primary" tabindex="-1" (click)="visualizar()">Visualizar</button>
+                    </div>
+                    <div class="col-6 bold text-end mt-1">
+                        <label>{{versaoApp}}</label>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="bold card-label d-flex between align-middle table-hove">
+        <label class="color-text bold">USUÁRIOS PARA NOTIFICAR</label>
+    </div>
+</section>
+<div class="mb-5">
+    <div class="table">
+        <table class="table table-sm table-striped align-middle table-hover">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th class="text-center">Notificar ?</th>
+                    <th class="text-center">Notificar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let usuario of usuarios">
+                    <td>{{usuario.nome}}</td>
+                    <td>{{usuario.email}}</td>
+                    <td class="text-center text-success bold" *ngIf="usuario.notificacao">Sim</td>
+                    <td class="text-center text-danger bold" *ngIf="!usuario.notificacao">Não</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-success me-2" (click)="notificarUsuario(usuario)">Notificar</button>
+                        <button class="btn btn-sm btn-danger" (click)="cancelarNotificacao(usuario)">Cancelar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mb-5">
+    <button class="btn btn-sm btn-success" (click)="notificarTodos()">Notificar todos</button>
+    <button class="btn btn-danger btn-sm ms-2" (click)="cancelarTodos()">Cancelar todos</button>
+</div>
+
+
+
+<!-- 
+
+<p>Olha eu aqui novamente, trago mais uma atualização.</p>
+<p>Agora quando o meta do mês não for preenchida o sistema  <br> utilizará as informações do mês anterior.</p>
+<p>Em seguida sistema fará uma notificação via e-mail para os  <br> responsáveis pela atualização dos valores.</p>
+<br>
+<p> Até breve!</p>
+
+ -->

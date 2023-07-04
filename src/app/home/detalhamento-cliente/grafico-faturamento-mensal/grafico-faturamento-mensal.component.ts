@@ -16,7 +16,7 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
   private elementChart: any;
   private chartBarDay: any;
   private dadosFaturamento: any = [];
-  private dataInicial: any;
+  private dataRecebida: any;
   private cdCliente: any;
   private valores: any = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   private meses: any = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
@@ -30,15 +30,22 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe((res: any) => {
-      this.dataInicial = res.data;
+      this.dataRecebida = res.data;
       this.cdCliente = res.cdCliente;
       this.consultarFaturamentoMensal();
     });
+    this.receberDataPorEvento();
+  }
 
+  private receberDataPorEvento(){
+    DetalhamentoClienteService.event.subscribe(res=>{ 
+      this.dataRecebida = res;
+      this.consultarFaturamentoMensal();
+    });
   }
 
   public consultarFaturamentoMensal() {
-    this.detalhamentoClienteService.consultarFaturamentoMensalDoCliente(this.dateService.getInicioDoAno(this.dataInicial), this.dataInicial, this.cdCliente).subscribe({
+    this.detalhamentoClienteService.consultarFaturamentoMensalDoCliente(this.dateService.getInicioDoAno(this.dataRecebida), this.dataRecebida, this.cdCliente).subscribe({
       next: (res) => {
         this.organizarValoresParaExibicao(res);
       }
@@ -46,6 +53,7 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
   }
 
   private organizarValoresParaExibicao(valores: FaturamentoMensalDTO[]) {
+    this.valores = [];
     valores.forEach(e => {
       switch (e.mes) {
         case 1:
@@ -86,7 +94,17 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
           break;
       }
     });
-    this.gerarGrafico();
+    this.atualizarGrafico();
+  }
+
+  private atualizarGrafico(){
+    if(this.elementChart){
+      this.chartBarDay.data.labels = this.meses;
+      this.chartBarDay.data.datasets[0].data = this.valores;
+      this.chartBarDay.update();
+    }else{
+      this.gerarGrafico();
+    }
   }
 
   delayed: any;

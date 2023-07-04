@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FaturamentoMensalBeneficiamento } from 'src/app/models/faturamento/faturamento-mensal-beneficiamento';
 import { FaturamentoMensalProduto } from 'src/app/models/faturamento/faturamento-mensal-produto';
+import { DetalhamentoClienteService } from 'src/app/services/detalhamento-cliente.service';
 import { FaturamentoMensalService } from 'src/app/services/faturamento-mensal.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 
@@ -29,6 +30,14 @@ export class TblFaturamentoProdComponent implements OnInit {
     this.activeRoute.params.subscribe((res: any) => {
       this.cdCliente = res.cdCliente;
       this.dataRecebida = res.data;
+      this.consultarFaturamentoDoClientePorProduto();
+    });
+    this.receberDataPorEvento();
+  }
+
+  private receberDataPorEvento(){
+    DetalhamentoClienteService.event.subscribe(res=>{ 
+      this.dataRecebida = res;
       this.consultarFaturamentoDoClientePorProduto();
     });
   }
