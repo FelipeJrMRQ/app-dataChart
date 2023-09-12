@@ -43,6 +43,10 @@ export class UsuarioService {
     return this.http.get(`${this.urlApi}/${email}`);
   }
 
+  public consultarUsuarioPorEmailRecuperarSenha(email: any): Observable<any> {
+    return this.http.get(`${this.urlApi}/recuperarSenha/${email}`);
+  }
+
   public bloquearUsuario(id: number) {
     return this.http.get(`${this.urlApi}/bloquear/${id}`);
   }

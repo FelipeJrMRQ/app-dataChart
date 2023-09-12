@@ -40,7 +40,7 @@ export class EntradaBeneficiamentoClienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE DETALHES POR CLIENTE EM ENTRADA [ENTRADA -> BENEFICIAMENTO]')
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE DETALHES POR CLIENTE EM ENTRADA [ENTRADA -> BENEFICIAMENTO]', 'ENTRADA -> BENEFICIAMENTO');
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
     var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)

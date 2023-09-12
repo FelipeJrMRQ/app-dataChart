@@ -34,7 +34,7 @@ export class TelaFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE CONFIGURACAO DE TELAS');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE CONFIGURACAO DE TELAS', 'CONFIGURACAO TELAS');
     this.consultarTelasDoSistama();
   }
 

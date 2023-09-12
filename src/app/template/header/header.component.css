@@ -3,6 +3,9 @@
     margin: 10px;
     color: rgb(2, 78, 218);
 }
+.logo{
+    width:145px;
+}
 
 .z-index-8 {
     z-index: 8;

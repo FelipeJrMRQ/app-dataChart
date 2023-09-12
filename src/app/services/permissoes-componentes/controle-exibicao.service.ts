@@ -110,10 +110,10 @@ export class ControleExibicaoService {
    * recebe a descrição do evento como parametro.
    * @param descricao 
    */
-  public registrarLog(descricao: string) {
+  public registrarLog(descricao: string, tela :string) {
     this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')).subscribe({
       next: (res) => {
-        this.logSistemaService.salvarLog(new LogSistema(null, descricao, res[0])).subscribe({
+        this.logSistemaService.salvarLog(new LogSistema(null, descricao, res[0], tela)).subscribe({
           next: () => {
             
           },

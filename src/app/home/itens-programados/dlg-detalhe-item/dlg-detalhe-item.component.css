@@ -15,9 +15,9 @@
     font-weight: bold;
 }
 
-th{
+/* th{
     background: #36304a;;
-}
+} */
 .color-text{
     color: #fff;
     font-weight: bold;
@@ -28,3 +28,4 @@ th{
     max-width: 200px;
     width: 100%;
 }
+

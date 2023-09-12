@@ -1,9 +1,9 @@
-import { Component, OnInit,Inject  } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
 import { LinhaDeProducao } from 'src/app/models/linha-de-producao';
-import { Programacao } from 'src/app/models/programacao';
+import { Programacao } from 'src/app/models/programacao/programacao';
 import { Turno } from 'src/app/models/turno';
 import { ImageService } from 'src/app/services/image.service';
 import { LinhaDeProducaoService } from 'src/app/services/linha-de-producao.service';
@@ -33,8 +33,10 @@ export class DlgProgramacaoComponent implements OnInit {
   snackBarSucesso = 'my-snack-bar-sucesso';
   public urlImagem: any;
   public qtdeProgramada: any;
+  public saldoControle: any;
+  public saldoAntigo:any;
+  linkBook: string = `https://cromart.bitqualy.tech/eng_produto_ftp_produto_integra_sm.php?cod_peca=${this.data.cdProduto}`;
 
-  
   constructor(
     private programacaoService: ProgramacaoService,
     private dialog: MatDialog,
@@ -47,7 +49,7 @@ export class DlgProgramacaoComponent implements OnInit {
     private controleExibicaoService: ControleExibicaoService,
     private sanitizer: DomSanitizer,
     private usuarioService: UsuarioService,
-  ) { 
+  ) {
     this.linhas = [];
     this.turnos = [];
     this.programacao = new Programacao();
@@ -59,26 +61,29 @@ export class DlgProgramacaoComponent implements OnInit {
     this.idTurno = this.data.turno;
     this.idLinhaDeProducao = this.data.linhaDeProducao;
     this.qtdeProgramada = this.data.qtdeProgramada;
+    this.saldoControle = this.data.qtdeProgramada;
     this.programacao.data = moment(this.data.dataProgramacao).format('yyyy-MM-DD');
     this.programacao.setup = this.data.setup;
     this.alterarValorPrevisto(this.data);
     this.consultarImagem();
     this.consultarLinhasDeProducao();
     this.consultarTurnoDeTrabalho();
-    LinhaDeProducaoService.linhaCadastrada.subscribe(()=>{
+    LinhaDeProducaoService.linhaCadastrada.subscribe(() => {
       this.consultarLinhasDeProducao();
     });
-    TurnoService.turnoCadastrado.subscribe(()=>{
+    TurnoService.turnoCadastrado.subscribe(() => {
       this.consultarTurnoDeTrabalho();
     });
   }
 
 
-  public salvarProgramacao(){
+  public salvarProgramacao() {
+    if(this.validarSaldo()){
+      return
+    }
     forkJoin({
       s1: this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')),
-    }).subscribe(({s1})=>{
-      console.log(this.data.setup);
+    }).subscribe(({ s1 }) => {
       this.programacao.sequenciaSetup = 0;
       this.programacao.sequencia = 0;
       this.programacao.setup = this.data.setup;
@@ -98,68 +103,75 @@ export class DlgProgramacaoComponent implements OnInit {
       this.programacao.linhaDeProducao.id = this.idLinhaDeProducao;
       this.programacao.data = moment(this.data).format('yyyy-MM-DD');
       this.programacao.qtdeProgramada = this.qtdeProgramada;
-  
       this.programacaoService.salvar(this.programacao).subscribe({
-          next:(res)=>{
-            this.controleExibicaoService.registrarLog(`COLOCOU NA PROGRAMAÇÃO O ITEM: [${this.data.cdProduto} - ${this.data.nomeProduto}]`);
-            this.openSnackBar("Item programado com sucesso!", this.snackBarSucesso);
-            this.fechar(true);
-          },
-          error:(e)=>{
-            this.openSnackBar("Falha ao programar item!", this.snackBarErro);
-            this.fechar(false);
-          }
+        next: (res) => {
+          this.controleExibicaoService.registrarLog(`COLOCOU NA PROGRAMAÇÃO O ITEM: [${this.data.cdProduto} - ${this.data.nomeProduto}]`, '');
+          this.openSnackBar("Item programado com sucesso!", this.snackBarSucesso);
+          this.fechar(true);
+        },
+        error: (e) => {
+          this.openSnackBar("Falha ao programar item!", this.snackBarErro);
+          this.fechar(false);
+        }
       });
     });
-   
-       
+
+
 
   }
 
-  public alterarValorPrevisto(item: any){
+  public alterarValorPrevisto(item: any) {
     let valorUnitario = (item.valorPrevisto / item.saldoRetorno);
     this.programacao.valorPrevisto = (valorUnitario * this.qtdeProgramada);
   }
 
   public consultarImagem() {
     this.service.downloadImg(`${this.data.cdProduto}`).subscribe({
-      next:(res)=>{
+      next: (res) => {
         this.imagemProduto = res;
         this.urlImagem = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.imagemProduto));
       }
-     });
-  }
-
-  public consultarLinhasDeProducao(){
-      this.linhaService.consultar().subscribe({
-        next:(res)=>{
-          this.linhas = res;
-        }, error:(e)=>{
-          console.log(e);
-        }
-      });
-  }
-
-  public consultarTurnoDeTrabalho(){
-    this.turnoService.consultar().subscribe({
-        next:(res)=>{
-          this.turnos = res;
-        },error:(e)=>{
-          this.openSnackBar("Falha ao consultar turno de trabalho!", this.snackBarErro);
-        }
     });
   }
 
-  public fechar(resultado: any){
+  public consultarLinhasDeProducao() {
+    this.linhaService.consultar().subscribe({
+      next: (res) => {
+        this.linhas = res;
+      }, error: (e) => {
+        console.log(e);
+      }
+    });
+  }
+
+  public validarSaldo(): boolean {
+    if (this.qtdeProgramada > this.saldoControle || this.qtdeProgramada < 0) {
+      this.openSnackBar(`Quantidade maior que saldo, saldo disponivel ${this.saldoControle}`, this.snackBarErro);
+      return true;
+    }
+    return false;
+  }
+
+  public consultarTurnoDeTrabalho() {
+    this.turnoService.consultar().subscribe({
+      next: (res) => {
+        this.turnos = res;
+      }, error: (e) => {
+        this.openSnackBar("Falha ao consultar turno de trabalho!", this.snackBarErro);
+      }
+    });
+  }
+
+  public fechar(resultado: any) {
     this.dialogRef.close(resultado);
   }
 
-  public cadastrarLinha(){
-      this.dialog.open(DlgCadLinhaComponent, {
-      });
+  public cadastrarLinha() {
+    this.dialog.open(DlgCadLinhaComponent, {
+    });
   }
 
-  public cadastrarTurno(){
+  public cadastrarTurno() {
     this.dialog.open(DlgCadTurnoComponent, {
     });
   }

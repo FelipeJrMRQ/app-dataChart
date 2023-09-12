@@ -10,25 +10,27 @@
                     <img [src]="urlImagem" alt="Imagem não encontrada" class="image-size">
                 </a>
             </div>
-            <label for="" class="bold d-block">CLIENTE:</label>
+            <label class="bold d-block">CLIENTE:</label>
             <p>{{data.nomeCliente}}</p>
-            <label for="" class="bold d-block">PRODUTO:</label>
+            <label class="bold d-block">PRODUTO:</label>
             <p>{{data.nomeProduto}}</p>
-            <label for="" class="bold d-block">BENEFICIAMENTO:</label>
+            <label class="bold d-block">BENEFICIAMENTO:</label>
             <p>{{data.nomeBeneficiamento}}</p>
-            <label for="" class="bold">QUANTIDADE ENTRADA:</label>
+            <label class="bold">QUANTIDADE ENTRADA:</label>
             <p>{{data.qtdeEntrada}}</p>
-            <label for="" class="bold">SALDO:</label>
+            <label class="bold">SALDO:</label>
             <p>{{data.saldoRetorno}}</p>
-            <label for="" class="bold">VALOR PREVISTO:</label>
+            <label class="bold">VALOR PREVISTO:</label>
             <p>{{data.valorPrevisto | currency: 'BRL'}}</p>
+            <label class="bold">BOOK DO PRODUTO</label>
+            <p><a href="{{linkBook}}" target="_blank" rel="noopener noreferrer">Clique aqui.</a></p>
         </div>
 
         <div class="col-12 col-lg-6">
            <form>
-            <label for="" class="form-label">Quantidade programada</label>
-            <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="qtdeProgramada" (keyup)="alterarValorPrevisto(data)" >
-            <label for="" class="form-label mt-2">Linha</label>
+            <label class="form-label">Quantidade programada</label>
+            <input type="number" class="form-control" name="qtdeProgramada" min="0" [max]="this.saldoAntigo" [(ngModel)]="qtdeProgramada" (keyup)="alterarValorPrevisto(data)" >
+            <label class="form-label mt-2">Linha</label>
             <div class="input-group">
                 <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao">
                     <option selected [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
@@ -38,7 +40,7 @@
                 </button>
             </div>
 
-            <label for="" class="form-label mt-2">Turno</label>
+            <label class="form-label mt-2">Turno</label>
             <div class="input-group">
                 <select class="form-select" name="turn" [(ngModel)]="idTurno">
                     <option selected [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
@@ -48,7 +50,7 @@
                 </button>
             </div>
             
-            <label for="" class="form-label mt-2">Prioridade</label>
+            <label class="form-label mt-2">Prioridade</label>
             <select class="form-select" name="prioridade" [(ngModel)]="programacao.prioridade">
                 <option value="3">BAIXA</option>
                 <option selected value="2">NORMAL</option>
@@ -58,9 +60,9 @@
 
             <label class="form-label">Data</label>
             <input type="date" name="data" class="form-control" [(ngModel)]="programacao.data">
-            <label for="" class="mt-2 form-label">Observação</label>
+            <label class="mt-2 form-label">Observação</label>
             <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao" [(ngModel)]="programacao.observacao"></textarea>
-            <button class="btn btn-primary mt-2 me-2" (click)="salvarProgramacao()" [disabled]="data.programado">Programar</button>
+            <button class="btn btn-primary mt-2 me-2" (click)="salvarProgramacao()" [disabled]="this.saldoControle < this.qtdeProgramada">Programar</button>
             <button class="btn btn-danger mt-2" (click)="fechar(false)">Fechar</button>
            </form>
         </div>

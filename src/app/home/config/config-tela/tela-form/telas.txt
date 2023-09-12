@@ -25,14 +25,18 @@ dashboard-sintetico
 	media_faturamento_sabado
 	meta_sabado
 	valor_carteira
-	entradas_dia
-	meta_projetada
 	grafico_faturamento_diario
 	grafico_faturamento_mensal
 	grafico_entrada_vs_faturamento
 	grafico_faturamento_ano_anterior
 	grafico_comparativo_ano_anterior
 	grafico_evolucao_carteira
+	meta_projetada
+	entradas_dia
+	grafico_novos_negocios
+	tabela_novos_negocios
+	grafico_movimentacao_produto
+	tabela_movimentacao_produto
 entrada
 	exportar_dados
 	visualizar_detalhes_produto
@@ -49,3 +53,5 @@ faturamento-mensal
 itens-programados
 produtos
 	visualizar_preco
+datalhamento_cliente
+	exportar_dados_movimento

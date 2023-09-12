@@ -10,6 +10,9 @@ import * as XLSX from 'xlsx';
 import { ProdutoExport } from '../models/exports/produto-export';
 import { FaturamentoMensalCliente } from '../models/faturamento/faturamento-mensal-cliente';
 import { FaturamentoMensalBeneficiamento } from '../models/faturamento/faturamento-mensal-beneficiamento';
+import { Programacao } from '../models/programacao/programacao';
+import { ProgramacaoItemExport } from '../models/exports/programacaoItemExport';
+import { ItensLinha } from '../home/itens-programados/itens-programados-form/itens-linha';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -94,6 +97,33 @@ export class ExcelService {
       listaBeneficimentoD.push(beneficiamentoDiarioExport);
     });
     this.geradorExcell(listaBeneficimentoD, nome);
+  }
+
+
+  public gerarExportProgramacaoItens(programacao: ItensLinha, nome: string) {
+    let itensProgramados: ProgramacaoItemExport[] = [];
+    let processos = [];
+    programacao.itensProgramados.forEach(f => {
+      let itensTemp = new ProgramacaoItemExport();
+      itensTemp.Entrada = moment(f.dataEntrada).format("DD/MM/yyyy");
+      itensTemp.Cliente = f.nomeCliente;
+      processos = f.nomeBeneficiamento?.split('+');
+      itensTemp.Produto = f.nomeProduto;
+      itensTemp.Processo1 = processos[0];
+      itensTemp.Processo2 = processos[1];
+      itensTemp.Espessura = f.espessura;
+      itensTemp.Quantidade = f.qtdeProgramada;
+      itensTemp.Controle = f.cdEntrada;
+      itensTemp.Item = f.item;
+      itensTemp.Obs = f.observacao;
+      itensTemp.Sim = "";
+      itensTemp.Nao = "";
+      itensTemp.Porque = "";
+      itensProgramados.push(itensTemp);
+    });
+    this.geradorExcell(itensProgramados, nome);
+
+
   }
 
 }

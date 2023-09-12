@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+.tamanhoImg{
+    width: 70%;
+}
+.descricao{
+    margin-left: 65px;
+}
 
 /* definição do tamanho do container e das "content(div)" dentro do container */
 .container {
@@ -218,8 +224,8 @@ input:focus {
 @-webkit-keyframes fadeInLeft {
     0% {
         opacity: 0;
-        -webkit-transform: translate3d(-100%, 0, 0);
-        transform: translate3d(-100%, 0, 0);
+        -webkit-transform: translate3d(-30%, 0, 0);
+        transform: translate3d(-30%, 0, 0);
     }
 
     100% {
@@ -232,8 +238,8 @@ input:focus {
 @keyframes fadeInLeft {
     0% {
         opacity: 0;
-        -webkit-transform: translate3d(-100%, 0, 0);
-        transform: translate3d(-100%, 0, 0);
+        -webkit-transform: translate3d(-30%, 0, 0);
+        transform: translate3d(-30%, 0, 0);
     }
 
     100% {
@@ -298,8 +304,8 @@ input:focus {
 @-webkit-keyframes fadeInRight {
     0% {
         opacity: 0;
-        -webkit-transform: translate3d(100%, 0, 0);
-        transform: translate3d(100%, 0, 0);
+        -webkit-transform: translate3d(30%, 0, 0);
+        transform: translate3d(30%, 0, 0);
     }
 
     100% {
@@ -312,8 +318,8 @@ input:focus {
 @keyframes fadeInRight {
     0% {
         opacity: 0;
-        -webkit-transform: translate3d(100%, 0, 0);
-        transform: translate3d(100%, 0, 0);
+        -webkit-transform: translate3d(30%, 0, 0);
+        transform: translate3d(30%, 0, 0);
     }
 
     100% {

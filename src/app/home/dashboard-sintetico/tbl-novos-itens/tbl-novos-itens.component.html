@@ -1,0 +1,36 @@
+<div *ngIf="controle">
+    <div>
+        <section>
+            <div class="bold card-label">
+                <div class="row">
+                    <div class="col-10 text-start">
+                        <label class="color-text">NOVOS NEGÓCIOS DO MÊS</label>
+                    </div>
+                    <div class="col-2 text-end text-success c-pointer" (click)="exportarDados()">
+                        <i class="fas fa-download" title="Exportar dados"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <div class="table">
+        <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="d-none d-lg-table-cell">CLIENTE</th>
+                    <th>PRODUTO</th>
+                    <th>INCLUSÃO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="c-pointer" *ngFor="let produto of produtos | paginate: {itemsPerPage: 10, currentPage: pagina, id: 'tbl-novos-itens'}" (click)="visualizarDetalhesDoProduto(produto)">
+                    <td class="d-none d-lg-table-cell">{{produto.nomeCliente}}</td>
+                    <td>{{produto.nomeProduto}}</td>
+                    <td>{{produto.dataInclusao | date: 'dd/MM/yyyy'}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls id='tbl-novos-itens' (pageChange)="pagina = $event" nextLabel="" previousLabel=""[maxSize]="5"></pagination-controls>
+    </div>
+</div>

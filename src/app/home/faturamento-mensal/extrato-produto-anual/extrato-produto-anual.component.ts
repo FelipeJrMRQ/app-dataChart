@@ -15,6 +15,7 @@ import { ExtratoAnualExportData } from './export-data';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 import { elementAt, forkJoin } from 'rxjs';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-extrato-produto-anual',
@@ -49,7 +50,9 @@ export class ExtratoProdutoAnualComponent implements OnInit {
   public nomeProduto = "";
   public extratoModelo: ExtratoModelo[] = [];
   public meses: any = [];
-  private nomeTela = 'faturamento-extrato-anual'
+  private nomeTela = 'faturamento-extrato-anual';
+  snackBarErro = 'my-snack-bar-erro';
+  snackBarSucesso = 'my-snack-bar-sucesso';
 
 
   constructor(
@@ -60,6 +63,7 @@ export class ExtratoProdutoAnualComponent implements OnInit {
     private excelService: ExcelService,
     private dateService: DateControllerService,
     private controleExibicaoService: ControleExibicaoService,
+    private snackBar: MatSnackBar,
   ) {
     this.exportData = new ExtratoAnualExportData();
     this.extrato = [];
@@ -69,7 +73,7 @@ export class ExtratoProdutoAnualComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA EXTRATO ANUAL FATURAMENTO');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA EXTRATO ANUAL FATURAMENTO', 'EXTRATO ANUAL FATURAMENTO');
     this.activeRoute.params.subscribe((param: any) => {
       this.dataRecebida = param.data;
       this.cdCliente = param.cdCliente;
@@ -228,7 +232,7 @@ export class ExtratoProdutoAnualComponent implements OnInit {
     });
     let fileName = `${this.colunasTabela[0]}_A_${this.colunasTabela[11]}`;
     this.excelService.geradorExcell(this.dadosExcel, `historico_anual_${fileName}`);
-    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DO EXTRATO ANUAL FATURAMENTO');
+    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DO EXTRATO ANUAL FATURAMENTO', '');
   }
 
 
@@ -331,86 +335,86 @@ export class ExtratoProdutoAnualComponent implements OnInit {
         switch (m.mes) {
           case 1:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 2:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 3:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 4:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 5:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 6:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 7:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 8:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 9:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 10:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 11:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 12:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           default:
@@ -430,99 +434,94 @@ export class ExtratoProdutoAnualComponent implements OnInit {
         switch (m.mes) {
           case 1:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 2:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 3:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 4:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 5:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 6:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 7:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 8:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 9:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 10:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 11:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           case 12:
             if (this.isValor) {
-              this.totalMes[index] = this.totalMes[index] += m.valor
+              this.totalMes[index] = this.totalMes[index] += m.valor;
             } else {
-              this.totalMes[index] = this.totalMes[index] += m.quantidade
+              this.totalMes[index] = this.totalMes[index] += m.quantidade;
             }
             break;
           default:
             break;
         }
       });
-    })
+    });
   }
-
-
-
-
-
 
   /**
    * Utilizado para checar se o produto já existe no array 
@@ -726,6 +725,7 @@ export class ExtratoProdutoAnualComponent implements OnInit {
   }
 
   public openDetalhesProduto(produto: any) {
+    console.log(produto);
     if(this.visualizaDetalhesProduto){
       this.dialogRef = this.dialogo.open(DlgFatMensalProdutoComponent, {
         data: {
@@ -733,13 +733,24 @@ export class ExtratoProdutoAnualComponent implements OnInit {
           cdProduto: produto.cdProduto,
           nomeProduto: produto.nomeProduto,
           nomeBeneficiamento: produto.nomeBeneficiamento,
-          valorUnitario: (produto.valorTotal / produto.qtdeTotal),
           quantidade: produto.qtdeTotal,
           valor: produto.valorTotal,
         },
         maxHeight: '95vh',
       });
+    }else{
+       this.openSnackBar('Você não possui permissão de acesso aos detalhes do produto!', this.snackBarErro);
     }
+  }
+
+
+  private openSnackBar(mensagem: string, tipo: string) {
+    this.snackBar.open(mensagem, "X", {
+      duration: 6000,
+      panelClass: [tipo],
+      horizontalPosition: "right",
+      verticalPosition: "top",
+    });
   }
 }
 

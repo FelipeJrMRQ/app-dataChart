@@ -56,7 +56,7 @@ export class FaturamentoClienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR CLIENTE EM FATURAMENTO MENSAL');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR CLIENTE EM FATURAMENTO MENSAL', 'FATURAMENTO MENSAL -> CLIENTE');
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
     var tootipList = this.toolTip.map(function(tooltipTriggerEl){
      return new bootstrap.Tooltip(tooltipTriggerEl);

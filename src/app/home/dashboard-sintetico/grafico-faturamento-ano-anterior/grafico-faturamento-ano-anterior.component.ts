@@ -115,7 +115,6 @@ export class GraficoFaturamentoAnoAnteriorComponent implements OnInit {
         labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
         datasets: [{
           label: `Realizado`,
-          borderColor: 'red',
           data: this.valor,
           backgroundColor: 'rgb(0, 128, 0)',
         },
@@ -124,7 +123,6 @@ export class GraficoFaturamentoAnoAnteriorComponent implements OnInit {
           label: 'Meta',
           data: this.metaMes,
           backgroundColor: 'rgb(2, 78, 218)',
-          // backgroundColor: 'rgb(237, 9, 9)',
         },
         ]
       },

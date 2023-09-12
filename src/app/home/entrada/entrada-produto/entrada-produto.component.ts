@@ -61,6 +61,7 @@ export class EntradaProdutoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA ENTRADA POR PRODUTO', 'ENTRADA -> PRODUTO')
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
     var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);

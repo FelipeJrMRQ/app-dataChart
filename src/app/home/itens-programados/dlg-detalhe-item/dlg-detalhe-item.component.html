@@ -1,70 +1,76 @@
 <header class="bgCor head-label p-2 d-flex justify-content-between align-middle">
     <label>Programação de itens</label>
 </header>
-<section>
-    <div class="row">
 
+<section *ngIf="data.id">
+    <div class="row">
         <div class="col-12 col-lg-6">
             <div class="mb-2">
                 <a [href]="urlImagem" target="_blank">
                     <img [src]="urlImagem" alt="Imagem não encontrada" class="image-size">
                 </a>
             </div>
-            <label for="" class="bold d-block">CLIENTE:</label>
+            <label class="bold d-block">CLIENTE:</label>
             <p>{{data.nomeCliente}}</p>
-            <label for="" class="bold d-block">PRODUTO:</label>
+            <label class="bold d-block">PRODUTO:</label>
             <p>{{data.nomeProduto}}</p>
-            <label for="" class="bold d-block">BENEFICIAMENTO:</label>
+            <label class="bold d-block">BENEFICIAMENTO:</label>
             <p>{{data.nomeBeneficiamento}}</p>
-            <label for="" class="bold d-block">VALOR PREVISTO:</label>
+            <label class="bold d-block">VALOR PREVISTO:</label>
             <p>{{data.valorPrevisto | currency : 'BRL'}}</p>
-            <label for="" class="bold d-block">PROGRAMADO POR:</label>
+            <label class="bold d-block">PROGRAMADO POR:</label>
             <p>{{data.responsavel}}</p>
+            <label class="bold d-block">Book:</label>
+            <p><a href="{{this.linkBook}}" class="bold" target="_blank">LINK DO BOOK</a></p>
         </div>
 
         <div class="col-12 col-lg-6">
             <form>
-                <label for="" class="form-label">Data</label>
+                <label class="form-label">Data</label>
                 <input type="date" class="form-control" name="dataProgramacao" [(ngModel)]="data.data"
                     [value]="data.data">
 
-                <label for="" class="form-label mt-2">Quantidade programada</label>
+                <label class="form-label mt-2">Quantidade programada</label>
                 <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="data.qtdeProgramada"
                     [value]="data.qtdeProgramada">
 
-                <label for="" class="form-label mt-2">Linha</label>
-                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao" (change)="verificaAlteracaoLinhaTurnoPrioridade()">
+                <label class="form-label mt-2">Linha</label>
+                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao"
+                    (change)="verificaAlteracaoLinhaTurnoPrioridade()">
                     <option selected [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
                 </select>
 
-                <label for="" class="form-label mt-2">Turno</label>
-                <select class="form-select" name="turn" [(ngModel)]="idTurno" (change)="verificaAlteracaoLinhaTurnoPrioridade()">
+                <label class="form-label mt-2">Turno</label>
+                <select class="form-select" name="turn" [(ngModel)]="idTurno"
+                    (change)="verificaAlteracaoLinhaTurnoPrioridade()">
                     <option selected [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
                 </select>
 
 
                 <div *ngIf="exibirSequencia">
-                    <label for="" class="form-label mt-2">Sequência</label>
+                    <label class="form-label mt-2">Sequência</label>
                     <div class="input-group">
                         <input type="number" class="form-control" name="sequencia" [(ngModel)]="sequencia">
                         <button class="btn btn-primary" (click)="alterarSequencia()">Alterar</button>
                     </div>
                 </div>
 
-                <label for="" class="form-label mt-2">Prioridade</label>
-                <select class="form-select" name="prioridade" [(ngModel)]="prioridade" (click)="verificaAlteracaoLinhaTurnoPrioridade()">
+                <label class="form-label mt-2">Prioridade</label>
+                <select class="form-select" name="prioridade" [(ngModel)]="prioridade"
+                    (click)="verificaAlteracaoLinhaTurnoPrioridade()">
                     <option selected value="2">NORMAL</option>
                     <option value="1">ALTA</option>
                     <option value="0">CRITICO</option>
                 </select>
 
-                <label for="" class="mt-2 form-label">Observação</label>
+                <label class="mt-2 form-label">Observação</label>
                 <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao"
                     [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
 
                 <div class="row">
                     <div class="col-12 col-lg-4" *ngIf="!exibirSequencia">
-                        <button class="btn btn-primary mt-2 form-control" (click)="alterarProgramacao()">Alterar</button>
+                        <button class="btn btn-primary mt-2 form-control"
+                            (click)="alterarProgramacao()">Alterar</button>
                     </div>
                     <div class="col-12 col-lg-4" *ngIf="data.status =='AGUARDANDO'">
                         <button class="btn btn-warning mt-2 form-control"
@@ -73,6 +79,59 @@
                     <div class="col-12 col-lg-4">
                         <button class="btn btn-danger mt-2 form-control" (click)="fecharDialogo(false)">Fechar</button>
                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<section *ngIf="data.length > 0">
+    <!-- <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">CONTROLE</th>
+                <th scope="col" class="text-center">ITEM</th>
+                <th scope="col" class="text-center">CLIENTE</th>
+                <th scope="col" class="text-center">PRODUTO</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let item of itens">
+            <tr>
+                <td>{{item.cdProduto}}</td>
+                <td>{{item.item}}</td>
+                <td>{{item.nomeCliente}}</td>
+                <td>{{item.nomeProduto}}</td>
+            </tr>
+        </tbody>
+    </table> -->
+    <div class="row">
+        <div class="col-12 col-lg-12">
+            <form>
+                <label for="" class="form-label mt-2">Linha</label>
+                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao"  >
+                    <option select [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
+                </select>
+
+                <label for="" class="form-label mt-2">Turno</label>
+                <select class="form-select" name="turn" [(ngModel)]="idTurno">
+                    <option select [value]="turno.id"  *ngFor="let turno of turnos">{{turno.nome}}</option>
+                </select>
+
+                <label for="" class="form-label mt-2">Prioridade</label>
+                <select class="form-select" name="prioridade" [(ngModel)]="prioridade">
+                    <option select value="2">NORMAL</option>
+                    <option value="1">ALTA</option>
+                    <option value="0">CRITICO</option>
+                </select>
+
+                <label for="" class="mt-2 form-label">Observação</label>
+                <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao"
+                    [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
+                <div class="d-flex justify-content-center align-items-center mt-3">
+                    <button class="btn btn-sm btn-primary col-5 me-1"
+                        (click)="salvarTodosItensAlterados()">Alterar</button>
+                    <button class="btn btn-sm  btn-danger col-5" (click)="fecharDialogo(false)">Fechar</button>
                 </div>
             </form>
         </div>

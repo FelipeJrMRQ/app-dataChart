@@ -9,13 +9,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DlgAlterarSetupComponent } from './dlg-alterar-setup/dlg-alterar-setup.component';
+import { MatSortModule } from '@angular/material/sort';
+import {MatTableModule} from '@angular/material/table';
+import { DlgDetalheObservacaoComponent } from './dlg-detalhe-observacao/dlg-detalhe-observacao.component';
+import { DlgCadastroMotivoComponent } from './dlg-cadastro-motivo/dlg-cadastro-motivo.component';
 
 
 @NgModule({
   declarations: [
     ItensProgramadosFormComponent,
     DlgDetalheItemComponent,
-    DlgAlterarSetupComponent
+    DlgAlterarSetupComponent,
+    DlgDetalheObservacaoComponent,
+    DlgCadastroMotivoComponent
   ],
   imports: [
     CommonModule,
@@ -25,6 +31,8 @@ import { DlgAlterarSetupComponent } from './dlg-alterar-setup/dlg-alterar-setup.
     ReactiveFormsModule,
     MatExpansionModule,
     MatTooltipModule,
+    MatTableModule,
+    MatSortModule,
   ],
   exports: [
     ItensProgramadosFormComponent,

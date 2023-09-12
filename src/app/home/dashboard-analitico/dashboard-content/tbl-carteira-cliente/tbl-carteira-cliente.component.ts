@@ -116,7 +116,7 @@ export class TblCarteiraClienteComponent implements OnInit, OnDestroy {
       this.carteiraExportData.push(expor);
     });
     this.exportDataService.geradorExcell(this.carteiraExportData, "Carteira-cliente");
-    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DA CARTEIRA POR CLIENTE');
+    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DA CARTEIRA POR CLIENTE', '');
   }
 
   private receberData() {

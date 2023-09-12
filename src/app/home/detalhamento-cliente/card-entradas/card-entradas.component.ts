@@ -28,6 +28,7 @@ export class CardEntradasComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.limparDados();
     this.activeRoute.params.subscribe((res: any) => {
       this.cdCliente = res.cdCliente;
       this.nomeCliente = res.nomeCliente;
@@ -48,7 +49,14 @@ export class CardEntradasComponent implements OnInit {
     });
   }
 
+  public limparDados(){
+    this.vlEntradaDia  = 0;
+    this.vlEntradaMes  = 0;
+    this.vlEntradaAno  = 0;
+  }
+
   public consultaEntradaDiaria(){
+    this.limparDados();
       this.datalhamentoService.consultaEntradaDoDiaDoCliente(this.dataRecebida, this.dataRecebida, this.cdCliente).subscribe({
           next:(res)=>{
             try {
@@ -59,6 +67,7 @@ export class CardEntradasComponent implements OnInit {
   } 
 
   public consultarEntradasDoMes() {
+    this.limparDados()
     this.datalhamentoService.consultaEntradaDoMesDoCliente(this.dataService.getInicioDoMes(this.dataRecebida), this.dataRecebida, this.cdCliente).subscribe({
       next: (res) => {
         this.vlEntradaMes = res[0].valor;
@@ -67,7 +76,7 @@ export class CardEntradasComponent implements OnInit {
   }
 
   public consultarEntradasDoAno() {
-    this.vlEntradaAno = 0;
+    this.limparDados();
     this.datalhamentoService.consultaEntradaDoMesDoCliente(this.dataService.getInicioDoAno(this.dataRecebida), this.dataRecebida, this.cdCliente).subscribe({
       next: (res) => {
         res.forEach(e => {

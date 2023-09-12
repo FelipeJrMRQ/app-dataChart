@@ -1,12 +1,13 @@
 <nav class="navbar bg-dark z-index-8 top-0 w-100 mb-2" *ngIf="exibirCabecalhoSeAutenticado()">
     <div class="container-fluid">
         <section class="d-flex w-100 align-items-center">
-            <button class="navbar-toggler me-3" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar">
                 <span><i class="fas fa-bars text-light"></i></span>
             </button>
-            <a class="navbar-brand text-white" routerLink="/dashboard-sintetico"><i
-                    class="fas fa-chart-line me-2 text-light"></i>Dashboard</a>
+            <div>
+                <img class="logo c-pointer" routerLink="/dashboard-sintetico" src="assets/LOGO-BRANCA.png">
+            </div>
             <div class="w-100 d-flex justify-content-end">
                 <form class="d-flex">
                     <div class="d-flex align-middle">
@@ -76,7 +77,12 @@
                     </li>
                     <li class="nav-item p-1 list">
                         <a routerLink="/notificacao" class="decoration-none" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasNavbar"><i class="fas fa-comment-dots iconLateral"></i>Criar notificação</a>
+                            data-bs-target="#offcanvasNavbar"><i class="fas fa-comment-dots iconLateral"></i>Criar
+                            notificação</a>
+                    </li>
+                    <li class="nav-item p-1 list">
+                        <a routerLink="/administracao" class="decoration-none" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasNavbar"> <i class="fas fa-user-shield iconLateral"></i>Administração</a>
                     </li>
                 </ul>
             </div>
@@ -93,7 +99,7 @@
         <img class="bg-perfil" src="assets/asset-cover.jpg">
         <div class="picture" data-bs-toggle="tooltip" data-bs-placement="left" title="Alterar imagem">
             <label for="img-input">
-                <img class="img-perfil c-pointer" accept="image"  [src]="urlFoto">
+                <img class="img-perfil c-pointer" accept="image" [src]="urlFoto">
             </label>
             <input type="file" id="img-input" (change)="alterarImagemPerfil($event)">
         </div>
@@ -110,7 +116,8 @@
                     </li>
                     <li class="ms-3 mt-2" data-bs-dismiss="offcanvas">
                         <i class="fas fa-clipboard-list text-primary"></i>
-                        <a class="decoration-none c-pointer" routerLink="/historico-atividades-sistema">Atividades no sistema</a>
+                        <a class="decoration-none c-pointer" routerLink="/historico-atividades-sistema">Atividades no
+                            sistema</a>
                     </li>
                 </ul>
             </div>
@@ -118,7 +125,7 @@
 
         <div class="log-out c-pointer sublinhado c-pointer p-2" data-bs-dismiss="offcanvas" (click)="sair()">
             <i class="fas fa-power-off ms-1 c-pointer"></i>
-            <label for="" class="ms-2 bold c-pointer"> Sair</label>
+            <label class="ms-2 bold c-pointer"> Sair</label>
         </div>
     </div>
 </nav>

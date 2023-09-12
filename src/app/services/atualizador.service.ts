@@ -55,5 +55,13 @@ export class AtualizadorService {
     return this.http.post<ModeloRetorno>(`${this.urlApi}/faturamento-cliente-produto`, modeloConsulta);
   }
 
+  public atualizarCadastroDeProdutos(): Observable<any>{
+    return this.http.get<any>(`${environment.urlApi}/produtos/atualizar-cadastro-produtos`);
+  }
+
+  public atualizarNotasCanceladas(): Observable<any>{
+    return this.http.get<any>(`${this.urlApi}/notas-canceladas`);
+  }
+
 
 }

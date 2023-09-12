@@ -11,6 +11,7 @@ import { MetaDiaria } from 'src/app/models/meta-diaria';
 import { Usuario } from 'src/app/models/usuario';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { forkJoin } from 'rxjs';
+import { ClienteService } from 'src/app/services/cliente.service';
 
 @Component({
   selector: 'app-atualizador-form',
@@ -56,6 +57,7 @@ export class AtualizadorFormComponent implements OnInit {
     private metaProjetadaService: MetaProjetadaService,
     private metaDiariaService: MetaDiariaService,
     private controleExibicaoService: ControleExibicaoService,
+    private clienteService: ClienteService,
   ) {
     this.modeloConsulta = new ModeloConsulta();
     this.metaDiaria = new MetaDiaria();
@@ -65,7 +67,7 @@ export class AtualizadorFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA ATUALIZADOR DE INFORMAÇÕES');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA ATUALIZADOR DE INFORMAÇÕES', 'AUTALIZADOR INFORMACOES');
     this.dataInicial = moment().subtract(1, 'days').format("yyyy-MM-DD");
     this.dataFinal = moment().format("yyyy-MM-DD");
     this.tipoConsulta = "selecione uma opção";
@@ -85,6 +87,17 @@ export class AtualizadorFormComponent implements OnInit {
     this.metaDiariaService.consultarMetaDoDia(this.dataFinal).subscribe({
       next: (res) => {
         this.metaDiaria = res;
+      }
+    });
+  }
+
+  public atualizarCadastroDeProdutos() {
+    this.atualizadorService.atualizarCadastroDeProdutos().subscribe({
+      next: (res) => {
+        this.openSnackBar('Produtos atualizados com sucesso!', this.snackBarSucesso);
+      },
+      error: (e) => {
+        this.openSnackBar('Falha ao tentar atualizar cadastro de produtos!', this.snackBarErro);
       }
     });
   }
@@ -191,6 +204,18 @@ export class AtualizadorFormComponent implements OnInit {
     })
   }
 
+  public atualizarNotasCanceladas(){
+    this.atualizadorService.atualizarNotasCanceladas().subscribe({
+        next:(res)=>{
+          console.log(res);
+          this.openSnackBar("Operação realizada com sucesso! ", this.snackBarSucesso);
+        },
+        error:(e)=>{
+          this.openSnackBar("Falha ao atualizar notas canceladas: ", this.snackBarErro);
+        }
+    });
+  }
+
   public salvarMetaProjetada() {
     this.metaProjetada.data = new Date();
     this.metaProjetadaService.salvarMetaProjetada(this.metaProjetada).subscribe({
@@ -200,6 +225,16 @@ export class AtualizadorFormComponent implements OnInit {
         this.openSnackBar("Falha ao tentar salvar meta projetada!", this.snackBarErro);
       }
     });
+  }
+
+  public atualizarCadastroDeCliente(){
+      this.clienteService.atualizarClientes(
+        this.modeloConsulta.getInstance('', '', 'consulta_clientes', '', undefined)
+      ).subscribe({
+          next:(res)=>{
+            this.openSnackBar("Cadastro de clientes atualizado com sucesso!", this.snackBarSucesso);
+          }
+      });
   }
 
   public salvarMetaDiaria() {
@@ -273,6 +308,15 @@ export class AtualizadorFormComponent implements OnInit {
         break;
       case "faturamento-cliente-produto":
         this.atualizarFaturamentoClienteProduto();
+        break;
+      case "cadastro-produtos":
+        this.atualizarCadastroDeProdutos();
+        break;
+      case "notas-canceladas":
+        this.atualizarNotasCanceladas();
+        break;
+      case "cadastro-clientes":
+        this.atualizarCadastroDeCliente();
         break;
       default:
         break;

@@ -218,7 +218,11 @@ export class DateControllerService {
    * @returns 
    */
   public getInicioDoMes(data: any) {
-    return moment(`${moment(data).format('yyyy-MM')}-01`).format('yyyy-MM-DD');
+    return `${moment(data).format('yyyy-MM')}-01`;
+  }
+
+  public getFimDoMes(data: any){
+    return `${moment(data).endOf('month').format('yyyy-MM-DD')}`;
   }
 
   /**

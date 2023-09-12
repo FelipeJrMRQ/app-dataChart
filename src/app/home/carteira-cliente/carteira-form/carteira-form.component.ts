@@ -22,7 +22,7 @@ export class CarteiraFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE CARTEIRA POR CLIENTE');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE CARTEIRA POR CLIENTE', "CARTEIRA CLIENTE");
     this.activeRoute.params.subscribe((param:any)=>{
         this.dataRecebida = param.data;
         this.nomeCliente = param.nomeCliente;

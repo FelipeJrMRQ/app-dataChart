@@ -138,7 +138,7 @@ export class TblEntradasDiariaComponent implements OnInit, OnDestroy {
       listaEntrada.push(listaExport);
     });
     this.exportDataService.geradorExcell(listaEntrada, "Entradas-diaria");
-    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DAS ENTRADAS DIARIAS');
+    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DAS ENTRADAS DIARIAS', '');
   }
 
   /**

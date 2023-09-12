@@ -83,8 +83,12 @@ export class ExtratoAnualComponent implements OnInit {
     })
   }
 
+  // public voltar() {
+  //   this.router.navigate([`entrada-produto/${this.cdCliente}/${this.dataRecebida}/${this.nomeCliente}`]);
+  // }
+
   public voltar() {
-    this.router.navigate([`entrada-produto/${this.cdCliente}/${this.dataRecebida}/${this.nomeCliente}`]);
+    this.router.navigate([`detalhamento-cliente/${this.cdCliente}/${this.nomeCliente}/${this.dataRecebida}`]);
   }
 
   public consultaExtratoAnual() {
@@ -560,7 +564,7 @@ export class ExtratoAnualComponent implements OnInit {
     });
     let fileName = `${this.colunasTabela[0]}_A_${this.colunasTabela[11]}`;
     this.excelService.geradorExcell(this.dadosExcel, `historico_anual_${fileName}`);
-    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DO EXTRATO ANUAL ENTRADAS');
+    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DO EXTRATO ANUAL ENTRADAS', '');
   }
 
 

@@ -1,61 +1,77 @@
 <div class="row mb-2 nao-imprime">
     <div class="col-12 col-lg-4">
-        <label for="" class="form-label">Cliente</label>
-        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeCliente">
+        <label class="form-label">Cliente</label>
+        <input type="text" class="form-control form-control-sm upper-case" (keyup)="filtrar()"
+            [(ngModel)]="nomeCliente">
     </div>
     <div class="col-12 col-lg-4">
-        <label for="" class="form-label">Produto</label>
-        <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeProduto"
-            (focus)="limpar()">
+        <label class="form-label">Produto</label>
+        <input type="text" class="form-control  form-control-sm upper-case" (keyup)="filtrar()"
+            [(ngModel)]="nomeProduto">
     </div>
     <div class="col-12 col-lg-4">
         <div class="row">
             <div class="col-3">
-                <label for="" class="form-label">Código</label>
-                <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="cdBeneficiamento">
+                <label class="form-label">Código</label>
+                <input type="text" class="form-control  form-control-sm upper-case" (keyup)="filtrar()"
+                    [(ngModel)]="cdBeneficiamento">
             </div>
             <div class="col-9">
-                <label for="" class="form-label">Beneficiamento</label>
-                <input type="text" class="form-control upper-case" (keyup)="filtrar()" [(ngModel)]="nomeBeneficiamento"
-                    (focus)="limpar()">
+                <label class="form-label">Beneficiamento</label>
+                <input type="text" class="form-control  form-control-sm upper-case" (keyup)="filtrar()"
+                    [(ngModel)]="nomeBeneficiamento">
             </div>
         </div>
     </div>
 </div>
 <div class="row mb-4">
-    <div class="col-12" [ngClass]="setupClass">
-        <label for="" class="form-label">Data</label>
-        <input type="date" class="form-control upper-case" [(ngModel)]="dataProgramacao">
+    <div class="col-12 col-lg-2" [ngClass]="setupClass">
+        <label class="form-label">Data</label>
+        <input type="date" class="form-control form-control-sm  upper-case" [(ngModel)]="dataProgramacao">
+    </div>
+    <div class="col-12 col-lg-2">
+        <label class="form-label">Observação</label>
+        <input type="text" class="form-control form-control-sm  upper-case" [(ngModel)]="observacao">
+    </div>
+    <div class="col-12 col-lg-3">
+        <label class="form-label">Prioridade</label>
+        <select type="text" class="form-control form-control-sm  upper-case" [(ngModel)]="prioridade">
+            <option value="3">BAIXA</option>
+            <option selected value="2">NORMAL</option>
+            <option value="1">ALTA</option>
+            <option value="0">CRITICO</option>
+        </select>
     </div>
     <div class="col-12 col-lg-2" *ngIf="setupMisto">
-        <label for="" class="form-label">Setup Misto</label>
-        <input class="form-control upper-case" placeholder="HABILITADO" disabled="true">
+        <label class="form-label">Setup Misto</label>
+        <input class="form-control form-control-sm  upper-case" placeholder="HABILITADO" disabled="true">
     </div>
-    <div class="col-12 col-lg-4">
-        <label for="" class="form-label">Turno</label>
+    <div class="col-12 col-lg-2">
+        <label class="form-label">Turno</label>
         <div class="input-group">
-            <select class="form-select" name="turn" [(ngModel)]="idTurno">
+            <select class="form-select form-select-sm " name="turn" [(ngModel)]="idTurno">
                 <option [value]="turno.id" *ngFor="let turno of turnos">{{turno.nome}}</option>
             </select>
-            <button class="btn btn-outline-secondary" type="button" (click)="cadastrarTurno()">
+            <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cadastrarTurno()">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
     </div>
-    <div class="col-12 col-lg-3">
-        <label for="" class="form-label">Linha</label>
+    <div class="col-12 col-lg-2">
+        <label class="form-label">Linha</label>
         <div class="input-group">
-            <select class="form-select" name="turn" [(ngModel)]="idLinha">
+            <select class="form-select form-select-sm " name="turn" [(ngModel)]="idLinha">
                 <option [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
             </select>
-            <button class="btn btn-outline-secondary" type="button" (click)="cadastrarLinha()">
+            <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cadastrarLinha()">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
     </div>
     <div class="col-12 col-lg-1">
-        <label for="" class="form-label">Setup Misto</label>
-        <button class="form-control btn btn-primary" tabindex="-1" (click)="habilitarSetupMisto()">{{btnSetup}}</button>
+        <label class="form-label">Setup Misto</label>
+        <button class="form-control btn btn-primary btn-sm" tabindex="-1"
+            (click)="habilitarSetupMisto()">{{btnSetup}}</button>
     </div>
 </div>
 

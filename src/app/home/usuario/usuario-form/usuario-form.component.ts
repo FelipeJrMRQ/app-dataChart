@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ComponenteTela } from 'src/app/models/tela/componente-tela';
 import { TelaSistema } from 'src/app/models/tela/tela-sistema';
@@ -25,6 +25,7 @@ export class UsuarioFormComponent implements OnInit {
   outrasTelas: boolean = false;
   administrador: boolean = false;
   programacao: boolean = false;
+  controleDeClique: boolean = true;
   email: string = "";
   usuarios: UsuarioDTO[] = [];
   modoDeEdicao: boolean = false;
@@ -32,14 +33,10 @@ export class UsuarioFormComponent implements OnInit {
   snackBarSucesso = 'my-snack-bar-sucesso';
   pagina: number = 1;
   itensPagina: number = 10;
-  conta: boolean = false;
-  panelOpenState = false;
-  nomeComponente: any;
   telasDoSistema: TelaSistema[];
   telasDoUsuario: TelaUsuario[];
   telaUsuario: TelaUsuario;
   componentesSelecionados: ComponenteTela[];
-  iconeRemocao: boolean = false;
   editar = false;
   public toolTip = [];
 
@@ -66,7 +63,15 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   private registraLog() {
-    this.controleExibicaoService.registrarLog('ACESSOU CADASTRO DE USUÁRIOS')
+    this.controleExibicaoService.registrarLog('ACESSOU CADASTRO DE USUÁRIOS', 'USUARIOS');
+  }
+
+  private consultarTelasDoSistema() {
+    this.telaService.consultarTelas().subscribe({
+      next: (res) => {
+        this.telasDoSistema = res;
+      }
+    });
   }
 
   public consultarTelasUsuario(usuario: Usuario) {
@@ -78,170 +83,114 @@ export class UsuarioFormComponent implements OnInit {
         this.openSnackBar('Falha ao consultar usuário!', this.snackBarErro);
       },
       complete: () => {
-        this.consultarTelasDoSistema();
-      }
-    });
-  }
-
-  public marcarItensDoUsuario(nomeTela: any) {
-    //  let telaSelecionada: TelaSistema = new TelaSistema();  
-    //  let telaUsuario: TelaSistema = new TelaSistema();  
-    //  telaSelecionada =  this.telasDoSistema.find(t=>t.nome == nomeTela)!;
-    //  if(this.telasDoUsuario.some(t=>t.nome === telaSelecionada.nome)){
-    //     telaUsuario = this.telasDoUsuario.find(t=>t.nome === telaSelecionada.nome)!;
-    //     console.log(telaSelecionada);
-    //     telaSelecionada.componentes.forEach(c=>{
-    //       if(telaUsuario.componentes.some(cu=>cu.nome === c.nome)){
-    //         let imput: any = this.elementRef.nativeElement.querySelector(`#cp_${c.id}`);
-    //         this.renderer.setProperty(imput, 'checked', true);
-    //       }
-    //     });
-    //  }
-  }
-
-  private salvarTelasUsuario() {
-    this.telasDoUsuario.forEach(tela => {
-      this.telaUsuarioService.salvarTela(tela).subscribe({
-        next: (res) => {
-          this.openSnackBar('Operação realizada com sucesso!', this.snackBarSucesso);
-        },
-        error: (e) => {
-          this.openSnackBar('Falha ao realizar operação!', this.snackBarErro);
-        }
-      });
-    });
-    this.controleExibicaoService.registrarLog('CADASTROU TELAS PARA USUÁRIO');
-  }
-
-  public exibirIconeDeRemocao(componente: ComponenteTela) {
-    let i = this.elementRef.nativeElement.querySelector(`#icone_${componente.id}`);
-    this.renderer.removeClass(i, 'fa-check');
-    this.renderer.removeClass(i, 'text-success');
-    this.renderer.addClass(i, 'fa-trash-alt');
-    this.renderer.addClass(i, 'text-danger');
-  }
-
-  public exibirIconeVinculo(componente: ComponenteTela) {
-    let i = this.elementRef.nativeElement.querySelector(`#icone_${componente.id}`);
-    this.renderer.addClass(i, 'fa-check');
-    this.renderer.addClass(i, 'text-success');
-    this.renderer.removeClass(i, 'fa-trash-alt');
-    this.renderer.removeClass(i, 'text-danger');
-  }
-
-  public removerTela(tela: TelaUsuario) {
-    this.telaUsuarioService.excluirTela(tela).subscribe({
-      next: (res) => {
-        this.openSnackBar('Tela removida com sucesso!', this.snackBarSucesso);
-        this.controleExibicaoService.registrarLog(`REMOVEU A TELA DO USUARIO: [${tela.usuario.username}] - TELA: [${tela.nome}]`);
-      },
-      error: (e) => {
-        this.openSnackBar('Falha ao tentar remover tela!', this.snackBarErro);
-      },
-      complete: () => {
-        this.consultarTelasUsuario(this.usuario);
-      }
-    });
-  }
-
-  public selecionarTodas(event: any, tela: TelaSistema) {
-    this.componentesSelecionados = [];
-    let tipo: boolean = event.target.checked;
-    tela.componentes.forEach(c => {
-      let imput: any = this.elementRef.nativeElement.querySelector(`#cp_${c.id}`);
-      this.renderer.setProperty(imput, 'checked', tipo);
-      if (tipo) {
-        this.componentesSelecionados.push(c);
-      } else {
-        this.componentesSelecionados = [];
-      }
-    });
-  }
-
-  public vincularTelaAoUsuario(event: any, tela: TelaSistema) {
-    let telaUsuario = new TelaUsuario();
-    if (this.novaTela(tela.nome)) {
-      telaUsuario.nome = tela.nome;
-      telaUsuario.usuario = this.usuario;
-      telaUsuario.rota = tela.rota;
-      this.componentesSelecionados.forEach(t => {
-        let ct = new ComponenteTela
-        ct.nome = t.nome;
-        telaUsuario.componentes.push(ct);
-      });
-      if (this.telasDoUsuario.find(t => t.nome == tela.nome)) {
-        this.vincularComponentesATela(tela);
-      } else {
-        this.telasDoUsuario.push(telaUsuario);
-      }
-      this.componentesSelecionados = [];
-      this.controleExibicaoService.registrarLog(`VINCULOU TELA AO USUARO [${tela.nome}]`);
-    } else {
-      this.vincularComponentesATela(tela);
-    }
-  }
-
-  public vincularComponentesATela(tela: TelaSistema) {
-    if (this.telasDoUsuario.find(t => t.nome === tela.nome)) {
-      let index = this.telasDoUsuario.findIndex(t => t.nome == tela.nome);
-      this.componentesSelecionados.forEach(c => {
-        if (!this.telasDoUsuario[index].componentes.find(comp => comp.nome == c.nome)) {
-          this.telasDoUsuario[index].componentes.push(c);
-        }
-      });
-    }
-  }
-
-  public removerComponenteDaTelaDoUsuario(tela: TelaUsuario, componente: ComponenteTela) {
-    if (this.telasDoUsuario.find(t => t.nome === tela.nome)) {
-      this.usuarioService.removerComponenteTelaUsuario(componente.id).subscribe({
-        next: (res) => {
-          this.controleExibicaoService.registrarLog(`REMOVEU COMPONENTE DA TELA DO USUARIO: [${tela.usuario.username}] - TELA: [${tela.nome}] - COMPONENTE [${componente.nome}]`);
-        },
-        error: (e) => {
-          console.log(e);
-        }
-      });
-      let index = this.telasDoUsuario.findIndex(t => t.nome == tela.nome);
-      this.telasDoUsuario[index].componentes.splice(this.telasDoUsuario[index].componentes.findIndex(c => c.nome == componente.nome), 1);
-    }
-  }
-
-  public consultarTelasDoSistema() {
-    this.telaService.consultarTelas().subscribe({
-      next: (res) => {
-        this.telasDoSistema = res;
-      },
-      complete: () => {
         this.verificaTelasQueOUsuarioPossui();
       }
     });
   }
 
-  public verificaTelasQueOUsuarioPossui() {
-    this.telasDoSistema.forEach(t => {
+  private salvarTelasUsuario() {
+    this.telasDoUsuario.forEach(tela => {
+      tela.usuario = this.usuario;
+      this.telaUsuarioService.salvarTela(tela).subscribe({
+        next: (res) => {
+        },
+        error: (e) => {
+          this.openSnackBar('Falha ao realizar operação!', this.snackBarErro);
+        },
+        complete: () => {
+          this.dialog.closeAll();
+          this.openSnackBar('Operação realizada com sucesso!', this.snackBarSucesso);
+        }
+      });
+    });
+    this.limparDados();
+  }
 
+  private verificaTelasQueOUsuarioPossui() {
+    this.telasDoSistema.forEach(ts => {
+      /**
+       * Verifica as permissoes de acesso a tela do usuário
+       */
+      let tela = this.telasDoUsuario.find(tu => ts.rota == tu.rota);
+      if (tela) {
+        let el = this.elementRef.nativeElement.querySelector(`#${tela.rota}`);
+        this.renderer.setProperty(el, 'checked', true);
+      } else {
+        let el = this.elementRef.nativeElement.querySelector(`#${ts.rota}`);
+        this.renderer.setProperty(el, 'checked', false);
+      }
+      /**
+       * Verifica a permissoes de acesso aos componentes da tela
+       */
+      ts.componentes.forEach(c => {
+        let componente = tela?.componentes.find(cu => cu.nome == c.nome);
+        if (componente) {
+          let el = this.elementRef.nativeElement.querySelector(`#${ts.rota}_${c.nome}`);
+          this.renderer.setProperty(el, 'checked', true);
+        } else {
+          let el = this.elementRef.nativeElement.querySelector(`#${ts.rota}_${c.nome}`);
+          this.renderer.setProperty(el, 'checked', false);
+        }
+      });
     });
   }
 
-  public selecionarComponentes(event: any, componente: ComponenteTela) {
-    if (event.target.checked === true && componente.nome == event.target.defaultValue) {
-      if (this.componentesSelecionados.length != 0) {
-        if (this.novoComponente(componente)) {
-          this.componentesSelecionados.push(componente);
-        }
-      } else {
-        this.componentesSelecionados.push(componente);
-      }
+  private visualizarTela(tela: TelaSistema) {
+    let i = this.elementRef.nativeElement.querySelector(`#${tela.rota}`);
+    this.renderer.setProperty(i, 'checked', true);
+  }
+
+  public IncluirTelaParaUsuario(event: any, tela: TelaSistema) {
+    if (event.target.checked) {
+      let telaTemp = new TelaUsuario();
+      telaTemp.nome = tela.nome;
+      telaTemp.rota = tela.rota;
+      telaTemp.usuario = this.usuario;
+      this.telasDoUsuario.push(telaTemp);
+      this.controleExibicaoService.registrarLog(`HABILITOU A TELA [${tela.rota}] PARA [${this.usuario.username}]`, '');
     } else {
-      this.removerComponenteDoArray(componente);
+      this.telaUsuarioService.excluirTela(this.telasDoUsuario.find(t => t.rota == tela.rota)!).subscribe({
+        next: (res) => {
+
+        },
+        complete: () => {
+          this.telasDoUsuario.splice(this.telasDoUsuario.findIndex(t => t.rota == tela.rota), 1);
+          tela.componentes.forEach(c => {
+            let el = this.elementRef.nativeElement.querySelector(`#${tela.rota}_${c.nome}`);
+            this.renderer.setProperty(el, 'checked', false);
+          });
+          this.controleExibicaoService.registrarLog(`DESABILITOU A TELA [${tela.rota}] PARA [${this.usuario.username}]`, '');
+        }
+      });
+    }
+  }
+
+  public selecionarComponentes(event: any, componente: ComponenteTela, tela: TelaSistema) {
+    if (event.target.checked == true) {
+      this.visualizarTela(tela);
+      let tu = this.telasDoUsuario.find(t => t.nome == tela.nome);
+      if (tu) {
+        tu?.componentes.push(componente);
+      } else {
+        let telaTemp = new TelaUsuario();
+        telaTemp.nome = tela.nome;
+        telaTemp.rota = tela.rota;
+        telaTemp.usuario = this.usuario;
+        telaTemp.componentes.push(componente);
+        this.telasDoUsuario.push(telaTemp);
+      }
+      this.controleExibicaoService.registrarLog(`HABILITOU O COMPONENTE [${componente.nome}] NA TELA [${tela.rota}] PARA [${this.usuario.username}]`, '');
+    } else {
+      let index = this.telasDoUsuario.findIndex(t => t.nome == tela.nome);
+      let cp = this.telasDoUsuario[index].componentes.findIndex(c => c.nome == componente.nome);
+      this.telasDoUsuario[index].componentes.splice(cp, 1);
+      this.controleExibicaoService.registrarLog(`DESABILITOU O COMPONENTE [${componente.nome}] NA TELA [${tela.rota}] PARA [${this.usuario.username}]`, '');
     }
   }
 
   public alterarUsuario() {
     this.usuarioService.alterarUsuario(this.usuario).subscribe({
       next: (res) => {
-        this.limparDados();
         this.openSnackBar("Cadastro de usuário alterado com sucesso!", this.snackBarSucesso);
       },
       error: (e) => {
@@ -254,9 +203,15 @@ export class UsuarioFormComponent implements OnInit {
 
   public cadastrarUsuario() {
     if (this.usuario.nome && this.usuario.username) {
-      this.dialog.open(DlgLoadingComponent, { disableClose: true });
+      this.dialog.open(DlgLoadingComponent, { 
+        disableClose: true,
+        position: {
+          top: '50px'
+        }
+      });
       this.usuarioService.cadastrarUsuario(this.usuario).subscribe({
         next: (res) => {
+          this.usuario = res;
           this.openSnackBar("Usuário cadastrado com sucesso!", this.snackBarSucesso);
         },
         error: (e) => {
@@ -264,14 +219,14 @@ export class UsuarioFormComponent implements OnInit {
           this.dialog.closeAll();
         },
         complete: () => {
-          this.limparDados();
+          this.controleExibicaoService.registrarLog(`CADASTROU O USUÁRIO [${this.usuario.nome}]`, '');
+          this.salvarTelasUsuario();
           this.dialog.closeAll();
         }
       });
     } else {
       this.openSnackBar('Digite o nome e e-mail do usuário', this.snackBarErro);
     }
-
   }
 
   public limparDados() {
@@ -287,26 +242,16 @@ export class UsuarioFormComponent implements OnInit {
     this.editar = false;
     this.telasDoSistema = [];
     this.componentesSelecionados = [];
+    this.telasDoUsuario = [];
+    this.controleDeClique = true;
+    this.consultarTelasDoSistema();
   }
 
-  private novoComponente(componente: ComponenteTela) {
-    return this.componentesSelecionados.some(c => c.id == componente.id);
-  }
 
-  private novaTela(nomeTela: any): boolean {
-    let verificador = false;
-    if (this.telasDoUsuario.length != 0) {
-      this.telasDoUsuario.forEach(tela => {
-        verificador = (tela.nome !== nomeTela);
-      });
-    } else {
-      verificador = true;
-    }
-    return verificador;
-  }
 
   public editarUsuario(usuario: UsuarioDTO) {
-    this.controleExibicaoService.registrarLog(`SELECIONOU O USUÁRIO [${usuario.email}]`);
+    this.controleExibicaoService.registrarLog(`SELECIONOU O USUÁRIO [${usuario.email}]`, '');
+    this.controleDeClique = false;
     this.editar = true;
     window.scroll(0, 0);
     this.modoDeEdicao = true;
@@ -318,15 +263,11 @@ export class UsuarioFormComponent implements OnInit {
     this.consultarTelasUsuario(this.usuario);
   }
 
-  private removerComponenteDoArray(componente: ComponenteTela) {
-    this.componentesSelecionados.splice(this.componentesSelecionados.findIndex(cp => cp.id == componente.id), 1);
-  }
-
   public consultarUsuario() {
     this.usuarioService.consultarUsuarioPorEmail(this.email).subscribe({
       next: (res) => {
         this.usuarios = res;
-        this.controleExibicaoService.registrarLog(`CONSULTOU O USUARIOS DO SISTEMA`);
+        this.controleExibicaoService.registrarLog(`CONSULTOU O USUARIOS DO SISTEMA`, '');
       },
       error: (e) => {
         console.log(e);
@@ -334,39 +275,22 @@ export class UsuarioFormComponent implements OnInit {
     });
   }
 
-  public notificarUsuarios() {
-    this.usuarioService.consultarTodos().subscribe({
-      next: (res) => {
-        this.prepararParaNotificacao(res);
-      }
-    });
-  }
 
-  private prepararParaNotificacao(dto: UsuarioDTO[]) {
-    dto.forEach(e => {
-      let u = new Usuario();
-      u.contaAtiva = e.contaAtiva
-      u.id = e.id;
-      u.nome = e.nome;
-      u.notificacao = true;
-      u.username = e.email;
-      this.usuarioService.alterarUsuario(u).subscribe({
-         next:(res)=>{} 
-      });
-    });
-    this.openSnackBar('Notificações atualizadas com sucesso!', this.snackBarSucesso);
-  }
-
-
-
-  public bloquearUsuario(id: any) {
-    this.usuarioService.bloquearUsuario(id).subscribe({
+  public bloquearUsuario(usuario: any) {
+    this.usuarioService.bloquearUsuario(usuario.id).subscribe({
       next: (res) => {
         this.openSnackBar("Alteração realizada com sucesso!", this.snackBarSucesso);
         this.consultarUsuario();
       },
       error: (e) => {
         this.openSnackBar("Falha ao bloquear usuário!", this.snackBarErro);
+      },
+      complete: () => {
+        if (usuario.contaAtiva) {
+          this.controleExibicaoService.registrarLog(`BLOQUEOU O ACESSO DO USUÁRIO [${usuario.email}]`,'');
+        } else {
+          this.controleExibicaoService.registrarLog(`DESBLOQUEOU O ACESSO DO USUÁRIO [${usuario.email}]`, '');
+        }
       }
     });
   }

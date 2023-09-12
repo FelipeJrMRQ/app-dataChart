@@ -3,6 +3,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { forkJoin } from 'rxjs';
+import { Produto } from 'src/app/models/produto/Produto';
 import { ImageService } from 'src/app/services/image.service';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { ProdutoService } from 'src/app/services/produto.service';
@@ -14,11 +15,12 @@ import { ProdutoService } from 'src/app/services/produto.service';
 })
 export class DlgFatMensalProdutoComponent implements OnInit {
 
-  private response: HttpErrorResponse | undefined;
   public imagemProduto: Blob;
   public visualizarPreco: boolean = false;
-  private nomeTela = 'produtos'
+  private nomeTela = 'produtos';
   public urlImagem: any;
+  produto: Produto;
+  linkBook: string = `https://cromart.bitqualy.tech/eng_produto_ftp_produto_integra_sm.php?cod_peca=${this.data.cdProduto}`;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -29,6 +31,7 @@ export class DlgFatMensalProdutoComponent implements OnInit {
     private sanitizer: DomSanitizer,
   ) {
     this.imagemProduto = new Blob();
+    this.produto = new Produto();
   }
 
   ngOnInit(): void {
@@ -43,30 +46,27 @@ export class DlgFatMensalProdutoComponent implements OnInit {
       next: ({ s1 }) => {
         this.visualizarPreco = s1;
       },
-      complete:()=>{
+      complete: () => {
         this.consultarImagem();
         this.consultaPrecoProduto();
         if (this.data.valorTotal) {
           this.data.valor = this.data.valorTotal;
         }
       }
-    })
+    });
   }
-
 
   public iniciarNoTopo() {
     window.scrollTo(0, 0);
     this.consultaPrecoProduto();
   }
 
-  public consultaPrecoProduto(){
-     if(this.visualizarPreco){
-      this.produtoService.consultarPrecoProduto(this.data.cdProduto).subscribe({
-        next:(res)=>{
-          this.data.valorUnitario = res.objeto;
-        }
-      });
-     }
+  public consultaPrecoProduto() {
+    this.produtoService.consultarPrecoProduto(this.data.cdProduto).subscribe({
+      next: (res) => {
+        this.produto = res;
+      }
+    });
   }
 
   public fechar() {
@@ -74,12 +74,12 @@ export class DlgFatMensalProdutoComponent implements OnInit {
   }
 
   public consultarImagem() {
-   this.service.downloadImg(`${this.data.cdProduto}`).subscribe({
-    next:(res)=>{
-      this.imagemProduto = res;
-      this.urlImagem = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.imagemProduto));
-    }
-   });
+    this.service.downloadImg(`${this.data.cdProduto}`).subscribe({
+      next: (res) => {
+        this.imagemProduto = res;
+        this.urlImagem = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.imagemProduto));
+      }
+    });
   }
 
 }

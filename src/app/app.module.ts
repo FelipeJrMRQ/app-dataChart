@@ -46,6 +46,7 @@ import { TelaSistemaService } from './services/telas/tela-sistema.service';
 import { DashboardModule } from './home/dashboard-analitico/dashboard-analitico.module';
 
 
+
 registerLocaleData(ptBr);
 
 @NgModule({

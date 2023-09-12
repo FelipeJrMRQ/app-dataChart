@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import { Programacao } from '../models/programacao';
+import { Programacao } from '../models/programacao/programacao';
 import { ItemNaoRetornado } from '../models/itens-nao-retornados';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class ProgramacaoService {
     private http: HttpClient,
   ) { }
 
-  public salvar(programacao: Programacao): Observable<any> {
+  public salvar(programacao: any): Observable<any> {
     return this.http.post<any>(`${this.urlApi}`, programacao);
   }
 
@@ -43,6 +43,13 @@ export class ProgramacaoService {
   public consultarPorData(data: String): Observable<ItemNaoRetornado[]> {
     return this.http.get<ItemNaoRetornado[]>(`${this.urlApi}/${data}`);
   }
+
+
+  public consultarPorIdProgramacao(id:number): Observable<Programacao> {
+    return this.http.get<Programacao>(`${this.urlApi}/consultar/programacao/${id}`);
+  }
+
+
   public excluirProgramacao(id: number): Observable<any>{
     return this.http.delete<any>(`${this.urlApi}/${id}`);
   }

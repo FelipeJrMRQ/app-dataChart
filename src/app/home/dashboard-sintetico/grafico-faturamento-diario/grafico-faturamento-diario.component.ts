@@ -27,6 +27,7 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
   faturamento: any = [];
   metaDia: any = [];
   arrowGap: any;
+  delayed: any;
   private nomeTela = "dashboard-sintetico";
 
   constructor(
@@ -41,11 +42,11 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.receberData();
+    this.receberDataPorEvento();
     this.verificaPermissaoDeAcesso();
   }
 
-  public receberData() {
+  public receberDataPorEvento() {
     FaturamentoService.emitirData.subscribe(res => {
       this.dataRecebida = res;
       this.verificaPermissaoDeAcesso();
@@ -62,7 +63,7 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
       });
   }
 
-  public consultarFaturamentoDiario() {
+  private consultarFaturamentoDiario() {
     this.faturamentoDiario = [];
     this.faturamentoService.consultaFaturamentoDiario(
       this.modeloDeConsulta.getInstance(
@@ -113,7 +114,9 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
     this.atualizarGrafico();
   }
 
-  public atualizarGrafico() {
+
+  
+  private atualizarGrafico() {
     if (this.elementChart) {
       this.chartBarDay.data.datasets[0].data = this.faturamento.reverse();
       this.chartBarDay.data.datasets[1].data = this.metaDia.reverse();
@@ -124,8 +127,7 @@ export class GraficoFaturamentoDiarioComponent implements OnInit {
     }
   }
 
-  delayed: any;
-  public gerarGraficoFaturamentoDia() {
+  private gerarGraficoFaturamentoDia() {
     this.elementChart = document.getElementById('myChartBarDia');
     this.chartBarDay = new Chart(this.elementChart, {
       type: 'bar',

@@ -20,7 +20,7 @@ Chart.register(LineController, LinearScale)
 export class GraficoFaturamentoMensalComponent implements OnInit {
   public elementChart: any;
   public chartBarMonth: any;
-
+  delayed: any;
   labelAtindigo: any = '';
   labelNaoAtingido: any = 'Atingido';
   labelColor: any = [];
@@ -108,7 +108,7 @@ export class GraficoFaturamentoMensalComponent implements OnInit {
     }
   }
 
-delayed: any;
+
   public gerarGraficoFaturamentoMensal() {
     this.elementChart = document.getElementById('myChartBarMes');
     this.chartBarMonth = new Chart(this.elementChart, {

@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit {
   teste: any;
   public toolTip = [];
 
+
   constructor(
     private loginService: LoginService,
     private router: Router,
@@ -87,7 +88,7 @@ export class HeaderComponent implements OnInit {
       formData.append('image', novoArquivo);
       this.usuarioService.enviarFotoPerfil(formData, email).subscribe({  
           next:(res)=>{
-            this.controleExibicaoService.registrarLog('ALTEROU A IMAGEM DE PERFIL');
+            this.controleExibicaoService.registrarLog('ALTEROU A IMAGEM DE PERFIL', '');
           },
           complete:()=>{
             this.obterImagemDoPerfil();

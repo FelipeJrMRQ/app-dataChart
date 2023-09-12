@@ -20,7 +20,7 @@ export class EntradaFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA ENTRADA');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA ENTRADA', 'ENTRADA');
     this.activeRoute.params.subscribe((param:any)=>{
       this.dataRecebida = param.data;
     })

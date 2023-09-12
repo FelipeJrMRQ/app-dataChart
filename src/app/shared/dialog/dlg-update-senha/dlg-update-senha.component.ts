@@ -28,7 +28,7 @@ export class DlgUpdateSenhaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA ALTERACAO DE SENHA');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA ALTERACAO DE SENHA', 'ALTERACAO SENHA');
   }
 
   public alterarSenha() {
@@ -36,7 +36,7 @@ export class DlgUpdateSenhaComponent implements OnInit {
       this.usuarioService.alterarSenha(sessionStorage.getItem('user'), this.senha, this.nSenha).subscribe({
         next: (res) => {
           this.openSnackBar('Senha alterada com sucesso!', this.snackBarSucesso);
-          this.controleExibicaoService.registrarLog('ALTEROU A SENHA');
+          this.controleExibicaoService.registrarLog('ALTEROU A SENHA', '');
           this.fecharDialogo();
         },
          error:(e)=> {

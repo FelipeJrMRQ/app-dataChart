@@ -22,7 +22,7 @@ export class DlgDetalheItemComponent implements OnInit {
   turnos: Turno[];
   imagem: any;
   idTurno: number | undefined;
-  idLinhaDeProducao: number| undefined;
+  idLinhaDeProducao: number | undefined;
   prioridade: never | undefined;
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
@@ -31,6 +31,8 @@ export class DlgDetalheItemComponent implements OnInit {
   sequencia: any = undefined;
   nomeTurno: any;
   exibirSequencia: boolean = true;
+  linkBook: any;
+  itens: any = [];
 
 
   constructor(
@@ -53,16 +55,19 @@ export class DlgDetalheItemComponent implements OnInit {
     //Captura a quantidade programada do item antes de qualquer alteração
     this.quantidade = this.data.qtdeProgramada;
     this.sequencia = this.data.sequencia;
+    this.linkBook = `https://cromart.bitqualy.tech/eng_produto_ftp_produto_integra_sm.php?cod_peca=${this.data.cdProduto}`
+    this.itens = this.data;
     this.consultarImagem();
     this.consultarLinhasDeProducao();
     this.consultarTurnoDeTrabalho();
-    this.controleExibicaoService.registrarLog(`VISUALIZOU DETALHES DO ITEM PROGRAMADO: [${this.data.nomeProduto}]`);
+    this.controleExibicaoService.registrarLog(`VISUALIZOU DETALHES DO ITEM PROGRAMADO: [${this.data.nomeProduto}]`, '');
   }
 
   public consultarImagem() {
     this.service.downloadImg(`${this.data.cdProduto}`).subscribe({
       next: (res) => {
         this.imagem = res;
+
         this.urlImagem = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.imagem));
       }
     });
@@ -102,11 +107,16 @@ export class DlgDetalheItemComponent implements OnInit {
   //   });
   // }
 
+
+
+
+
+
   public excluirProgramacao(id: number) {
     this.programacaoService.excluirProgramacao(id).subscribe({
       next: (res) => {
         this.dialogRef.close(this.data);
-        this.controleExibicaoService.registrarLog(`EXCLUIU A PROGRAMAÇÃO DO ITEM: [${this.data.nomeProduto}]`);
+        this.controleExibicaoService.registrarLog(`EXCLUIU A PROGRAMAÇÃO DO ITEM: [${this.data.nomeProduto}]`, '');
         this.openSnackBar("Item excluído com sucesso!", this.snackBarSucesso);
       },
       error: (e) => {
@@ -115,9 +125,9 @@ export class DlgDetalheItemComponent implements OnInit {
     });
   }
 
- public alterarSequencia(){
+  public alterarSequencia() {
     this.dialogRef.close({
-      data: {'retorno': 'alterar_sequencia', 'item': this.data, 'nova_sequencia': this.sequencia}
+      data: { 'retorno': 'alterar_sequencia', 'item': this.data, 'nova_sequencia': this.sequencia }
     })
   }
 
@@ -144,10 +154,10 @@ export class DlgDetalheItemComponent implements OnInit {
    * manualmente o sistema colocará o item na última posição de acordo com a sequência encontrada
    * no banco de dados
    */
-  public verificaAlteracaoLinhaTurnoPrioridade(){
-    if(this.data.linhaDeProducao.id != this.idLinhaDeProducao || this.data.turno.id != this.idTurno || this.data.prioridade != this.prioridade){
+  public verificaAlteracaoLinhaTurnoPrioridade() {
+    if (this.data.linhaDeProducao.id != this.idLinhaDeProducao || this.data.turno.id != this.idTurno || this.data.prioridade != this.prioridade) {
       this.exibirSequencia = false;
-    }else{
+    } else {
       this.exibirSequencia = true;
     }
   }
@@ -163,13 +173,13 @@ export class DlgDetalheItemComponent implements OnInit {
     }
     if (this.idTurno != this.data.turno.id || this.idLinhaDeProducao != this.data.linhaDeProducao.id) {
       this.dialogRef.close({
-        data: {'retorno': 'alterar_linha_turno' ,'item': this.data, 'turno': this.idTurno, 'linhaDeProducao': this.idLinhaDeProducao}
+        data: { 'retorno': 'alterar_linha_turno', 'item': this.data, 'turno': this.idTurno, 'linhaDeProducao': this.idLinhaDeProducao }
       });
     }
-    if(this.prioridade != this.data.prioridade){
+    if (this.prioridade != this.data.prioridade) {
       this.data.prioridade = this.prioridade;
       this.dialogRef.close({
-        data: {'retorno': 'alterar_prioridade','item': this.data}
+        data: { 'retorno': 'alterar_prioridade', 'item': this.data }
       });
     }
   }
@@ -181,9 +191,30 @@ export class DlgDetalheItemComponent implements OnInit {
       }, error: (e) => {
         console.log(e);
       }, complete: () => {
-        this.idTurno = this.data.turno.id;
-        this.idLinhaDeProducao = this.data.linhaDeProducao.id;
-        this.prioridade = this.data.prioridade;
+        if (this.data.length) {
+          this.data.forEach((item: any) => {
+            this.idTurno = item.id;
+            this.idLinhaDeProducao = item.idLinhaDeProducao;
+            this.prioridade = item.prioridade;
+            return;
+          });
+        }else{
+          this.idTurno = this.data.turno.id;
+          this.idLinhaDeProducao = this.data.linhaDeProducao.id;
+          this.prioridade = this.data.prioridade;
+        }
+       
+      }
+    });
+  }
+
+  public salvarTodosItensAlterados() {
+    this.itens.forEach((e: any) => {
+      if (this.idTurno != e.turno.id || this.idLinhaDeProducao != e.linhaDeProducao.id || this.prioridade != e.prioridade) {
+        e.prioridade = this.prioridade;
+        this.dialogRef.close({
+          data: { 'retorno': 'alterar_linha_turno', 'item': this.itens, 'turno': this.idTurno, 'linhaDeProducao': this.idLinhaDeProducao }
+        });
       }
     });
   }

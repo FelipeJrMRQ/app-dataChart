@@ -12,10 +12,11 @@ import { LinhaDeProducao } from 'src/app/models/linha-de-producao';
 import { Turno } from 'src/app/models/turno';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
+import { Usuario } from 'src/app/models/usuario';
 import { DlgCadLinhaComponent } from '../dlg-cad-linha/dlg-cad-linha.component';
 import { DlgCadTurnoComponent } from '../dlg-cad-turno/dlg-cad-turno.component';
 import { ProgramacaoService } from 'src/app/services/programacao.service';
-import { Programacao } from 'src/app/models/programacao';
+import { Programacao } from 'src/app/models/programacao/programacao';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { ItensNaoRetornadosExport } from 'src/app/models/exports/itens-nao-retornados';
@@ -38,6 +39,7 @@ export class ProgramacaoFormComponent implements OnInit {
   nomeCliente = "";
   nomeBeneficiamento = "";
   nomeProduto = "";
+  nomeProduto_Cliente = "";
   pagina = 1;
   itensPagina = 30;
   paginaFiltro = 1;
@@ -60,9 +62,12 @@ export class ProgramacaoFormComponent implements OnInit {
   private dataExport: ItensNaoRetornadosExport[];
   processo1: any;
   processo2: any;
+  observacao: any;
+  prioridade:any;
   cdBeneficiamento: number | undefined;
   btnSetup: any = 'Habilitar';
-  setupClass: any = 'col-lg-4';
+  setupClass: any = 'col-lg-2';
+
 
   constructor(
     private itemNaoRetornadoService: ItemNaoRetornadoService,
@@ -95,7 +100,7 @@ export class ProgramacaoFormComponent implements OnInit {
   }
 
   private resgistrarLog() {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE PROGRAMAÇÃO');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE PROGRAMAÇÃO', 'PROGRAMACAO');
   }
 
   public habilitarSetupMisto() {
@@ -106,7 +111,7 @@ export class ProgramacaoFormComponent implements OnInit {
       this.setupClass = 'col-lg-4';
     } else {
       //Habilita o setup misto
-      this.controleExibicaoService.registrarLog('HABILITOU SETUP MISTO');
+      this.controleExibicaoService.registrarLog('HABILITOU SETUP MISTO', '');
       let dialogo = this.dialog.open(DlgConfirmaSetupMistoComponent, {});
       dialogo.afterClosed().subscribe(res => {
         if (res.data) {
@@ -122,6 +127,7 @@ export class ProgramacaoFormComponent implements OnInit {
     this.programacaoService.consultarPorData(moment().format('yyyy-MM-DD')).subscribe({
       next: (res) => {
         this.itensProgramados = res;
+        console.log(this.itensProgramados)
       },
       error: (e) => {
         console.log(e);
@@ -136,6 +142,7 @@ export class ProgramacaoFormComponent implements OnInit {
     this.itemNaoRetornadoService.consultarItensNaoRetornados().subscribe({
       next: (res) => {
         this.itens = res;
+        
       },
       error: (e) => {
         console.log(e);
@@ -143,6 +150,8 @@ export class ProgramacaoFormComponent implements OnInit {
       complete: () => {
         this.alterarExibicaoNfe();
         this.consultaProgramacaoPorData();
+        this.observacao = "";
+        this.prioridade = '';
       }
     });
   }
@@ -167,7 +176,14 @@ export class ProgramacaoFormComponent implements OnInit {
     this.itens.forEach(item => {
       this.itensProgramados.forEach(res => {
         if (res.cdEntrada == item.cdEntrada && item.item == res.item) {
-          item.programado = true;
+          if(res.qtdeProgramada == item.saldoRetorno){
+            item.saldoRetorno = 0;
+            item.programado = true;
+          }else{
+            item.saldoRetorno! -= res.qtdeProgramada!;
+            item.qtdeProgramada = res.qtdeProgramada
+            item.programado = false;
+          }
         } else if (item.programado === undefined) {
           item.programado = false;
         }
@@ -191,6 +207,7 @@ export class ProgramacaoFormComponent implements OnInit {
             programacao.sequenciaSetup = this.sequenciaSetup;
             programacao.setup = (this.setupMisto ? 0 : item.cdBeneficiamento);
             programacao.responsavel = res.s0[0].nome;
+            programacao.dataEntrada = item.dataEntrada;
             programacao.espessura = item.espessura;
             programacao.cdCliente = item.cdCliente;
             programacao.nomeCliente = item.nomeCliente;
@@ -206,10 +223,14 @@ export class ProgramacaoFormComponent implements OnInit {
             programacao.qtdeProgramada = item.saldoRetorno;
             programacao.data = moment(this.dataProgramacao).format('yyyy-MM-DD');
             programacao.prioridade = 2;
+            if (this.observacao != "") {
+              programacao.observacao = this.observacao;
+            }
+            programacao.prioridade = this.prioridade;
             programacao.valorPrevisto = item.valorPrevisto;
             this.programacaoService.salvar(programacao).subscribe({
               next: (res) => {
-                this.controleExibicaoService.registrarLog(`COLOCOU NA PROGRAMAÇÃO O ITEM: [${programacao.cdProduto} - ${programacao.nomeProduto}]`);
+                this.controleExibicaoService.registrarLog(`COLOCOU NA PROGRAMAÇÃO O ITEM: [${programacao.cdProduto} - ${programacao.nomeProduto}]`, '');
               },
               error: (e) => {
                 this.openSnackBar("Falha ao programar item!", this.snackBarErro);
@@ -224,8 +245,7 @@ export class ProgramacaoFormComponent implements OnInit {
     this.openSnackBar("Itens programados com sucesso!", this.snackBarSucesso);
   }
 
-  public atribuirSequeciamentoParaSetups(item: any) {
-  }
+
 
   public selecionarTodas() {
     this.itensFiltro.forEach(item => {
@@ -244,12 +264,12 @@ export class ProgramacaoFormComponent implements OnInit {
       processos = item.nomeBeneficiamento?.split('+');
       console.log(processos[1]);
       i.ENTRADA = `${moment(item.dataEntrada).format('DD/MM/yyyy').toString()} ${item.hora}`;
-      i.NF = item.nf;
-      i.CONTROLE = item.cdEntrada;
-      i.ITEM = item.item;
-      i.TIPO_OS = item.nomeTipoOS;
       i.CLIENTE = item.nomeCliente;
+      i.NF = item.nf;
+      i.ITEM = item.item;
+      i.CONTROLE = item.cdEntrada;
       i.PRODUTO = item.nomeProduto;
+      i.TIPO_OS = item.nomeTipoOS;
       i.PROCESSO1 = processos[0];
       if (processos.length >= 1) {
         i.PROCESSO2 = processos[1];
@@ -257,10 +277,12 @@ export class ProgramacaoFormComponent implements OnInit {
       }
       i.ESPESSURA = item.espessura;
       i.PESO = item.peso;
+      i.QTE_ENTRADA = item.qtdeEntrada;
       i.SALDO = item.saldoRetorno;
       i.VALOR = item.valorBeneficiamento;
       i.VALOR_PREVISTO = item.valorPrevisto;
       i.EMBALAGEM = item.nomeEmbalagem;
+      i.PROGRAMADO = item.programado == true ? "SIM" : "";
       this.dataExport.push(i);
     });
     this.excelService.geradorExcell(this.dataExport, "Carteira_Produto");
@@ -298,12 +320,14 @@ export class ProgramacaoFormComponent implements OnInit {
       let nfTemp: any;
       nfTemp = e.nf?.replace('  000', '-');
       e.nf = (nfTemp);
-      if (this.nomeCliente != '') {
+      if (this.nomeCliente != '' || this.nomeProduto != '') {
         if (e.nomeCliente?.includes(this.nomeCliente.toUpperCase())) {
-          this.itensFiltro.push(e);
-          return
+          if (e.nomeProduto.includes(this.nomeProduto.toUpperCase())) {
+            this.itensFiltro.push(e)
+          }
         }
-      } else if (this.nomeProduto != '') {
+        return
+      } else if (this.nomeProduto != '' || this.nomeCliente != '') {
         if (e.nomeProduto?.includes(this.nomeProduto.toUpperCase())) {
           this.itensFiltro.push(e);
         }
@@ -313,7 +337,7 @@ export class ProgramacaoFormComponent implements OnInit {
         }
       } else if (this.cdBeneficiamento != undefined) {
         if (e.cdBeneficiamento == this.cdBeneficiamento) {
-          this.itensFiltro.push(e);
+          this.itensFiltro.push(e)
         }
       } else {
         this.itensFiltro = []
@@ -322,15 +346,13 @@ export class ProgramacaoFormComponent implements OnInit {
 
   }
 
+
   public iniciarProgramacao(item: ItemNaoRetornado) {
     item.qtdeProgramada = item.saldoRetorno;
     item.linhaDeProducao = this.idLinha;
     item.turno = this.idTurno;
     item.dataProgramacao = this.dataProgramacao;
-    console.log(this.setupMisto);
     item.setup = (this.setupMisto ? 0 : item.cdBeneficiamento);
-    console.log(item.setup);
-
     let dlg = this.dialog.open(DlgProgramacaoComponent, {
       data: item,
       maxHeight: '80vh',

@@ -1,0 +1,63 @@
+<div class="bgCor head-label p-2 d-flex justify-content-between align-middle">
+    <label class="bold">PRODUÇÃO POR BENEFICIAMENTO</label>
+</div>
+
+<div class="mb-5">
+    <div class="row">
+        <div class="col-12 col-lg-6 mt-2">
+            <label class="form-label">Data inicial</label>
+            <input type="date" class="form-control" [(ngModel)]="dataInicial">
+        </div>
+        <div class="col-12 col-lg-6 mt-2">
+            <label class="form-label">Data Final</label>
+            <div class="input-group">
+                <input type="date" class="form-control bgInput text-center" [(ngModel)]="dataFinal">
+                <button class="input-group-text btn btn-primary z-index"
+                    (click)="consultarProducaoPorBeneficiamentoValorQuantidade()">
+                    <i class="fas fa-search-dollar"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table mt-3">
+        <table class="table table-sm table-striped table-hover" matSort (matSortChange)="ordenarDados($event)">
+            <thead>
+                <tr>
+                    <th mat-sort-header="nomeBeneficiamento">Beneficiamento</th>
+                    <th mat-sort-header="quantidade" class="d-none d-lg-table-cell">Quantidade</th>
+                    <th mat-sort-header="peso" class="d-none d-lg-table-cell">Peso</th>
+                    <th mat-sort-header="area" class="d-none d-lg-table-cell">Área</th>
+                    <th mat-sort-header="valor" >Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let beneficiamento of beneficiamentos | paginate: { itemsPerPage: 30, currentPage:pagina,id:'tbFatuDiario' };let j =index">
+                    <td class="text-truncate" style="max-width: 150px;">{{beneficiamento.nomeBeneficiamento}}</td>
+                    <td class="d-none d-lg-table-cell">{{beneficiamento.quantidade | number}}</td>
+                    <td class="d-none d-lg-table-cell">{{beneficiamento.peso | number}}</td>
+                    <td class="d-none d-lg-table-cell">{{beneficiamento.area | number }}</td>
+                    <td>{{beneficiamento.valor | currency: 'BRL' }}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <td>Total</td>
+                <td class="d-none d-lg-table-cell">{{quantidade | number}}</td>
+                <td class="d-none d-lg-table-cell">{{peso | number}}</td>
+                <td class="d-none d-lg-table-cell">{{area | number}}</td>
+                <td>{{valor | currency: 'BRL'}}</td>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-10">
+            <pagination-controls id='tbFatuDiario' (pageChange)="pagina = $event" nextLabel="" previousLabel=""
+                [maxSize]="5"></pagination-controls>
+        </div>
+        <div class="col-2 text-success text-end c-pointer" (click)="exportarDados()" title="Exportar dados">
+            <i class="fas fa-download iconeExcell me-2 " ></i>
+        </div>
+    </div>
+</div>

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FaturamentoMensalBeneficiamento } from 'src/app/models/faturamento/faturamento-mensal-beneficiamento';
 import { FaturamentoMensalProduto } from 'src/app/models/faturamento/faturamento-mensal-produto';
 import { DetalhamentoClienteService } from 'src/app/services/detalhamento-cliente.service';
 import { FaturamentoMensalService } from 'src/app/services/faturamento-mensal.service';
+import { DlgFatMensalProdutoComponent } from 'src/app/shared/dialog/dlg-fat-mensal-produto/dlg-fat-mensal-produto.component';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 
 @Component({
@@ -24,6 +26,7 @@ export class TblFaturamentoProdComponent implements OnInit {
     private faturamentoService: FaturamentoMensalService,
     private activeRoute: ActivatedRoute,
     private dateService: DateControllerService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -57,7 +60,14 @@ export class TblFaturamentoProdComponent implements OnInit {
     this.valorTotal = 0;
     this.faturamentos.forEach(e=>{
         this.valorTotal += e.valor;
-    })
+    });
+  }
+
+  public visualizarDetalhesDoProduto(produto: any){
+    this.dialog.open(DlgFatMensalProdutoComponent, {
+      data: produto,
+      maxHeight: '90vh',
+    });
   }
 
 }

@@ -6,24 +6,56 @@
     font-size: 15px;
     border-radius: 0.2em;
     box-shadow: 2px 2px 3px;
-    /* border-left: 5px solid rgba(221, 146, 76, 0.767); */
-    border-left: 5px solid   rgb(2, 78, 218);
+    border-left: 5px solid rgb(2, 78, 218);
 }
 
 .bold {
     font-weight: bold;
 }
 
-.c-pointer{
+.c-pointer {
     cursor: pointer;
 }
 
-.c-pointer:hover{
+.c-pointer:hover {
     cursor: pointer;
-    color: rgb(226, 43, 43);
+    color: #0d6efd;
 }
 
-.item-lista:hover{
+.item-lista:hover {
     font-weight: bold;
+    color: #0d6efd;
 }
 
+.list-group-item {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(99, 99, 99);
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    margin: 1px 0px;
+}
+
+.mb {
+    padding: 3px;
+}
+
+.card-list {
+    width: 50%;
+    background-color: rgb(243, 243, 243);
+    border: 1px solid rgb(237, 237, 237);
+    border-radius: 18px;
+    margin: 5px 0px;
+    padding: 5px;
+}
+
+.fa-clock {
+    font-size: 10px;
+}
+
+@media screen and (max-width:1000px) {
+    .card-list {
+        width: 100%;
+    }
+}

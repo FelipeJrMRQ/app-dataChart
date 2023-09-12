@@ -1,0 +1,60 @@
+<div *ngIf="controle">
+    <div>
+        <section>
+            <div class="bold card-label ">
+                <div class="row">
+                    <div class="col-12 col-lg-11 text-start">
+                        <label class="color-text">PRODUTOS SEM MOVIMENTAÇÃO POR PERÍODO</label>
+                    </div>
+                    <div class="col-12 col-lg-1 c-pointers">
+                       <div class="text-end text-success c-pointer" (click)="exportarDados()">
+                        <i class="fas fa-download" title="Exportar dados" ></i>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="table">
+        <div class="p-2">
+            <select class="form-select form-select-sm" (change)="subtrairDataFinal(valorMes)"
+                [(ngModel)]="valorMes">
+                <option value="1" selected>1 MÊS</option>
+                <option value="2">2 MESES</option>
+                <option value="3">3 MESES</option>
+                <option value="4">4 MESES</option>
+                <option value="5">5 MESES</option>
+                <option value="6">6 MESES</option>
+                <option value="7">7 MESES</option>
+                <option value="8">8 MESES</option>
+                <option value="9">9 MESES</option>
+                <option value="10">10 MESES</option>
+                <option value="11">11 MESES</option>
+                <option value="12">12 MESES</option>
+            </select>
+        </div>
+        <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th class="text-center">Qtde Produtos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="c-pointer bold" 
+                    *ngFor="let cliente of movimentoCliente | paginate: {itemsPerPage: 7, currentPage: pagina, id: 'tbl-itens-movimentacao'}"
+                    (click)="detalheCliente(cliente.cdCliente,cliente.nomeCliente)">
+                    <td>{{cliente.nomeCliente}}</td>
+                    <td class="text-center">{{cliente.quantidade}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <th>Total</th>
+                <th class="text-center">{{totalProdutos}}</th>
+            </tfoot>
+        </table>
+        <pagination-controls id='tbl-itens-movimentacao' (pageChange)="pagina = $event" nextLabel="" previousLabel=""
+            [maxSize]="5"></pagination-controls>
+    </div>
+</div>

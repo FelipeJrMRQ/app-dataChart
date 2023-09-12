@@ -18,6 +18,12 @@ import { GraficoFaturamentoAnoAnteriorComponent } from './grafico-faturamento-an
 import { GraficoEvolucaoCarteiraComponent } from './grafico-evolucao-carteira/grafico-evolucao-carteira.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogModule } from 'src/app/shared/dialog/dialog.module';
+import { GraficoNovosItensComponent } from './grafico-novos-itens/grafico-novos-itens.component';
+import { TblNovosItensComponent } from './tbl-novos-itens/tbl-novos-itens.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { GraficoItensNaoRetornadosComponent } from './grafico-movimentacao-produtos/grafico-movimentacao-produtos.component';
+import { CardMovimentacaoComponent } from './tbl-movimento-produtos/tbl-movimento-produtos.component';
+import { GraficoMovimentoMensalComponent } from './grafico-movimento-mensal/grafico-movimento-mensal.component';
 
 
 @NgModule({
@@ -35,6 +41,11 @@ import { DialogModule } from 'src/app/shared/dialog/dialog.module';
     GraficoEntradasMesComponent,
     GraficoFaturamentoAnoAnteriorComponent,
     GraficoEvolucaoCarteiraComponent,
+    GraficoNovosItensComponent,
+    GraficoItensNaoRetornadosComponent,
+    TblNovosItensComponent,
+    CardMovimentacaoComponent,
+    GraficoMovimentoMensalComponent,
   ],
   imports: [
     CommonModule,
@@ -43,6 +54,7 @@ import { DialogModule } from 'src/app/shared/dialog/dialog.module';
     ReactiveFormsModule,
     MatDialogModule,
     DialogModule,
+    NgxPaginationModule,
   ]
 })
 export class DashboardSinteticoModule { }

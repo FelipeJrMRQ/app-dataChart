@@ -48,5 +48,17 @@ export class LogSistemaService {
     });
   }
 
+  public consultarAcessos(inicio: any, fim: any): Observable<any>{
+    return this.http.get(`${this.urlApi}/acessos/${inicio}/${fim}`);
+  }
+
+  public consultaTodos(inicio: string, fim: string): Observable<LogSistemaDTO[]>{
+    return this.http.get<LogSistemaDTO[]>(`${this.urlApi}/${inicio}/${fim}`);
+  }
+
+  public consultaAcessoPorTela(): Observable<any>{
+    return this.http.get(`${this.urlApi}/acessos-tela`);
+  }
+
 
 }

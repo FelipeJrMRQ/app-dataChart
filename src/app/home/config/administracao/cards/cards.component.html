@@ -1,0 +1,64 @@
+<div class="mt-2">
+    <div class="row">
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="card mt-2">
+                <div class="card-header bg-primary text-light bold">
+                    Acessos do mês
+                </div>
+                <div class="card-body text-center bold">
+                   {{acessos | number}}
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="card mt-2">
+                <div class="card-header bg-primary text-light bold">
+                    Usuarios
+                </div>
+                <div class="card-body text-center bold">
+                   {{totalUsuarios | number}}
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="card mt-2">
+                <div class="card-header bg-primary text-light bold">
+                   Contas ativas
+                </div>
+                <div class="card-body text-center bold">
+                   {{contasAtivas | number}}
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="card mt-2">
+                <div class="card-header bg-primary text-light bold">
+                    Contas inativas
+                </div>
+                <div class="card-body text-center bold">
+                   {{contasInativas | number}}
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="card mt-2">
+                <div class="card-header bg-primary text-light bold">
+                    Notificações
+                </div>
+                <div class="card-body text-center bold">
+                   {{notificacoes | number}}
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="card mt-2">
+                <div class="card-header bg-primary text-light bold">
+                    Notificados
+                </div>
+                <div class="card-body text-center bold">
+                   {{notificados | number}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

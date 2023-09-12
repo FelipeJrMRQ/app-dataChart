@@ -54,7 +54,7 @@ export class ProdutoDetalheComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES DO PRODUTO: [FATURAMENTO MENSAL -> CLIENTE -> BENEFICIAMENTO ]')
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES DO PRODUTO: [FATURAMENTO MENSAL -> CLIENTE -> BENEFICIAMENTO ]', 'FATURAMENTO MENSAL -> CLIENTE')
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
     var tootipList = this.toolTip.map(function(tooltipTriggerEl){
      return new bootstrap.Tooltip(tooltipTriggerEl);

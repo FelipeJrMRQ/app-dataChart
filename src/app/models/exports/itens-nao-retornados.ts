@@ -10,6 +10,8 @@ export class ItensNaoRetornadosExport{
     CONTROLE: any;
     ITEM: any;
     NF: any;
+    QTE_ENTRADA: any;
+    PROGRAMADO: any;
     SALDO: any;
     EMBALAGEM: any;
     TIPO_OS: any;

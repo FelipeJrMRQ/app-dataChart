@@ -1,0 +1,18 @@
+<section>
+    <div class="row ">
+        <div class="col-12">
+            <h4>Cadastrar Motivo</h4>
+            <input class="form-control" [(ngModel)]="motivoDescricao">
+            <span>Função do motivo</span>
+            <select class="form-control" [(ngModel)]="tipoMotivo">
+                <option value="BLOQUEAR">Bloqueio</option>
+                <option value="DESBLOQUEAR">Desbloqueio</option>
+                <option value="CONCLUIDO">Concluido</option>
+            </select>
+        </div>
+        <div class="d-flex col-12 align-items-center justify-content-between mt-2">
+            <button class="btn  btn-primary col-5" (click)="salvarMotivo()">Salvar</button>
+            <button class="btn btn-danger col-5" (click)="fechar()">fechar</button>
+        </div>
+    </div>
+</section>

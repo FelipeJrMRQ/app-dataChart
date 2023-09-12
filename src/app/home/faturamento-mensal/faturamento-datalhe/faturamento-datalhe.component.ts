@@ -79,7 +79,7 @@ export class FaturamentoDatalheComponent implements OnInit {
     this.consultaFaturamentoMensalCliente();
     this.consultaFaturamentoMensalBeneficiamento();
     this.consultaFaturamentoMensalProduto();
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE FUTAMENTO MENSAL');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE FATURAMENTO MENSAL', 'FATURAMENTO MENSAL');
   }
 
   //METODOS PARA MUDANÇA DE ROTA 

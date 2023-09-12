@@ -14,6 +14,11 @@ import { TblFaturamentoProdComponent } from './tbl-faturamento-prod/tbl-faturame
 import { TblFaturamentoBenefComponent } from './tbl-faturamento-benef/tbl-faturamento-benef.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { TblItensMovimentacaoComponent } from './tbl-itens-movimentacao/tbl-itens-movimentacao.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+
 
 
 @NgModule({
@@ -28,13 +33,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     GraficoEvolucaoCarteiraComponent,
     TblFaturamentoProdComponent,
     TblFaturamentoBenefComponent,
+    TblItensMovimentacaoComponent,
   ],
   imports: [
     CommonModule,
     DetalhamentoClienteRoutingModule,
     NgxPaginationModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatFormFieldModule
   ]
 })
 export class DetalhamentoClienteModule { }

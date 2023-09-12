@@ -8,7 +8,7 @@
     <div class="row">
         <!-- CLIENTES -->
         <div class="col-12 col-lg-4">
-            <!-- CAMPO DE FILTRO PRO CLIENTE -->
+            <!-- CAMPO DE FILTRO POR CLIENTE -->
             <div class=" mt-1 mb-1" >
                 <input type="text" class="form-control upper-case" placeholder="Digite o nome do cliente para filtrar"
                     [(ngModel)]="nomeCliente" (keyup)="filtrarPorCliente()">
@@ -37,6 +37,8 @@
                     </tfoot>
                 </table>
             </div>
+
+
             <!-- TABELA DE FILTRO DO CLIENTE -->
             <div class="table" *ngIf="this.clientesFiltro.length != 0" >
                 <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortCliente($event)">
@@ -106,6 +108,7 @@
                     </tfoot>
                 </table>
             </div>
+
             <!-- TABELA DE FILTRO DO BENEFICIAMENTO -->
             <div class="table" *ngIf="beneficiamentosFiltro.length != 0">
                 <table class="table table-sm table-hover table-striped" matSort
@@ -177,6 +180,7 @@
                     </tfoot>
                 </table>
             </div>
+
             <!-- TABELA DE PRODUTOS COM FILTRO -->
             <div class="table"  *ngIf="produtosFiltro.length != 0">
                 <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortProduto($event)">

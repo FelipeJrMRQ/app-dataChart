@@ -18,7 +18,7 @@ export class FaturamentoFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA FATURAMENTO DIARIO');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA FATURAMENTO DIARIO', 'FATURAMENTO DIARIO');
     this.activeRouter.params.subscribe((param:any)=>{
       this.dataRecebida = param.data;
     });

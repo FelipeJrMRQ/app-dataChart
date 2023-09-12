@@ -15,6 +15,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { ExtratoProdutoAnualComponent } from './extrato-produto-anual/extrato-produto-anual.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -26,7 +27,6 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     FaturamentoBeneficiamentoComponent,
     ClienteDetalheComponent,
     ExtratoProdutoAnualComponent,
-
   ],
   imports: [
     CommonModule,
@@ -38,6 +38,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     FormsModule,
     ReactiveFormsModule,
     MatProgressBarModule,
+    MatSnackBarModule,
   ]
 })
 export class FaturamentoMensalModule { }

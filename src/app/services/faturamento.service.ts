@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { ModeloConsulta } from '../models/modelo-consulta';
 import { environment } from 'src/environments/environment';
 import { ValorFaturamento } from '../models/faturamento/valor-faturamento';
+import { ProducaoPorBeneficiamentoDTO } from '../models/produto/producao-beneficiamento-dto';
+import { HistoricoFaturamentoClienteDTO } from '../models/faturamento/historico-faturamento-cliente-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +62,14 @@ export class FaturamentoService {
 
   public consultaValorFaturamento(mc: ModeloConsulta):Observable<ValorFaturamento>{
     return this.http.post<ValorFaturamento>(`${this.urlApi}/valor-faturamento`, mc);
+  }
+
+  public consultarProducaoPorBeneficiamentoValorQuantidade(dataInicial: any, dataFinal: any): Observable<ProducaoPorBeneficiamentoDTO[]>{
+      return this.http.get<ProducaoPorBeneficiamentoDTO[]>(`${this.urlApi}/producao-beneficiamento-valor-quantidade/${dataInicial}/${dataFinal}`);
+  }
+
+  public consultaHistoricoDeFaturamentoPorCliente(dataInicial: any, dataFinal: any): Observable<HistoricoFaturamentoClienteDTO[]>{
+    return this.http.get<HistoricoFaturamentoClienteDTO[]>(`${this.urlApi}/historico-faturamento-cliente/${dataInicial}/${dataFinal}`);
   }
 
 }

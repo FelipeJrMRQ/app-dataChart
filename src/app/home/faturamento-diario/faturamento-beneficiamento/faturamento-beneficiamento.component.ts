@@ -42,7 +42,7 @@ export class FaturamentoBeneficiamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR BENEFICIAMENTO EM FATURAMENTO DIARIO');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR BENEFICIAMENTO EM FATURAMENTO DIARIO', 'FATURAMENTO DIARIO -> BENEFICIAMENTO');
     this.verificaPermissaoDeAcesso();
   }
 

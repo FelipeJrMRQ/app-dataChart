@@ -25,21 +25,19 @@ export class ContentComponent implements OnInit, OnDestroy {
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
-    private renderer : Renderer2,
+    private renderer: Renderer2,
     private controleExibicaoService: ControleExibicaoService,
     private dialog: MatDialog
   ) {
     this.usuario = new UsuarioDTO();
   }
 
-  
-
   ngOnInit(): void {
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
     var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-    window.scroll(0,0);
+    window.scroll(0, 0);
     this.consultaPorIntervalo();
     this.registraLog();
     this.consultaUsuario();
@@ -49,44 +47,45 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.cancelarIntervalo();
   }
 
-  private consultaUsuario(){
+  private consultaUsuario() {
     this.usuarioService.consultarUsuarioPorEmail(sessionStorage.getItem('user')).subscribe({
-      next:(res)=>{
+      next: (res) => {
         this.usuario = res[0];
       },
-      complete:()=>{
-        if(this.usuario.notificacao){
-          this.openDialog()
+      complete: () => {
+        if (this.usuario.notificacao) {
+          this.openDialog();
         }
       }
-  });
+    });
   }
 
   /**
    * Verifica de há notificações para o usuário se houver será exibido a notificação na tela do usuário
    */
-  private openDialog(){
-    let dialog = this.dialog.open(NotificacaoComponent,{
+  private openDialog() {
+    let dialog = this.dialog.open(NotificacaoComponent, {
       data: [],
       disableClose: true,
-      height: '90%',
+      height: 'auto',
+      maxHeight: '90vh'
     });
     dialog.afterClosed().subscribe({
-      next:(res)=>{
+      next: (res) => {
         let u = new Usuario;
         u.id = this.usuario.id;
         u.contaAtiva = this.usuario.contaAtiva;
         u.nome = this.usuario.nome;
         u.username = this.usuario.email
         u.notificacao = false;
-        this.usuarioService.alterarUsuario(u).subscribe(res=>{
+        this.usuarioService.alterarUsuario(u).subscribe(res => {
         });
       }
-    })
+    });
   }
 
-  private registraLog(){
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DASHBOARD SINTETICO');
+  private registraLog() {
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DASHBOARD SINTETICO' , 'DASHBOARD SINTETICO');
   }
 
   public alterarParaModoAnalitico() {
@@ -96,7 +95,6 @@ export class ContentComponent implements OnInit, OnDestroy {
   public verificaPermissaoDoUsuario() {
     this.usuarioService.acessoNegado();
   }
-
 
   emitirData() {
     FaturamentoService.emitirData.emit(this.dataEscolhida);
@@ -111,5 +109,4 @@ export class ContentComponent implements OnInit, OnDestroy {
   private cancelarIntervalo() {
     clearInterval(this.intervalo);
   }
-
 }

@@ -14,3 +14,7 @@
 table{
     font-size: 11px;
 }
+
+.c-pointer{
+    cursor: pointer;
+}

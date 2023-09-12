@@ -5,11 +5,11 @@
     
     <div class="row">
         <div class="col-12 col-md-4 col-lg-4">
-            <label for="" class="form-label">Data inicial:</label>
+            <label class="form-label">Data inicial:</label>
             <input type="date" class="form-control" [(ngModel)]="dataInicial">
         </div>
         <div class="col-12 col-md-4 col-lg-4">
-            <label for="" class="form-label">Data final:</label>
+            <label class="form-label">Data final:</label>
             <div class="input-group">
                 <input type="date" class="form-control" [(ngModel)]="dataFinal">
                 <button class="btn btn-primary" (click)="consultarLogsDoUsuario()">
@@ -19,12 +19,12 @@
         </div>
     </div>
     
-    <section class="ms-2 mt-3 mb-5">
-        <div *ngFor="let log of logView" class="mb-3">
-            <label for="" class="bold c-pointer" (click)="exibirHistoricoDeLogs(log.data)"><i class="fas fa-plus-circle me-2" id="icon_{{log.data}}"></i>{{log.data | date: 'dd/MM/yyyy'}}</label>
+    <section class="card-list">
+        <div *ngFor="let log of logView" class="mb">
+            <label class="bold c-pointer" (click)="exibirHistoricoDeLogs(log.data)"><i class="fas fa-plus-circle me-2" id="icon_{{log.data}}"></i>{{log.data | date: 'dd/MM/yyyy'}}</label>
             <ul class="m-0 d-none" id="ul_{{log.data}}">
-                <li *ngFor="let horario of log.horarios"  class="list-group-item ">
-                    <label for="" class="bold">{{horario.hora}}</label> - <label for="" class="item-lista">{{horario.descricao}}</label>
+                <li *ngFor="let horario of log.horarios"  class="list-group-item">
+                    <label class="bold">{{horario.hora}} <i class="far fa-clock"></i></label>  <label class="item-lista">{{horario.descricao}}</label>
                 </li>
             </ul>
         </div>

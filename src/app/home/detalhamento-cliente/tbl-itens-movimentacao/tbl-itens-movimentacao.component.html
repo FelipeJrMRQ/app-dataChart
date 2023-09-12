@@ -1,0 +1,69 @@
+<div class="bold card-label  row">
+    <div class="row">
+        <div class="col-8 d-flex justify-content-start align-items-center">
+            <label class="color-text">PRODUTOS ATIVOS SEM MOVIMENTAÇÃO HÁ:</label>
+        </div>
+        <div class="col-4 text-end">
+            <select class="form-select form-select-sm" (change)="subtrairDataAtual(valorMes)" [(ngModel)]="valorMes">
+                <option value="1" selected>1 MÊS</option>
+                <option value="2">2 MESES</option>
+                <option value="3">3 MESES</option>
+                <option value="4">4 MESES</option>
+                <option value="5">5 MESES</option>
+                <option value="6">6 MESES</option>
+                <option value="7">7 MESES</option>
+                <option value="8">8 MESES</option>
+                <option value="9">9 MESES</option>
+                <option value="10">10 MESES</option>
+                <option value="11">11 MESES</option>
+                <option value="12">12 MESES</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="table d-flex justify-content-center align-items-center">
+    <table class="table table-sm table-striped table-hover ">
+        <thead>
+            <tr>
+                <th>NOME PRODUTO</th>
+                <th>NOME BENEFICIAMENTO</th>
+                <th>VALOR BENEFICIAMENTO</th>
+                <th>AREA</th>
+                <th>PESO</th>
+                <th class="text-center">ÚLTIMA ENTRADA</th>
+                <th class="text-center">QTD DIAS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr (click)="visualizarDetalhesDoProduto(produto)"
+                *ngFor="let produto of movimentacaoProduto | paginate: {itemsPerPage: itensPagina, currentPage:pagina, id:'tblMovimentacaoProduto'}" class="c-pointer">
+                <td>{{produto.nomeProduto}}</td>
+                <td>{{produto.nomeBeneficiamento}}</td>
+                <td>{{produto.valorBeneficiamento | currency : 'BRL'}}</td>
+                <td>{{produto.area}}</td>
+                <td>{{produto.peso}}</td>
+                <td class="text-center">{{produto.dataUltimaEntrada | date: 'dd/MM/YY'}}</td>
+                <td class="text-center">{{getDias(produto.dataUltimaEntrada)}}  DIA<label for="" *ngIf="getDias(produto.dataUltimaEntrada)>1">S</label></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="row">
+    <div class="col-11">
+        <pagination-controls id="tblMovimentacaoProduto" (pageChange)="pagina =$event" nextLabel=""
+        previousLabel="" [maxSize]="5"></pagination-controls>
+    </div>
+    <div class="col-1 text-center text-success f-20 c-pointer" *ngIf="controle">
+        <i class="fas fa-download" title="Exportar dados" (click)="exportarDados()"></i>
+    </div>
+</div>
+
+
+
+

@@ -169,7 +169,7 @@ export class TblCarteiraBeneficiamentoComponent implements OnInit, OnDestroy {
       listaCarteira.push(beneficiamentoCarteiraExport);
     });
     this.exportDataService.geradorExcell(listaCarteira, "Carteira-beneficiamento");
-    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DA CARTEIRA POR BENEFICIAMENTO');
+    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DA CARTEIRA POR BENEFICIAMENTO', '');
   }
 
   public ordernarBeneficiamento(sort: Sort) {

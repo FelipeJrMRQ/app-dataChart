@@ -26,8 +26,10 @@ export class CardFaturamentoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.limparDados();
     this.activeRoute.params.subscribe((res: any) => {
       this.cdCliente = res.cdCliente;
+      this.dataRecebida = res.data;
       this.consultaFaturamentoDoDia();
       this.consultarFaturamentoDoMes();
       this.consultarFaturamentoDoAno();
@@ -36,6 +38,13 @@ export class CardFaturamentoComponent implements OnInit {
   }
 
   
+  public limparDados(){
+    this.faturamentoDia = 0;
+    this.faturamentoMes = 0;
+    this.faturamentoAno = 0;
+  }
+
+
   private receberDataPorEvento(){
     DetalhamentoClienteService.event.subscribe(res=>{ 
       this.dataRecebida = res
@@ -46,6 +55,7 @@ export class CardFaturamentoComponent implements OnInit {
   }
 
   public consultaFaturamentoDoDia() {
+    this.limparDados();
     this.detalhamentoService.consultarFaturamentoDiarioDoCliente(this.dataRecebida, this.dataRecebida, this.cdCliente).subscribe({
       next: (res) => {
         try {
@@ -58,6 +68,7 @@ export class CardFaturamentoComponent implements OnInit {
   }
 
   public consultarFaturamentoDoMes() {
+    this.limparDados();
     this.detalhamentoService.consultarFaturamentoMensalDoCliente(
         this.dateService.getInicioDoMes(this.dataRecebida),
        this.dataRecebida,
@@ -72,6 +83,7 @@ export class CardFaturamentoComponent implements OnInit {
   }
 
   public consultarFaturamentoDoAno() {
+    this.limparDados();
     this.detalhamentoService.consultarFaturamentoMensalDoCliente(
         this.dateService.getInicioDoAno(this.dataRecebida),
        this.dataRecebida,

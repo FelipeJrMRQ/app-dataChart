@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let produto of faturamentos | paginate: {itemsPerPage: itensPagina, currentPage:pagina, id:'tblFatProd'}">
+            <tr class="c-pointer" *ngFor="let produto of faturamentos | paginate: {itemsPerPage: itensPagina, currentPage:pagina, id:'tblFatProd'}" (click)="visualizarDetalhesDoProduto(produto)">
                 <td>{{produto.nomeProduto}}</td>
                 <td class="d-none d-lg-table-cell">{{produto.nomeBeneficiamento}}</td>
                 <td>{{produto.valor | currency : 'BRL'}}</td>

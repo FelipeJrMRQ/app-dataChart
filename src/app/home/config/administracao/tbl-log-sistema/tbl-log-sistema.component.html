@@ -1,0 +1,23 @@
+<div>
+    <div class="table">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Hora</th>
+                    <th scope="col">Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let log of logsDoSistema | paginate: {itemsPerPage: 12, currentPage: pagina, id: 'tbl-logs'}">
+                    <td>{{log.descricao}}</td>
+                    <td>{{log.data | date :'dd/MM/yyyy'}}</td>
+                    <td>{{log.data | date: 'HH:mm:ss'}}</td>
+                    <td>{{log.nomeUsuario}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls id='tbl-logs' (pageChange)="pagina = $event" nextLabel="" previousLabel=""[maxSize]="5"></pagination-controls>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 <header>
     <div class="bgCor card-label d-flex between align-middle">
-        <label class="color-text bold">EXTRATO ANALÍTICO DE PRODUTO</label>
+        <label class="color-text bold">EXTRATO ANUAL DE FATURAMENTO POR PRODUTO</label>
     </div>
 </header>
 <section class="mb-5">
@@ -42,7 +42,7 @@
             </thead>
             <tbody>
                 <tr
-                    *ngFor="let produto of extrato | paginate:{itemsPerPage:itensPagina,currentPage:pagina,id:'paginaQuantidade'} let i = index">
+                    *ngFor="let produto of extrato | paginate:{itemsPerPage:itensPagina,currentPage:pagina,id:'paginaQuantidade'} let i = index" class="c-pointer">
                     <td (click)="openDetalhesProduto(produto)">{{produto.nomeProduto}}</td>
                     <td *ngFor="let mes of produto.meses" class="{{valorClass(mes.quantidade)}}"
                         (click)="openDetalhesProduto(produto)">{{mes.quantidade}}</td>
@@ -71,7 +71,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
+                <tr class="c-pointer"
                     *ngFor="let produto of extratoFiltro | paginate:{itemsPerPage:itensPagina,currentPage:pagina,id:'paginaQuantidade'} let i = index">
                     <td (click)="openDetalhesProduto(produto)">{{produto.nomeProduto}}</td>
                     <td *ngFor="let mes of produto.meses" class="{{valorClass(mes.quantidade)}}"
@@ -100,10 +100,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
+                <tr class="c-pointer"
                     *ngFor="let produto of extrato | paginate:{itemsPerPage:itensPagina,currentPage:pagina,id:'paginaQuantidade'} let i = index">
-                    <td>{{produto.nomeProduto}}</td>
-                    <td *ngFor="let mes of produto.meses" class="{{valorClass(mes.valor)}}">{{mes.valor |
+                    <td (click)="openDetalhesProduto(produto)">{{produto.nomeProduto}}</td>
+                    <td (click)="openDetalhesProduto(produto)" *ngFor="let mes of produto.meses" class="{{valorClass(mes.valor)}}">{{mes.valor |
                         currency:'BRL'}}</td>
                     <td class="{{valorClass(produto.valor)}}">{{produto.valorTotal |currency: 'BRL'}}</td>
                 </tr>
@@ -129,7 +129,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
+                <tr class="c-pointer"
                     *ngFor="let produto of extratoFiltro | paginate:{itemsPerPage:itensPagina,currentPage:pagina,id:'paginaQuantidade'} let i = index">
                     <td>{{produto.nomeProduto}}</td>
                     <td *ngFor="let mes of produto.meses" class="{{valorClass(mes.valor)}}">{{mes.valor |

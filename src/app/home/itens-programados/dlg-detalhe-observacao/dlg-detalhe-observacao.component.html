@@ -1,0 +1,119 @@
+<section class="mb-3">
+    <div class="bold card-label d-flex between align-middle">
+        <label class="color-text bold">OBSERVAÇÃO PARA PROGRAMAÇÃO</label>
+    </div>
+</section>
+<section>
+    <div class="row  align-items-center background" *ngIf="status == 'BLOQUEADO'">
+        <div class="col-6">
+            <span class="text-danger form-label">Este item esta bloqueado</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="mb-2 col-12 ">
+                <a [href]="urlImagem" target="_blank">
+                    <img [src]="urlImagem" alt="Imagem não encontrada" class="image-size">
+                </a>
+            </div>
+            <div class="col-12">
+                <label class="bold d-block color-text">CLIENTE:</label>
+                <p>{{data.nomeCliente}}</p>
+            </div>
+            <div class="col-12">
+                <label class="bold d-block color-text">PRODUTO:</label>
+                <p>{{data.nomeProduto}}</p>
+            </div>
+            <div class="col-12">
+                <label class="bold d-block color-text">BENEFICIAMENTO:</label>
+                <p>{{data.nomeBeneficiamento}}</p>
+            </div>
+            <div class="col-12">
+                <label class="bold d-block color-text">PROGRAMADO POR:</label>
+                <p>{{data.responsavel}}</p>
+            </div>
+            <div class="col-12">
+                <label class="bold d-block color-text">INSTRUÇÃO DE TRABALHO:</label>
+                <p class="mt-2"><a href="{{this.linkBook}}" class="bold" target="_blank">Clique aqui</a></p>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <form class="col-12" *ngIf="status != 'FINALIZADO'">
+                <span class="color-text ">Motivo</span>
+                <div class="input-group" *ngIf="status == 'AGUARDANDO'">
+                    <select class="form-select" [(ngModel)]="motivo" name="motivo" required>
+                        <option [value]="motivoObj.id" *ngFor="let motivoObj of listaMotivosBloqueio">
+                            {{motivoObj.motivoDescricao}}</option>
+                    </select>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="criarMotivoObs()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="input-group" *ngIf="status == 'PRODUZINDO'">
+                    <select class="form-select" [(ngModel)]="motivo" name="motivo" required>
+                        <option [value]="motivoObj.id" *ngFor="let motivoObj of listaMotivosConcluir">
+                            {{motivoObj.motivoDescricao}}</option>
+                    </select>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="criarMotivoObs()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="input-group" *ngIf="status == 'BLOQUEADO'">
+                    <select class="form-select" [(ngModel)]="motivo" name="motivo" required>
+                        <option [value]="motivoObj.id" *ngFor="let motivoObj of listaMotivosDesbloqueio">
+                            {{motivoObj.motivoDescricao}}</option>
+                    </select>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="criarMotivoObs()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </form>
+            <div class="col-12" *ngIf="status != 'FINALIZADO'">
+                <span class="color-text ">Observação</span>
+                <textarea rows="3" cols="50" class="form-control" [(ngModel)]="obsApont" type="text" name="obsApont"
+                    [disabled]="status == 'FINALIZADO'">{{data.obsApont}}</textarea>
+            </div>
+            <div class="row  mt-2">
+                <div class="col-6" *ngIf="status != 'FINALIZADO' && status != 'BLOQUEADO'">
+                    <button class="btn btn-sm btn-primary form-control" (click)="salvarObservacao()">Salvar</button>
+                </div>
+                <div class="col-6"  *ngIf="status == 'BLOQUEADO'">
+                    <button class="btn btn-sm btn-success form-control" (click)="desbloquearItem()">Desbloquear</button>
+                </div>
+                <div class="col-6" *ngIf="status != 'FINALIZADO'">
+                    <button class="btn btn-sm btn-danger form-control" (click)="fecharDialog() ">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12" *ngIf="this.exibir">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>MOTIVO</th>
+                        <th>Observação</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of itensObservacoes">
+                        <td>{{item.motivo.motivoDescricao}}</td>
+                        <td>{{item.observacaoApontamento}}</td>
+                        <td>{{item.data | date:'dd/MM/yyyy' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-6" *ngIf="itensObservacoes.length > 0">
+            <button class="btn btn-sm btn-primary form-control" tabindex="-5" *ngIf="itensObservacoes.length > 0" (click)="exibirObservacoes()">{{messagemBotao}}</button>
+        </div>
+        <div class="col-6" *ngIf="status == 'FINALIZADO'">
+            <button class="btn btn-sm btn-danger col-6 form-control"  (click)="fecharDialog() ">Fechar</button>
+        </div>
+    </div>
+
+</section>

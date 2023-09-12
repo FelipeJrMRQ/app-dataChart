@@ -30,7 +30,7 @@ export class DashboardAnaliticoComponent implements OnInit {
     }
 
     private registrarLog(){
-        this.controleExibicaoService.registrarLog("ACESSOU A TELA DASHBOARD ANALITICO");
+        this.controleExibicaoService.registrarLog("ACESSOU A TELA DASHBOARD ANALITICO", 'DASHBOARD ANALITICO');
     }
 
     public VoltarTopo() {

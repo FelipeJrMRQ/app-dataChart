@@ -1,0 +1,20 @@
+.head-label {
+    margin: 0.5em 0em 0.5em 0em;
+    padding: 5px;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 0.2em;
+    box-shadow: 2px 2px 3px;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.z-index{
+    z-index: 0;
+}
+
+table{
+    font-size: 12px;
+}

@@ -21,106 +21,29 @@
                 </div>
             </section>
 
-            <section class="mt-4">
-                <div class="row">
-                    <div class="col-12 col-lg-6">
-                        <header>
-                            <div class="bgCor card-label d-flex between align-middle bold">
-                                <label class="color-text">PERMISSÕES DO USUÁRIO</label>
-                            </div>
-                        </header>
-                        <mat-accordion *ngIf="editar">
-                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
-                                *ngFor="let tela of telasDoUsuario">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        <label for="" class="bold">
-                                            {{tela.nome}}
-                                        </label>
-                                    </mat-panel-title>
-                                    <!-- <mat-panel-description>
-                                    </mat-panel-description> -->
-                                </mat-expansion-panel-header>
-                                <div>
-                                    <div class="mb-3">
-                                        <label for="">ROTA: </label>
-                                        <strong class="ms-2">{{tela.rota}}</strong>
-                                    </div>
-                                    <label for="" class="mb-2 ms-1 bold" *ngIf="tela.componentes.length > 0">Lista de
-                                        componentes da tela</label>
-                                    <div class="form-check ms-5" *ngFor="let componente of tela.componentes"
-                                        class="sublinhado">
-                                        <i class="fas fa-check me-2 text-success" id="icone_{{componente.id}}"></i>
-                                        <label class="form-check-label c-pointer mt-2"
-                                            (click)="removerComponenteDaTelaDoUsuario(tela, componente)"
-                                            title="Clique para remover" (mouseenter)="exibirIconeDeRemocao(componente)"
-                                            (mouseout)="exibirIconeVinculo(componente)">
-                                            {{componente.nome}}
-                                        </label>
-                                    </div>
-                                    <div class="text-end mt-2">
-                                        <button class="btn btn-danger btn-sm" (click)="removerTela(tela)">Remover
-                                            tela</button>
-                                    </div>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        <header>
-                            <div class="bgCor card-label d-flex between align-middle bold">
-                                <label class="color-text">TELAS DO SISTEMA</label>
-                            </div>
-                        </header>
-                        <mat-accordion>
-                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let tela of telasDoSistema" (click)="marcarItensDoUsuario(tela.nome)">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        <label for="" class="bold">{{tela.nome}}</label>
-                                    </mat-panel-title>
-                                    <!-- <mat-panel-description>
-                                    </mat-panel-description> -->
-                                </mat-expansion-panel-header>
-                                <div>
-                                    <div class="mb-2">
-                                        <label for="">ROTA:</label>
-                                        <strong class="ms-2">{{tela.rota}}</strong>
-                                    </div>
-                                    <label for="" class="mb-2 ms-1 bold" *ngIf="tela.componentes.length >0">Lista de
-                                        componentes da tela</label>
-                                    <div class="mb-2" *ngIf="tela.componentes.length > 0">
-                                        <input class="form-check-input me-2" type="checkbox" id="select_all"
-                                            (click)="selecionarTodas($event ,tela)">
-                                        <label class="form-check-label">Selecionar todas</label>
-                                    </div>
-                                    <div class="form-check ms-5" *ngFor="let componente of tela.componentes">
-                                        <input class="form-check-input" type="checkbox" value="{{componente.nome}}"
-                                            id="cp_{{componente.id}}"
-                                            (click)="selecionarComponentes($event,componente)">
-                                        <label class="form-check-label" for="{{componente.nome}}">
-                                            {{componente.nome}}
-                                        </label>
-                                    </div>
-                                    <div class="text-end">
-                                        <button class="btn btn-primary" (click)="vincularTelaAoUsuario($event, tela)"
-                                            [disabled]="!editar">Adicionar ao usuário</button>
-                                    </div>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
+            <section class="mt-3 mb-3">
+                <div class="bgCor card-label d-flex between align-middle bold">
+                    <label class="color-text">PERMISSÕES DO USUÁRIO</label>
+                </div>
+                <div *ngFor="let tela of telasDoSistema" class="ms-3">
+                    <span class="mt-3 bold">TELA - {{tela.nome}}</span><br>
+                    <input type="checkbox" id="{{tela.rota}}" class="ms-4" (click)="IncluirTelaParaUsuario($event,tela)">
+                    <label class="ms-2" for="{{tela.rota}}">visualizar_tela</label>
+                    <div *ngFor="let componente of tela.componentes" class="ms-4">
+                        <input type="checkbox" id="{{tela.rota}}_{{componente.nome}}" class="me-2"   (click)="selecionarComponentes($event, componente, tela)">
+                        <label for="{{tela.rota}}_{{componente.nome}}">{{componente.nome}}</label>
                     </div>
                 </div>
             </section>
-
             <div>
                 <button class="btn btn-primary mt-2 mb-2" (click)="cadastrarUsuario()" *ngIf="!modoDeEdicao">Convidar</button>
                 <button class="btn btn-primary mt-2 mb-2" (click)="alterarUsuario()"
                     *ngIf="modoDeEdicao">Alterar</button>
                 <button class="btn btn-danger ms-2" (click)="limparDados()">Limpar</button>
-                <button class="btn btn-success ms-2" (click)="notificarUsuarios()">Notificar usuários</button>
-            </div>
-            
+            </div>            
         </form>
+
+       
 
         <section>
             <header>
@@ -161,7 +84,7 @@
                             <td class="d-none d-lg-table-cell" *ngIf="!usuario.contaAtiva">BLOQUEADO</td>
                             <td class="d-none d-lg-table-cell" *ngIf="usuario.contaAtiva">ATIVO</td>
                             <td class="text-center">
-                                <button class="btn btn-sm " title="Bloquear" (click)="bloquearUsuario(usuario.id)">
+                                <button class="btn btn-sm " title="Bloquear" (click)="bloquearUsuario(usuario)">
                                     <i class="fas fa-lock-open text-success" *ngIf="usuario.contaAtiva"></i>
                                     <i class="fas fa-lock text-danger" *ngIf="!usuario.contaAtiva"></i>
                                 </button>

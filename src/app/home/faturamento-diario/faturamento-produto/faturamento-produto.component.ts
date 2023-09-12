@@ -58,7 +58,7 @@ export class FaturamentoProdutoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR PRODUTO EM FATURAMENTO DIARIO');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR PRODUTO EM FATURAMENTO DIARIO', 'FATURAMENTO DIARIO -> PRODUTO');
     this.activeRouter.params.subscribe((param: any) => {
       this.id = param.id;
       this.dataAtual = param.data;

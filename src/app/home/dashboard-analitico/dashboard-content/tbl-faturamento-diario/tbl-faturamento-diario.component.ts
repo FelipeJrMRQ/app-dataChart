@@ -7,7 +7,6 @@ import { FaturamentoDiario } from 'src/app/models/faturamento/faturamento-diario
 import { ModeloConsulta } from 'src/app/models/modelo-consulta';
 import { FaturamentoService } from 'src/app/services/faturamento.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
-import { Observable } from 'rxjs';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { forkJoin } from 'rxjs';
 
@@ -148,7 +147,7 @@ export class TblFaturamentoDiarioComponent implements OnInit, OnDestroy {
       listaFaturamento.push(listaExport);
     });
     this.exportDataService.geradorExcell(listaFaturamento, "Faturamento-diario");
-    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DO FATURAMENTO DIARIO');
+    this.controleExibicaoService.registrarLog('EXPORTOU DADOS DO FATURAMENTO DIARIO', '');
   }
 
   public navegarParaDetalhesFaturamentoPorCliente(data: any) {

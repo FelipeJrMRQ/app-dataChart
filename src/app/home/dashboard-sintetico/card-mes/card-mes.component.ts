@@ -18,6 +18,7 @@ import { FaturamentoMensalService } from 'src/app/services/faturamento-mensal.se
 export class CardMesComponent implements OnInit {
   arrowGap: string;
   valorFaturamento: number = 0;
+  valorFaturamendoAno: number = 0;
   gapDoMes: number = 0;
   metaFaturamentoDoMes: number = 0;
   modeloDeConsulta: ModeloConsulta;
@@ -53,12 +54,12 @@ export class CardMesComponent implements OnInit {
     }).subscribe(({ s1 }) => {
       if (s1) {
         this.consultaValorFaturamento();
+        this.consultaValorFaturamentoDoAno();
       }
     })
   }
 
   public consultaValorFaturamento() {
-
     this.faturamentoService.consultaTotalFaturamentoPorMes(this.dateService.getInicioDoMes(moment(this.dataRecebida).format('yyyy-MM-DD')), this.dataRecebida).subscribe({
         next:(res)=>{
          try {
@@ -69,6 +70,26 @@ export class CardMesComponent implements OnInit {
           this.consultaParametrosMeta();
         }
     });
+  }
+
+  public consultaValorFaturamentoDoAno() {
+    this.faturamentoService.consultaTotalFaturamentoPorMes(this.dateService.getInicioDoAno(moment(this.dataRecebida).format('yyyy-MM-DD')), this.dataRecebida).subscribe({
+        next:(res)=>{
+          this.valorFaturamendoAno = 0;
+         try {
+          res.forEach(e=>{
+            this.valorFaturamendoAno += e.valor;
+          })
+         } catch (error) {}
+        },
+        complete:()=>{
+          this.consultaParametrosMeta();
+        }
+    });
+  }
+
+  public visualizarFaturamentoPeriodo(){
+    this.router.navigate(['faturamento-periodo']);
   }
 
   public consultaParametrosMeta() {

@@ -20,7 +20,7 @@ export class CarteiraFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA CARTEIRA POR BENEFICIAMENTO')
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA CARTEIRA POR BENEFICIAMENTO', "CARTEIRA -> BENEFICIAMENTO")
     this.activeRoute.params.subscribe((param:any)=>{
       this.dataRecebida = param.data;
       this.nomeBeneficiamento = param.nome;

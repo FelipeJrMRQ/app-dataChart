@@ -3,15 +3,17 @@
         <div class="first-column">
             <h2 class="title title-primary pulse">Bem-vindo!</h2>
             <p class="description">Faça login para acessar dashboard.</p>
-            <p class="description">Utilize seu código de convite</p> 
+            <p class="description">Utilize seu código de convite</p>
             <button class="btn btn-primary" routerLink="/validar-convite">Convite</button>
         </div>
         <div class="second-column">
-            <h2 class="title-second fadeInLeft">
-                <i class="fas fa-chart-line"></i>
-                Dashboard 
-            </h2>
-            <p class="description-second fadeInRight">Preencha os campos de login</p>
+            <div class="d-flex justify-content-center mt-5 fadeInLeft">
+                <img class="tamanhoImg" src="assets/LOGO-AZUL.png">
+            </div>
+          
+                <span class="description-second text-center descricao  fadeInRight">Preencha os campos de login</span>
+          
+
 
             <form class="form">
                 <label class="label-input">
@@ -20,9 +22,12 @@
                 </label>
                 <label class="label-input">
                     <i class="fas fa-unlock-alt icon-modify"></i>
-                    <input  type="password" placeholder="Senha" name="senha" [(ngModel)]="user.senha">
+                    <input type="password" placeholder="Senha" name="senha" [(ngModel)]="user.senha">
                 </label>
                 <button class="btn btn-second" (click)="fazerLogin()">Fazer login</button>
+                <div class="text-center mt-3">
+                    <a href="#" routerLink="validar-convite/recuperar-senha">Esqueci a senha</a>
+                </div>
             </form>
         </div>
     </div>

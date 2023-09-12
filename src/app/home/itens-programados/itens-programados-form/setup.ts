@@ -1,4 +1,4 @@
-import { Programacao } from "src/app/models/programacao";
+import { Programacao } from "src/app/models/programacao/programacao";
 
 export class Setup{
     nomeBeneficiamento: string | undefined;

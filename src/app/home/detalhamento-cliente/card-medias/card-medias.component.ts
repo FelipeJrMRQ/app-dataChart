@@ -31,6 +31,11 @@ export class CardMediasComponent implements OnInit {
     this.receberDataPorEvento();
   }
 
+  public limparDados(){
+    this.valorMediaEntrada = 0;
+    this.valorMediaFaturamento = 0;
+  }
+
   private receberDataPorEvento(){
     DetalhamentoClienteService.event.subscribe(res=>{ 
       this.dataRecebida = res
@@ -40,6 +45,7 @@ export class CardMediasComponent implements OnInit {
   }
 
   private consultarFaturamentoDiario() {
+    this.limparDados();
     this.detalhamentoService.consultarFaturamentoMensalDoCliente(this.dateService.getInicioDoAno(this.dataRecebida), this.dataRecebida, this.cdCliente).subscribe({
       next: (res) => {
         this.valorMediaFaturamento = this.calculaMediaFaturamento(res);
@@ -48,6 +54,7 @@ export class CardMediasComponent implements OnInit {
   }
 
   private consultarEntradaDiaria() {
+    this.limparDados();
     this.detalhamentoService.consultaEntradaDoMesDoCliente(this.dateService.getInicioDoAno(this.dataRecebida), this.dataRecebida, this.cdCliente).subscribe({
       next: (res) => {
         this.valorMediaEntrada = this.calculaMediaEntrada(res);

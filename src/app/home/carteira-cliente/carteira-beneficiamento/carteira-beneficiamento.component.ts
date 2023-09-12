@@ -43,7 +43,7 @@ export class CarteiraBeneficiamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR BENEFICIAMENTO [CARTEIRA CLIENTE -> BENEFICIAMENTO] ')
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR BENEFICIAMENTO [CARTEIRA CLIENTE -> BENEFICIAMENTO] ', "CARTEIRA-CLIENTE -> BENEFICIAMENTO")
     //Utilizado para exibição do tooltip bootstrap
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
     var tootipList = this.toolTip.map(function (tooltipTriggerEl) {

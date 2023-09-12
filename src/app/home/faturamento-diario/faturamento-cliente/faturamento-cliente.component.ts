@@ -41,7 +41,7 @@ export class FaturamentoClienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR CLIENTE EM FATURAMENTO DIARIO');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR CLIENTE EM FATURAMENTO DIARIO', 'FATURAMENTO DIARIO -> CLIENTE');
     this.verificaPermissaoDeAcesso();
   }
 

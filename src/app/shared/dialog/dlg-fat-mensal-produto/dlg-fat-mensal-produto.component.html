@@ -14,17 +14,19 @@
         </div>
         <div class="col-12 col-lg-6 color-text">
             <label for="" class="form-label bold">CLIENTE:</label>
-            <p>{{data.nomeCliente}}</p>
+            <p>{{produto.nomeCliente}}</p>
             <label for="" class="form-label bold">PRODUTO:</label>
-            <p>{{data.nomeProduto}}</p>
-            <label for="" class="form-label bold" *ngIf="visualizarPreco">PREÇO:</label>
-            <p *ngIf="visualizarPreco">{{data.valorUnitario | currency : 'BRL'}}</p>
+            <p>{{produto.nomeProduto}}</p>
+            <label for="" class="form-label bold" *ngIf="visualizarPreco">VALOR UNITÁRIO:</label>
+            <p *ngIf="visualizarPreco">{{produto.valorBeneficiamento| currency : 'BRL'}}</p>
             <label for="" class="form-label bold">BENEFICIAMENTO</label>
-            <p>{{data.nomeBeneficiamento}}</p>
-            <label for="" class="form-label bold">QUANTIDADE:</label>
-            <p>{{data.quantidade | number }}</p>
-            <label for="" class="form-label bold">VALOR:</label>
-            <p>{{data.valor | currency : 'BRL'}}</p>
+            <p>{{produto.nomeBeneficiamento}}</p>
+            <label for="" class="form-label bold" *ngIf="data.quantidade">QUANTIDADE:</label>
+            <p *ngIf="data.quantidade">{{data.quantidade | number }}</p>
+            <label for="" class="form-label bold" *ngIf="data.valor">VALOR:</label>
+            <p *ngIf="data.valor">{{data.valor | currency : 'BRL'}}</p>
+            <label for="" class="form-label bold">BOOK DO PRODUTO</label>
+            <p><a href="{{linkBook}}" target="_blank" rel="noopener noreferrer">Clique aqui</a></p>
         </div>
         <hr>
         <div class="text-end">

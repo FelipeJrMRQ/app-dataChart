@@ -50,7 +50,7 @@ export class LoginFormComponent implements OnInit {
         } else {
           token = this.response?.error.text;
           this.gravarTokenNaSession(token);
-          this.controleExibicaoService.registrarLog('USUARIO AUTENTICADO');
+          this.controleExibicaoService.registrarLog('USUARIO AUTENTICADO', '');
         }
       }
     });

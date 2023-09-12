@@ -1,5 +1,5 @@
 import { LinhaDeProducao } from "src/app/models/linha-de-producao";
-import { Programacao } from 'src/app/models/programacao';
+import { Programacao } from 'src/app/models/programacao/programacao';
 import { Turno } from "src/app/models/turno";
 import { Setup } from "./setup";
 

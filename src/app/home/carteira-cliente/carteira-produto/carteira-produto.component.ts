@@ -51,7 +51,7 @@ export class CarteiraProdutoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR PRODUTO [CARTEIRA CLIENTE -> PRODUTO]');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DETALHES POR PRODUTO [CARTEIRA CLIENTE -> PRODUTO]', 'CARTEIRA-CLIENTE -> PRODUTO');
     //Utilizado para visualização do tooltip bootstrap
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
     var tootipList = this.toolTip.map(function (tooltipTriggerEl) {

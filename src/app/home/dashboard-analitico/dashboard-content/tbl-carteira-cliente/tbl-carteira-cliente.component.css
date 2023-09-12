@@ -42,3 +42,12 @@
     opacity: 0.8;
     transition: all;
 }
+
+
+.bold{
+    font-weight: bold;
+}
+
+table{
+    font-size: 12px;
+}

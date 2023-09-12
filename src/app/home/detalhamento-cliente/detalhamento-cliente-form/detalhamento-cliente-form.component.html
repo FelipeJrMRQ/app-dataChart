@@ -1,20 +1,39 @@
 <section class="mt-2">
     <section>
-        <div class="bold card-label d-flex between align-middle">
+        <div class="bold card-label d-flex justify-content-between align-items-center">
             <label clas="color-text">DETALHES DO CLIENTE - {{nomeCliente}}</label>
+
         </div>
     </section>
     <section>
         <div class="row">
-            <div class="col-8 col-md-4 col-lg-4 mt-1">
-              <div class="input-group">
-                <input type="date" name="dataRecebida" class="form-control bgInput text-center" [(ngModel)]="dataRecebida" />
-                <button class="input-group-text btn btn-primary" (click)="emitirData()">
-                  <i class="fas fa-search-dollar"></i>
-                </button>
-              </div>
+            <div class="col-12 col-md-4 col-lg-4 mt-1">
+                <div class="input-group">
+                    <input type="date" name="dataRecebida" class="form-control bgInput text-center"
+                        [(ngModel)]="dataRecebida" />
+                    <button class="input-group-text btn btn-primary" (click)="emitirData()">
+                        <i class="fas fa-search-dollar"></i>
+                    </button>
+                </div>
             </div>
-          </div>
+            <div class="col-12 col-md-4 col-lg-4 mt-1">
+                <div class="input-group">
+                    <input class="form-control" list="Options" type="text"
+                        placeholder="Digite o nome do cliente ou codigo" name="cdCliente" [(ngModel)]="descricaoCliente" (change)="teste($event)">
+                    <button class="input-group-text btn btn-danger" (click)="limpar()" title="Limpar">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <datalist class="lista" id="Options">
+                    <option *ngFor="let cliente of clientes" value="{{cliente.cdCliente}}-{{cliente.nomeCliente}}">
+                    </option>
+                </datalist>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+        </div>
     </section>
     <div class="row">
         <div class="col-12 col-lg-3 mt-2">
@@ -57,8 +76,14 @@
     </div>
 </section>
 
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <app-tbl-itens-movimentacao></app-tbl-itens-movimentacao>
+    </div>
+</div>
 
 <div class="mb-5 mt-5">
-    <button class="btn btn-danger me-2"(click)="voltar()">Voltar</button>
-    <button class="btn btn-primary" (click)="navegarPerspectivaAnual()">Histórico anual</button>
+    <button class="btn btn-danger me-2" (click)="voltar()">Voltar</button>
+    <!-- <button class="btn btn-primary me-2" (click)="navegarPerspectivaAnual()">Extrato faturamento</button>
+    <button class="btn btn-primary" (click)="exibirHistoricoAnualPorProduto()">Extrato entradas</button> -->
 </div>

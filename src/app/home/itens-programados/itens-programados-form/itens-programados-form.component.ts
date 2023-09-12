@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { LinhaDeProducao } from 'src/app/models/linha-de-producao';
-import { Programacao } from 'src/app/models/programacao';
+import { Programacao } from 'src/app/models/programacao/programacao';
 import { Turno } from 'src/app/models/turno';
 import { LinhaDeProducaoService } from 'src/app/services/linha-de-producao.service';
 import { ProgramacaoService } from 'src/app/services/programacao.service';
@@ -18,6 +18,16 @@ import { DlgAlterarSetupComponent } from '../dlg-alterar-setup/dlg-alterar-setup
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ManipuladorArrayService } from 'src/app/utils/manipulador-array.service';
 import { DlgExclusaoComponent } from 'src/app/shared/dialog/dlg-exclusao/dlg-exclusao.component';
+import { Sort } from '@angular/material/sort';
+import { DlgDetalheObservacaoComponent } from '../dlg-detalhe-observacao/dlg-detalhe-observacao.component';
+
+import * as bootstrap from 'bootstrap';
+import { Motivo } from 'src/app/models/motivo';
+import { ObservacaoProgramacaoDto } from 'src/app/models/observacoes/observacao-programacao-dto';
+import { ObservacaoProgramacao } from 'src/app/models/observacoes/observacao-programacao';
+
+import { ExcelService } from 'src/app/services/excel.service';
+
 
 
 @Component({
@@ -36,6 +46,11 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   totalTurno3: any = 0;
   totalGeral: any = 0;
   totalTbQtde: any = 0;
+
+  linhaSelecionada: any;
+  motivo: any;
+  bloqueio: boolean = false;
+  obsApontamento: any;
   processo: any = [];
   linhas: LinhaDeProducao[];
   turnos: Turno[];
@@ -53,18 +68,31 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   sequenciaSetup: Setup[] = [];
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
+  listaSetup: Programacao[];
   step: any;
+  ativo: boolean = false;
+  obsApont: any;
+  open: any;
+  close: any;
+  classAnimation: string = "pisca2";
+  obs: ObservacaoProgramacao;
+  obsItem: ObservacaoProgramacao;
+  public toolTip = [];
 
   constructor(
     private programacaoService: ProgramacaoService,
+    private renderer: Renderer2,
     private dialog: MatDialog,
     private linhaService: LinhaDeProducaoService,
     private turnoService: TurnoService,
     private controleExibicaoService: ControleExibicaoService,
     private snackBar: MatSnackBar,
-    private arrayService: ManipuladorArrayService
+    private arrayService: ManipuladorArrayService,
+    private excelService: ExcelService,
   ) {
     this.itensProgramados = [];
+    this.obs = new ObservacaoProgramacao();
+    this.obsItem = new ObservacaoProgramacao();
     this.itensIniciados = [];
     this.itensLinha = [];
     this.itensLinhaTurno1 = [];
@@ -72,6 +100,7 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     this.itensLinhaTurno3 = [];
     this.linhas = [];
     this.turnos = [];
+    this.listaSetup = [];
     this.itensLinhaVisualizacao = new ItensLinha();
     this.docPdf = new jsPDF(
       {
@@ -80,14 +109,207 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     );
   }
 
+
+
   ngOnInit(): void {
+    this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
+    var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
     this.consultarItensProgramadosAguardando();
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA ITENS PROGRAMADOS');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA ITENS PROGRAMADOS', 'ITENS PROGRAMADOS');
+   
   }
 
   ngOnDestroy(): void {
     clearInterval(this.intervalo);
   }
+
+
+  public verificarSeTemObservcao() {
+    const elemento = document.querySelectorAll("#fa-comment-alt");
+    elemento.forEach(e=>{
+      this.renderer.removeClass(e, "pisca");
+      this.renderer.addClass(e, this.classAnimation);
+    });
+    
+ 
+  }
+
+  /** Abre um dialog para alterar todos os itens do setup x podendo fazer a alteração de turno e prioridade */
+
+  public alterarTodos(itens: any) {
+    let dialogo = this.dialog.open(DlgDetalheItemComponent, {
+      data: itens,
+      height: '95%',
+      maxHeight: '95%',
+      disableClose: true,
+    });
+    dialogo.afterClosed().subscribe({
+      next: (res) => {
+        res.data.item.forEach((i: any) => {
+          switch (res.data.retorno) {
+            case 'alterar_linha_turno':
+              this.alterarLinhaOuTurnoTodos(i, res.data);
+              break;
+            case 'alterar_prioridade':
+              this.alterarPrioridade(i);
+              break;
+            default:
+              break;
+          }
+        });
+      }
+    });
+  }
+
+  /** abre o dialog que mostra observacoes e cria logo em seguida no close ele faz o switch
+   * para buscar a função correta */
+  public openObservacoes(item: any) {
+    let dialog = this.dialog.open(DlgDetalheObservacaoComponent, {
+      data: item,
+      maxHeight: '95vh',
+    });
+    dialog.afterClosed().subscribe({
+      next: (res) => {
+        switch (res.data.tipo) {
+          case "BLOQUEIO":
+            this.bloqueioDeApontamento(res);
+            return;
+          case "DESBLOQUEIO":
+            this.desbloqueioDeApontamento(res);
+            return;
+          case "FINALIZADO":
+            this.finalizarDeApontamento(res)
+            return;
+          default:
+            break;
+        }
+      },
+    })
+  }
+
+  public bloqueioDeApontamento(resultado: any) {
+    this.listaSetup.forEach(i => {
+      if (resultado.data.id == i.id) {
+        i.observacoes.push(this.criarObservacaoApontamento(i, resultado));
+        this.programacaoService.salvar(i).subscribe(({
+          next: (res) => { },
+          complete: () => {
+            this.consultarItensProgramadosAguardando();
+          }
+        }));
+      }
+    })
+  }
+
+  public desbloqueioDeApontamento(resultado: any) {
+    this.listaSetup.forEach(i => {
+      if (resultado.data.id == i.id) {
+        i.observacoes.push(this.criarObservacaoApontamento(i, resultado));
+        this.programacaoService.salvar(i).subscribe(({
+          next: (res) => { },
+          complete: () => {
+            this.consultarItensProgramadosAguardando();
+          }
+        }));
+      }
+    });
+  }
+
+  public finalizarDeApontamento(resultado: any) {
+    this.listaSetup.forEach(i => {
+      if (resultado.data.id == i.id) {
+        i.observacoes.push(this.criarObservacaoApontamento(i, resultado));
+        this.programacaoService.salvar(i).subscribe(({
+          next: (res) => { },
+          complete: () => {
+            this.consultarItensProgramadosAguardando();
+          }
+        }));
+      }
+    })
+  }
+
+  /** Cria um objeto ObservacaoProgramacao  e retorna ele para o item ser salvo*/
+  public criarObservacaoApontamento(item: Programacao, observacoes: any) {
+    if (item.observacoes == undefined) {
+      item.observacoes = [];
+    }
+    let obs = new ObservacaoProgramacao();
+    obs.bloqueio = observacoes.data.retorno;
+    obs.motivo.id = observacoes.data.motivo
+    obs.data = this.dataProgramacao;
+    obs.observacaoApontamento = observacoes.data.obsApont;
+    return obs;
+  }
+
+  // private toDTO(programacao: Programacao){
+  //       let dto: ProgramacaoDTO = new ProgramacaoDTO();
+  //       dto.cdBeneficiamento = programacao.cdBeneficiamento;
+  //       dto.cdCliente = programacao.cdCliente;
+  //       dto.cdEntrada = programacao.cdEntrada;
+  //       dto.cdProduto = programacao.cdProduto;
+  //       dto.data = programacao.data;
+  //       dto.status = "FINALIZADO"
+  //       dto.dataInclusao = programacao.dataInclusao;
+  //       dto.espessura = programacao.espessura;
+  //       dto.fimProducao = programacao.fimProducao;
+  //       dto.id = programacao.id;
+  //       dto.inicioProducao = programacao.inicioProducao;
+  //       dto.item = programacao.item;
+  //       dto.linhaDeProducao = programacao.linhaDeProducao;
+  //       dto.observacoes = programacao.observacoes;
+  //       programacao.observacoes.forEach(o=>{
+  //         let dtoObs = new ObservacaoProgramacaoDto();
+  //         dtoObs.bloqueio = false;
+  //         dtoObs.data = o.data;
+  //         dtoObs.id = o.id;
+  //         dtoObs.observacaoApontamento = o.observacaoApontamento
+  //         dto.observacoes.push(dtoObs);
+  //       });
+  //       return dto;
+
+  // }
+
+  /** Realiza a atualização de todos os itens de um setup X */
+
+  public alterarLinhaOuTurnoTodos(dados: any, dados2: any) {
+    this.programacaoService.consultaUltimoNumeroSequencia(
+      moment(this.dataProgramacao).format('yyyy-MM-DD'),
+      dados.cdBeneficiamento,
+      dados2.linhaDeProducao,
+      dados2.turno
+    ).subscribe({
+      next: (res) => {
+        if (res == null) {
+          this.cadastrarNovoSetupTodos(dados, dados2);
+        } else {
+          this.atribuirSequenciaAoSetupExistenteTodos(res, dados, dados2);
+        }
+      }
+      , complete: () => {
+        this.limpar();
+        setTimeout(() => {
+          this.consultarItensProgramadosAguardando();
+          this.ativo = false;
+        }, 2000);
+      }
+    });
+  }
+
+  /** Realiza o cadastro de todos os itens de um setup para outro setup */
+  public cadastrarNovoSetupTodos(dados: any, dados2: any) {
+    dados.sequencia = 0;
+    dados.sequenciaSetup = 0;
+    dados.turno.id = dados2.turno;
+    dados.linhaDeProducao.id = dados2.linhaDeProducao;
+    this.programacaoService.salvar(dados).subscribe({
+      next: (res) => { },
+      error: (e) => { console.log(e); }
+    });
+  }
+
 
   /**
    * Método utilizado para conseguir atualizar todos usuários sobre
@@ -95,10 +317,11 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
    * 
    */
   public veriricarAtualizacoesPorIntervalo() {
-    console.log('3020')
     clearInterval(this.intervalo);
     this.intervalo = setInterval(() => {
+      this.listaSetup = [];
       this.consultarItensProgramadosAguardando();
+      this.ativo = false;
     }, 20000);
   }
 
@@ -157,8 +380,10 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
       , complete: () => {
         this.limpar();
         setTimeout(() => {
+          this.listaSetup = []
           this.consultarItensProgramadosAguardando();
-        }, 100);
+          this.ativo = false;
+        }, 20000);
       }
     });
   }
@@ -169,8 +394,19 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     dados.data.item.turno.id = dados.data.turno;
     dados.data.item.linhaDeProducao.id = dados.data.linhaDeProducao;
     this.programacaoService.salvar(dados.data.item).subscribe({
-      next: (res) => {},
-      error: (e) => {console.log(e);}
+      next: (res) => { },
+      error: (e) => { console.log(e); }
+    });
+  }
+
+  public atribuirSequenciaAoSetupExistenteTodos(resultado: any, dados: any, dados2: any) {
+    dados.sequencia = 0;
+    dados.setup = resultado.setup;
+    dados.turno.id = dados2.turno;
+    dados.linhaDeProducao.id = dados2.linhaDeProducao;
+    this.programacaoService.salvar(dados).subscribe({
+      next: (res) => { },
+      error: (e) => { console.log(e); }
     });
   }
 
@@ -180,12 +416,14 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     dados.data.item.turno.id = dados.data.turno;
     dados.data.item.linhaDeProducao.id = dados.data.linhaDeProducao;
     this.programacaoService.salvar(dados.data.item).subscribe({
-      next: (res) => {},
-      error: (e) => {console.log(e);}
+      next: (res) => { },
+      error: (e) => { console.log(e); }
     });
   }
 
   private alterarSequenciaDeExibicaoDosItensDoSetUp(item: Programacao, novaSequencia: any) {
+    
+    this.ativo = !this.ativo;
     let setupIndex = this.sequenciaSetup.findIndex(s => s.setup == item.setup);
     let itens = this.sequenciaSetup[setupIndex].itensProgramados;
 
@@ -199,27 +437,31 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     }
 
     itens = this.arrayService.alterarPosicaoDoElementoNoArray(origem, destino, itens);
-
     let sequencia = 0;
-
     itens.forEach(i => {
       i.sequencia = ++sequencia;
       this.programacaoService.salvar(i).subscribe({
+        next:()=>{
+
+        },complete:()=>{
+          this.consultarItensProgramadosAguardando();
+        }
       });
     });
     this.openSnackBar('Sequencia alterada com sucesso!', this.snackBarSucesso);
   }
 
   public alterarSetup(setupAltual: Setup) {
-    let dialogo = this.dialog.open(DlgAlterarSetupComponent, { disableClose: true,});
+    this.ativo = !this.ativo;
+    let dialogo = this.dialog.open(DlgAlterarSetupComponent, { disableClose: true, });
     dialogo.afterClosed().subscribe({
-      next:(res)=>{
+      next: (res) => {
         if (res) {
           clearInterval(this.intervalo);
           this.alterarSequenciaDoSetUp(res.data, setupAltual);
         }
       },
-      complete:()=>{
+      complete: () => {
         this.veriricarAtualizacoesPorIntervalo();
       }
     });
@@ -268,7 +510,7 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     itensProgramados.forEach(item => {
       item.sequenciaSetup = sequenciaSetup;
       this.programacaoService.salvar(item).subscribe({
-        next: (res) => {},
+        next: (res) => { },
       });
     });
     this.consultarItensProgramadosAguardando();
@@ -278,12 +520,14 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
    * Realiza uma consulta dos itens programados no banco de dados com status de Aguardando
    */
   public consultarItensProgramadosAguardando() {
+    this.sequenciaSetup = [];
     this.programacaoService.consultarPorDataStatus(this.dataProgramacao, 'AGUARDANDO').subscribe({
       next: (res) => {
         this.itensProgramados = res;
       },
       complete: () => {
         this.colocarItensNaLista();
+        this.listaSetup = [];
       }
     });
   }
@@ -320,6 +564,7 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
    * dos itens programados e os cálculos de valor previsto por turno e o total geral
    * de todos os turnos.
    */
+
   private separItensPorTurno() {
     this.itensLinhaTurno1 = [];
     this.itensLinhaTurno2 = [];
@@ -355,13 +600,48 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
    * 
    * @param nomeSetup
    */
+  nomeSetupTeste: any;
   public setStep(nomeSetup: any) {
-    this.step = nomeSetup;
+    this.ativo = !this.ativo;
+    if (this.ativo) {
+      let card = document.querySelectorAll(".cards")
+      let card2 = document.querySelector(".mat-expansion-panel")
+      card.forEach(e => {
+        if (e.id != nomeSetup) {
+          e.classList.add("ativo")
+          card2?.classList.remove("ativo");
+          // this.render.addClass(e, "ativo");
+          // this.render.removeClass(card2, "ativo");
+        }
+      });
+    } else if (!this.ativo) {
+      let card = document.querySelectorAll(".cards")
+      let card2 = document.querySelector(".mat-expansion-panel")
+      card.forEach(e => {
+        if (e.id != nomeSetup) {
+          e.classList.remove("ativo")
+          card2?.classList.add("ativo");
+        }
+      });
+    }
+
+  }
+
+  public reExibirLinhaSelecionada() {
+    let itens: any = this.sequenciaSetup.find(e => e.nomeBeneficiamento == this.nomeSetupTeste)?.itensProgramados;
+    this.exibirItensProgramados(itens);
   }
 
   public exibirItensProgramados(itens: ItensLinha) {
+    this.linhaSelecionada = itens.linhaDeProducao.nome;
+    this.listaSetup = [];
     this.linhaSelecionadaVisualizacao = itens;
     this.sequenciaSetup = [];
+    /**
+     * Verifica se o setup existe se não existir ele cria um novo 
+     * e atribui os itens para este setup caso exista o item será
+     * incluso no setup existente
+     */
     itens.itensProgramados.forEach(item => {
       if (!this.sequenciaSetup.find(s => s.setup == item.setup)) {
         let st = new Setup();
@@ -400,16 +680,19 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
       let itens: any;
       switch (this.linhaSelecionadaVisualizacao.turno.nome) {
         case 'MANHÃ':
+
           itens = this.itensLinhaTurno1.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
           this.exibirItensProgramados(itens[0]);
           //this.atualizarExibicao = false;
           break;
         case 'TARDE':
+
           itens = this.itensLinhaTurno2.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
           this.exibirItensProgramados(itens[0]);
           //this.atualizarExibicao = false;
           break;
         case 'NOITE':
+
           itens = this.itensLinhaTurno3.filter(i => i.linhaDeProducao.id == this.linhaSelecionadaVisualizacao.linhaDeProducao.id);
           this.exibirItensProgramados(itens[0]);
           //this.atualizarExibicao = false;
@@ -460,7 +743,7 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     itensLinha.itensProgramados.forEach(item => {
       this.processo = [];
       this.processo = item.nomeBeneficiamento?.split('+');
-      titulo = `${moment(this.dataProgramacao).format('DD/MM/yyyy')} - PROGAMAÇÃO CROMA ${item.linhaDeProducao.nome}`
+      titulo = `${moment(this.dataProgramacao).format('DD/MM/yyyy')} - PROGAMAÇÃO CROMA ${item.linhaDeProducao.nome} TURNO | ${item.turno.nome}`
       let linha = [
         moment(item.data).format('DD/MM/yyyy'),
         item.nomeCliente,
@@ -487,31 +770,51 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
       ],
       body: bodyTabela
       ,
-      // foot: [['TOTAIS', '', '', '', '', '', '', '', '', '', '', '']]
+      foot: [['TOTAIS', '', '', '', '', '', this.totalTbQtde, '', '', '', '', '']]
     });
 
     this.docPdf.output("dataurlnewwindow");
     // this.docPdf.save("A");
   }
 
+
+  public gerarExcel(linha: ItensLinha) {
+    this.excelService.gerarExportProgramacaoItens(linha, `PROGRAMACAO-${this.dataProgramacao}`);
+  }
+
+
+
   public iniciarProgramacao(item: Programacao) {
-    let dialogo = this.dialog.open(DglConfirmacaoComponent, { data: { mensagem: 'DESEJA INICIAR A PRODUÇÃO DESTE ITEM?' } });
-    dialogo.afterClosed().subscribe(res => {
-      if (res.data) {
-        item.status = "PRODUZINDO";
-        item.inicioProducao = new Date();
-        this.programacaoService.salvar(item).subscribe({
-          next: (res) => { },
-          complete: () => {
-            this.atualizarVisualizacaoAposAlteracao();
-          }
-        })
-      }
-    });
+    if (item.status == "BLOQUEADO") {
+      this.openSnackBar("O item esta bloqueado", this.snackBarErro);
+    } else {
+      this.ativo = !this.ativo;
+      let dialogo = this.dialog.open(DglConfirmacaoComponent, { data: { mensagem: 'DESEJA INICIAR A PRODUÇÃO DESTE ITEM?', observacao: 'Se não for possivel iniciar o item digita observação', status: "nao_iniciado" } });
+      dialogo.afterClosed().subscribe(res => {
+        if (res.data) {
+          item.status = "PRODUZINDO";
+          item.inicioProducao = new Date();
+          this.programacaoService.salvar(item).subscribe({
+            next: (res) => { },
+            complete: () => {
+              this.atualizarVisualizacaoAposAlteracao();
+            }
+          });
+        } if (res.data == false) {
+          this.programacaoService.salvar(item).subscribe({
+            next: (res) => { },
+            complete: () => {
+              this.atualizarVisualizacaoAposAlteracao();
+            }
+          })
+        }
+      });
+    }
   }
 
   public finalizaProgramacao(item: Programacao) {
-    let dialogo = this.dialog.open(DglConfirmacaoComponent, { data: { mensagem: 'DESEJA FINALIZAR A PRODUÇÃO DESTE ITEM?' } });
+    this.ativo = !this.ativo;
+    let dialogo = this.dialog.open(DglConfirmacaoComponent, { data: { mensagem: 'DESEJA FINALIZAR A PRODUÇÃO DESTE ITEM?', observacao: 'Para concluir o item digita a Observação', status: "finalizado" } });
     dialogo.afterClosed().subscribe(res => {
       if (res.data) {
         item.status = "FINALIZADO";
@@ -527,7 +830,8 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
   }
 
   public excluirSetup(itens: Programacao[]) {
-    let dialogo = this.dialog.open(DlgExclusaoComponent, { disableClose: true,});
+    this.ativo = !this.ativo;
+    let dialogo = this.dialog.open(DlgExclusaoComponent, { disableClose: true, });
     dialogo.afterClosed().subscribe({
       next: (res) => {
         if (itens.some(i => i.status != 'AGUARDANDO')) {
@@ -538,7 +842,6 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
           itens.forEach(i => {
             this.programacaoService.excluirProgramacao(i.id!).subscribe({
               next: (res) => {
-                console.log();
               },
               complete: () => {
                 this.limpar();
@@ -573,4 +876,75 @@ export class ItensProgramadosFormComponent implements OnInit, OnDestroy {
     this.itensLinhaVisualizacao = new ItensLinha();
     this.sequenciaSetup = [];
   }
+
+  criarSetup(setup: any) {
+    this.listaSetup = []
+    this.totalTbQtde = 0;
+    this.sequenciaSetup.forEach(e => {
+      if (setup == e.setup) {
+        this.listaSetup = e.itensProgramados;
+        this.listaSetup.forEach(i => {
+          this.totalTbQtde += i.qtdeProgramada;
+        });
+      }
+    });
+    setTimeout(() => {
+      this.verificarSeTemObservcao()
+    }, 100);
+   
+  }
+
+
+  public sort(sort: Sort) {
+    const data = this.listaSetup.slice();
+    if (!sort.active || sort.direction === '') {
+      this.listaSetup = data;
+      return;
+    }
+    this.listaSetup = data.sort((a, b) => {
+      const isAsc = sort.direction === 'desc';
+      switch (sort.active) {
+        case 'cdEntrada':
+          return this.compare(a.cdEntrada, b.cdEntrada, isAsc);
+        case 'item':
+          return this.compare(a.item, b.item, isAsc);
+        case 'nomeCliente':
+          return this.compare(a.nomeCliente, b.nomeCliente, isAsc);
+        case 'nomeProduto':
+          return this.compare(a.nomeProduto, b.nomeProduto, isAsc);
+        case 'espessura':
+          return this.compare(a.espessura, b.espessura, isAsc);
+        case 'nomeBeneficiamento':
+          return this.compare(a.nomeBeneficiamento, b.nomeBeneficiamento, isAsc);
+        case 'quantidade':
+          return this.compare(a.qtdeProgramada, b.qtdeProgramada, isAsc);
+        case 'status':
+          return this.compare(a.status, b.status, isAsc);
+        default:
+          return 0;
+      }
+    });
+    this.salvarOrdenacao();
+  }
+
+  public salvarOrdenacao() {
+    var listTemp: any = [];
+    listTemp = this.listaSetup;
+    let seq = 0;
+    listTemp.forEach((f: any) => {
+      f.sequencia = 0;
+      f.sequencia = ++seq
+      this.programacaoService.salvar(f).subscribe(({
+        next: (res) => { },
+        complete: () => {
+
+        }
+      }))
+    });
+  }
+
+  public compare(a: any, b: any, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
 }

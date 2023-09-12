@@ -46,7 +46,7 @@ export class BeneficiamentoProdutosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A DETALHES DO BENEFICIAMENTO [ENTRADA -> BENEFICIAMENTO -> CLIENTE]  ');
+    this.controleExibicaoService.registrarLog('ACESSOU A DETALHES DO BENEFICIAMENTO [ENTRADA -> BENEFICIAMENTO -> CLIENTE]  ', 'ENTRADA -> BENEFICIAMENTO -> CLIENTE');
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
     var toolTipList = this.toolTip.map((e)=>{
       return new bootstrap.Tooltip(e);

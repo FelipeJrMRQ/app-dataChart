@@ -1,0 +1,19 @@
+<div>
+    <div class="table">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Acessos</th>
+                    <th scope="col">Telas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let acesso of acessosPorTela | paginate :{itemsPerPage: 12, currentPage:pagina, id: 'tbl-acessos'}">
+                    <td>{{acesso.quantidade}}</td>
+                    <td>{{acesso.nomeTela}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls id='tbl-acessos' (pageChange)="pagina = $event" nextLabel="" previousLabel=""[maxSize]="5"></pagination-controls>
+    </div>
+</div>

@@ -34,7 +34,7 @@ export class HistoricoAtividadesSistemaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE HISTORICO DE ATIVIDADES DO USUARIO');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA DE HISTORICO DE ATIVIDADES DO USUARIO', 'HISTORICO ATIVIDADE');
     this.consultarLogsDoUsuario();
   }
   public consultarLogsDoUsuario() {

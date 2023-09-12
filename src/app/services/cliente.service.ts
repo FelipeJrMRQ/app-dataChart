@@ -13,6 +13,7 @@ export class ClienteService {
   private urlApi: string = `${environment.urlApi}/clientes`;
   private urlApi2: string = `${environment.urlApi}/carteira`;
   private urlApi3: string = `${environment.urlApi}/atualizacoes`;
+  private urlApi4: string = `${environment.urlApi}/cliente-detalhes`;
   static emitirValorEntradas =  new EventEmitter<any>();
   static emitirMediaEntrada = new EventEmitter<any>();
 
@@ -52,6 +53,14 @@ export class ClienteService {
 
   public consultarEvolucaoCarteira(dataIncial: any, dataFinal: any):Observable<any>{
     return this.http.get<any>(`${this.urlApi}/evolucao-carteira/${dataIncial}/${dataFinal}`);
+  }
+
+  public atualizarClientes(modeloConsulta:ModeloConsulta):Observable<any>{
+    return this.http.post<any>(`${this.urlApi4}`, modeloConsulta);
+  }
+
+  public consultarClientes(){
+    return this.http.get<any>(`${this.urlApi4}/clientes`)
   }
 
 }

@@ -41,4 +41,10 @@ export class ManipuladorArrayService {
 
     return array;
   }
+
+
+  public verificadorArray(){
+    
+  }
+
 }

@@ -1,0 +1,43 @@
+<header class="bgCor head-label p-2 d-flex justify-content-between align-middle">
+    <label class="bold">HISTÓRICO DE FATURAMENTO POR CLIENTE</label>
+</header>
+
+<section class="mb-2">
+    <form>
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <input id="dataInicial" type="text" placeholder="Digite para filtrar"  class="form-control" name="nomeCliente" [(ngModel)]="nomeCliente" (keyup)="filtrarPorCliente()">
+            </div>
+            <div class="col-12 col-md-4">
+                <input id="dataInicial" type="date" class="form-control" name="dataInicial" [(ngModel)]="dataInicial">
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="input-group">
+                    <input type="date" class="form-control bgInput text-center" name="dataFinal" [(ngModel)]="dataFinal"/>
+                    <button class="input-group-text btn btn-primary" (click)="consultaHistoricoDeFaturamentoPorCliente()">
+                      <i class="fas fa-search-dollar"></i>
+                    </button>
+                  </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+<section class="mb-5">
+    <div class="table mb-5">
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th *ngFor="let mesAno of colunas">{{mesAno}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cliente of historicoMesesFiltro">
+                    <td>{{cliente.nomeCliente}}</td>
+                    <td class="select-data {{valorClass(mes.valor)}}" *ngFor="let mes of cliente.valoresMes" (click)="selecionarFaturamento(cliente, mes.mesAno)">{{mes.valor | currency: 'BRL'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

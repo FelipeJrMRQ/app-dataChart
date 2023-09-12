@@ -11,6 +11,7 @@ import { FaturamentoService } from 'src/app/services/faturamento.service';
 import { MetaDiariaService } from 'src/app/services/meta-diaria.service';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
+import { ManipuladorArrayService } from 'src/app/utils/manipulador-array.service';
 
 Chart.register(BarController)
 
@@ -31,8 +32,8 @@ export class GraficoEntradasMesComponent implements OnInit {
   entradas: any = [];
   metaDia: any = [];
   arrowGap: any;
+  novaEntrada: EntradaDiaria[] = []
   private nomeTela = "dashboard-sintetico";
-
 
   constructor(
     private faturamentoService: FaturamentoService,
@@ -82,12 +83,6 @@ export class GraficoEntradasMesComponent implements OnInit {
         this.faturamentoDiario = res.objeto;
       },
       complete: () => {
-        this.faturamentos = [];
-        this.dias = [];
-        this.faturamentoDiario.forEach(f => {
-          this.faturamentos.push(f.valor);
-          this.dias.push(moment(f.data).date());
-        });
         this.consultarEntradas();
       }
     });
@@ -107,13 +102,34 @@ export class GraficoEntradasMesComponent implements OnInit {
         this.entradaDiaria = res.objeto;
       },
       complete: () => {
-        this.entradas = [];
-        this.entradaDiaria.forEach(e => {
-          this.entradas.push(e.valor);
-        });
-        this.atualizarGrafico();
+        this.verificarArray();
       }
     });
+  }
+
+  public verificarArray() {
+    if (this.entradaDiaria.length != this.faturamentoDiario.length) {
+      const t: any = this.faturamentoDiario.filter(obg => !this.entradaDiaria.some(ob => ob.data === obg.data));
+      t.forEach((v: any) => {
+        this.entradaDiaria.push({ id: v.id, data: v.data, valor: 0 });
+      });
+      this.entradaDiaria = this.entradaDiaria.sort((a: any, b: any) => b.data.localeCompare(a.data));
+    }
+    this.criarValoresGraficos();
+  }
+
+  public criarValoresGraficos() {
+    this.faturamentos = [];
+    this.dias = [];
+    this.faturamentoDiario.forEach((f: any) => {
+      this.faturamentos.push(f.valor);
+      this.dias.push(moment(f.data).date());
+    });
+    this.entradas = [];
+    this.entradaDiaria.forEach((e: any) => {
+      this.entradas.push(e.valor)
+    });
+    this.atualizarGrafico();
   }
 
   public atualizarGrafico() {
@@ -150,7 +166,7 @@ export class GraficoEntradasMesComponent implements OnInit {
       options: {
         animation: {
           duration: 3500,
-          onComplete:()=>{
+          onComplete: () => {
             this.delayed = true;
           },
           delay: (context) => {

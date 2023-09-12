@@ -18,6 +18,10 @@
     font-weight: bold;
 }
 
+.lista{
+    height: 300px;
+}
+
 .cartao {
     width: 100%;
     min-height: 100px;
