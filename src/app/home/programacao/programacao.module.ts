@@ -14,6 +14,7 @@ import { DlgCadTurnoComponent } from './dlg-cad-turno/dlg-cad-turno.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DlgConfirmaSetupMistoComponent } from './dlg-confirma-setup-misto/dlg-confirma-setup-misto.component';
+import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
 
 
 
@@ -35,7 +36,8 @@ import { DlgConfirmaSetupMistoComponent } from './dlg-confirma-setup-misto/dlg-c
     MatDialogModule,
     DragDropModule,
     MatSnackBarModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    LoadingPageModule
   ]
 })
 export class ProgramacaoModule { }

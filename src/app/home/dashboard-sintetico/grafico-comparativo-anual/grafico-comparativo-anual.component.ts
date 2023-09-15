@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BarController, CategoryScale, Chart, LinearScale, LineController } from 'chart.js'
+import { Chart } from 'chart.js'
 import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 import { FaturamentoMensal } from 'src/app/models/faturamento/faturamento-mensal';
@@ -26,7 +26,6 @@ export class GraficoComparativoAnualComponent implements OnInit {
   faturamentoPorMesDoAnoAnterior: FaturamentoMensal[];
   faturamentoPorMesDoAnoAtual: FaturamentoMensal[];
   dataRecebida: any = moment().format('yyyy-MM-DD');
-  private parametrosMeta: ParametrosMeta[];
   private nomeTela = "dashboard-sintetico";
 
   constructor(
@@ -37,7 +36,6 @@ export class GraficoComparativoAnualComponent implements OnInit {
   ) {
     this.faturamentoPorMesDoAnoAnterior = [];
     this.faturamentoPorMesDoAnoAtual = [];
-    this.parametrosMeta = [];
   }
 
   ngOnInit(): void {
@@ -108,7 +106,7 @@ export class GraficoComparativoAnualComponent implements OnInit {
     }
   }
 
-  delayed : any;
+  delayed: any;
   public gerarGraficoFaturamentoMensal() {
     this.elementChart = document.getElementById('myChartBarComp');
     this.chartBarComparativo = new Chart(this.elementChart, {
@@ -132,7 +130,7 @@ export class GraficoComparativoAnualComponent implements OnInit {
       options: {
         animation: {
           duration: 3500,
-          onComplete:()=>{
+          onComplete: () => {
             this.delayed = true;
           },
           delay: (context) => {

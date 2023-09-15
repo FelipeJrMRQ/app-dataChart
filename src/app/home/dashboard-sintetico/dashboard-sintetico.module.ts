@@ -24,6 +24,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { GraficoItensNaoRetornadosComponent } from './grafico-movimentacao-produtos/grafico-movimentacao-produtos.component';
 import { CardMovimentacaoComponent } from './tbl-movimento-produtos/tbl-movimento-produtos.component';
 import { GraficoMovimentoMensalComponent } from './grafico-movimento-mensal/grafico-movimento-mensal.component';
+import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { GraficoMovimentoMensalComponent } from './grafico-movimento-mensal/graf
     MatDialogModule,
     DialogModule,
     NgxPaginationModule,
+    LoadingPageModule
   ]
 })
 export class DashboardSinteticoModule { }

@@ -1,4 +1,11 @@
-<div class="row mb-2 nao-imprime">
+<!-- COMPONENTE DE CARREGAMENTO -->
+<div>
+    <div class="center" *ngIf="this.itens.length == 0">
+       <app-loading></app-loading>
+    </div>
+</div>
+
+<div class="row mb-2 nao-imprime" *ngIf="itensFiltro.length <= 0 && itens.length >0">
     <div class="col-12 col-lg-4">
         <label class="form-label">Cliente</label>
         <input type="text" class="form-control form-control-sm upper-case" (keyup)="filtrar()"
@@ -24,7 +31,7 @@
         </div>
     </div>
 </div>
-<div class="row mb-4">
+<div class="row mb-4" *ngIf="itensFiltro.length <= 0 && itens.length >0">
     <div class="col-12 col-lg-2" [ngClass]="setupClass">
         <label class="form-label">Data</label>
         <input type="date" class="form-control form-control-sm  upper-case" [(ngModel)]="dataProgramacao">
@@ -72,14 +79,6 @@
         <label class="form-label">Setup Misto</label>
         <button class="form-control btn btn-primary btn-sm" tabindex="-1"
             (click)="habilitarSetupMisto()">{{btnSetup}}</button>
-    </div>
-</div>
-
-<!-- COMPONENTE DE CARREGAMENTO -->
-<div class=" d-flex justify-content-center ">
-    <div class="center" *ngIf="this.itens.length == 0">
-        <h3 class="bold">Carregando informações aguarde...</h3>
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
 </div>
 

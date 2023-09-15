@@ -43,7 +43,7 @@ export class DetalhamentoClienteFormComponent implements OnInit {
   }
 
   public voltar() {
-    this.router.navigate([`faturamento-mensal/${this.dataRecebida}`]);
+    window.history.back();
   }
 
   public navegarPerspectivaAnual() {

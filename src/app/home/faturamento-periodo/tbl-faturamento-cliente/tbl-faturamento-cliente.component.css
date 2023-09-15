@@ -39,3 +39,13 @@ table{
     font-weight: bold;
     cursor: pointer;
 }
+
+.f-15{
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+input{
+    text-transform: uppercase;
+}
+

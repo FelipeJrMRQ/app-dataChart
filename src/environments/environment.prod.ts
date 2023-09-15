@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   urlApi: "http://125.67.2.242:8083/api",
   obterToken: "http://125.67.2.242:8083/login",
-  versaoApp: '1.38.21'
+  versaoApp: '1.39.22'
 };
 
 /**
@@ -112,6 +112,17 @@ export const environment = {
  * Inclusao da tabela de movimentoção de produtos por cliente em dashboard sintetico
  * Inclusao da tabela de movimentação por produto em detalhamento cliente
  * Inclusao da função de exportar dados de movimentação por cliente e produto
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.39.21
+ * Inclusão da tela de faturamento de clientes por periodo
+ * Visualização de detalhe do periodo selecionado
+ * Exportação de dados do periodo selecionado
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.39.22
+ * Correção do bug no vinculo de componente, onde era apenas alterado o usuario dono do componente e não era 
+ * feito um novo componente para o usuário
  * 
  * 
  */

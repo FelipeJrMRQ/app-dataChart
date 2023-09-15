@@ -2,7 +2,7 @@
     <label class="bold">HISTÓRICO DE FATURAMENTO POR CLIENTE</label>
 </header>
 
-<section class="mb-2">
+<section class="mb-2" *ngIf="historicoMesesFiltro.length != 0">
     <form>
         <div class="row">
             <div class="col-12 col-md-4">
@@ -17,19 +17,27 @@
                     <button class="input-group-text btn btn-primary" (click)="consultaHistoricoDeFaturamentoPorCliente()">
                       <i class="fas fa-search-dollar"></i>
                     </button>
-                  </div>
+                </div>
             </div>
         </div>
     </form>
 </section>
 
-<section class="mb-5">
-    <div class="table mb-5">
+<div class=" d-flex justify-content-center mt-3 mb-3" *ngIf="historicoMesesFiltro.length == 0">
+    <div class="center">
+        <app-loading></app-loading>
+    </div>
+</div>
+
+<section class="mb-5" *ngIf="historicoMesesFiltro.length != 0">
+    <div class="table mb-2">
         <table class="table table-sm table-striped">
             <thead>
                 <tr>
                     <th>Cliente</th>
-                    <th *ngFor="let mesAno of colunas">{{mesAno}}</th>
+                    <th class="c-pointer" *ngFor="let mesAno of colunas" (click)="ordenarPorValoresMes(mesAno)">{{mesAno}}
+                        <i class="ms-2 fas fa-sort"></i>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -40,4 +48,9 @@
             </tbody>
         </table>
     </div>
+    <div *ngIf="exportarDadosExcel" class="text-end text-success c-pointer f-15 mb-2" (click)="exportarDados()">
+        <i class="fas fa-download" title="Exportar dados" ></i>
+    </div>
+
+    <button class="btn btn-sm btn-danger" (click)="voltar()">Voltar</button>
 </section>

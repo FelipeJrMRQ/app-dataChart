@@ -21,16 +21,19 @@ export class ContentComponent implements OnInit, OnDestroy {
   dataEscolhida: any = moment().format('yyyy-MM-DD');
   private intervalo: any;
   public toolTip = [];
+  loadingPage: boolean = true;
 
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
     private renderer: Renderer2,
     private controleExibicaoService: ControleExibicaoService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
     this.usuario = new UsuarioDTO();
   }
+
+ 
 
   ngOnInit(): void {
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
@@ -42,6 +45,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.registraLog();
     this.consultaUsuario();
   }
+
 
   ngOnDestroy(): void {
     this.cancelarIntervalo();
@@ -56,6 +60,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         if (this.usuario.notificacao) {
           this.openDialog();
         }
+        this.loadingPage = false;
       }
     });
   }

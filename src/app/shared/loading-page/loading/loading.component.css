@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 90vh;
+    height: 80vh;
 }
 
 .c1 {
@@ -46,7 +46,7 @@
     font-weight: bold;
     font-size: 30px;
     color: rgb(2, 78, 218);
-    animation: pulsa 1.8s ease-in-out infinite;
+    animation: pulsar 1.8s ease-in-out infinite;
 }
 
 .foot{
@@ -77,7 +77,7 @@
     }
 }
 
-@keyframes pulsa {
+@keyframes pulsar {
     0% {
         transform: scale(1);
     }

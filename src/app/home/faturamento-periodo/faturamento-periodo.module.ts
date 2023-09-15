@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FaturamentoPeriodoRoutingModule } from './faturamento-periodo-routing.module';
 import { TblFaturamentoClienteComponent } from './tbl-faturamento-cliente/tbl-faturamento-cliente.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
 
 
 @NgModule({
@@ -14,7 +16,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FaturamentoPeriodoRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatProgressBarModule,
+    LoadingPageModule
   ]
 })
 export class FaturamentoPeriodoModule { }

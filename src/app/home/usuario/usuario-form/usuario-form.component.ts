@@ -170,7 +170,9 @@ export class UsuarioFormComponent implements OnInit {
       this.visualizarTela(tela);
       let tu = this.telasDoUsuario.find(t => t.nome == tela.nome);
       if (tu) {
-        tu?.componentes.push(componente);
+        let c = new ComponenteTela();
+        c.nome = componente.nome;
+        tu?.componentes.push(c);
       } else {
         let telaTemp = new TelaUsuario();
         telaTemp.nome = tela.nome;
@@ -247,8 +249,6 @@ export class UsuarioFormComponent implements OnInit {
     this.consultarTelasDoSistema();
   }
 
-
-
   public editarUsuario(usuario: UsuarioDTO) {
     this.controleExibicaoService.registrarLog(`SELECIONOU O USUÁRIO [${usuario.email}]`, '');
     this.controleDeClique = false;
@@ -274,7 +274,6 @@ export class UsuarioFormComponent implements OnInit {
       },
     });
   }
-
 
   public bloquearUsuario(usuario: any) {
     this.usuarioService.bloquearUsuario(usuario.id).subscribe({

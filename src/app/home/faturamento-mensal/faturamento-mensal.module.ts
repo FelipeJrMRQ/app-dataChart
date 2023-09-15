@@ -16,6 +16,7 @@ import { ExtratoProdutoAnualComponent } from './extrato-produto-anual/extrato-pr
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
 
 
 
@@ -39,6 +40,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ReactiveFormsModule,
     MatProgressBarModule,
     MatSnackBarModule,
+    LoadingPageModule
   ]
 })
 export class FaturamentoMensalModule { }

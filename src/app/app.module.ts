@@ -44,6 +44,7 @@ import { ProdutoService } from './services/produto.service';
 import { ConfigTelaModule } from './home/config/config-tela/config-tela.module';
 import { TelaSistemaService } from './services/telas/tela-sistema.service';
 import { DashboardModule } from './home/dashboard-analitico/dashboard-analitico.module';
+import { LoadingPageModule } from './shared/loading-page/loading-page.module';
 
 
 
@@ -51,7 +52,7 @@ registerLocaleData(ptBr);
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   
   imports: [
@@ -81,7 +82,7 @@ registerLocaleData(ptBr);
     UsuarioModule,
     SortableModule,
     ConfigTelaModule,
-    DashboardModule,
+    DashboardModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-br' },
