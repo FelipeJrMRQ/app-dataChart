@@ -12,7 +12,7 @@ export class CarteiraFormComponent implements OnInit {
 
   tipoConsulta: any = "BENEFICIAMENTO";
   dataRecebida: any;
-  nomeCliente:any;
+  nomeCliente: any;
   toolTip = [];
 
   constructor(
@@ -23,15 +23,19 @@ export class CarteiraFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.controleExibicaoService.registrarLog('ACESSOU A TELA DE CARTEIRA POR CLIENTE', "CARTEIRA CLIENTE");
-    this.activeRoute.params.subscribe((param:any)=>{
-        this.dataRecebida = param.data;
-        this.nomeCliente = param.nomeCliente;
+    this.activeRoute.params.subscribe((param: any) => {
+      this.dataRecebida = param.data;
+      this.nomeCliente = param.nomeCliente;
     });
 
     this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
-    var tootipList = this.toolTip.map(function(tooltipTriggerEl){
-     return new bootstrap.Tooltip(tooltipTriggerEl);
-   });
+    var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }
+
+  public voltar() {
+    window.history.back();
   }
 
 }

@@ -23,11 +23,11 @@ export class FaturamentoDatalheComponent implements OnInit {
 
   //OBJETOS
   clientes: FaturamentoMensalCliente[];
-  clientesFiltro: FaturamentoMensalCliente[];
+  clientesFiltro: any = [];
   beneficiamentos: FaturamentoMensalBeneficiamento[];
-  beneficiamentosFiltro: FaturamentoMensalBeneficiamento[];
+  beneficiamentosFiltro: any = [];
   produtos: FaturamentoMensalProduto[];
-  produtosFiltro: FaturamentoMensalProduto[];
+  produtosFiltro: any = [];
 
   //HTML VARIAVEIS
   paginaCliente: number = 1;
@@ -57,7 +57,7 @@ export class FaturamentoDatalheComponent implements OnInit {
     private exporta: ExcelService,
     private renderer: Renderer2,
     private controleExibicaoService: ControleExibicaoService,
-    
+
   ) {
     this.clientes = [];
     this.clientesFiltro = [];
@@ -65,7 +65,7 @@ export class FaturamentoDatalheComponent implements OnInit {
     this.beneficiamentosFiltro = [];
     this.produtos = [];
     this.produtosFiltro = [];
-    
+
   }
 
   ngOnInit(): void {
@@ -83,7 +83,6 @@ export class FaturamentoDatalheComponent implements OnInit {
   }
 
   //METODOS PARA MUDANÇA DE ROTA 
-
   public detalheCliente(cdCliente: any, nomeCliente: any) {
     this.router.navigate([`detalhamento-cliente/${cdCliente}/${nomeCliente}/${this.dataRecebida}`]);
   }
@@ -98,7 +97,7 @@ export class FaturamentoDatalheComponent implements OnInit {
       maxHeight: '95vh',
     });
   }
-  
+
   public voltar() {
     this.router.navigate(['/dashboard-sintetico']);
   }
@@ -125,6 +124,7 @@ export class FaturamentoDatalheComponent implements OnInit {
         }, error: (e) => {
           console.log(e);
         }, complete: () => {
+          this.clientesFiltro = [...this.clientes];
           this.somaTotalClientes();
         }
       });
@@ -137,6 +137,7 @@ export class FaturamentoDatalheComponent implements OnInit {
       }, error: (e) => {
         console.log(e);
       }, complete: () => {
+        this.beneficiamentosFiltro = [...this.beneficiamentos];
         this.somaTotalBeneficiamentos();
       }
     });
@@ -149,6 +150,7 @@ export class FaturamentoDatalheComponent implements OnInit {
       }, error: (e) => {
         console.log(e);
       }, complete: () => {
+        this.produtosFiltro = [...this.produtos];
         this.somaTotalProdutos();
       }
     });
@@ -162,61 +164,52 @@ export class FaturamentoDatalheComponent implements OnInit {
   }
 
   public somaTotalBeneficiamentos() {
-    this.beneficiamentos.forEach((e) => {
+    this.beneficiamentosFiltro.forEach((e: any) => {
       this.totalBeneficiamentos += e.valor;
     });
   }
 
   public filtrarPorCliente() {
-    if (this.nomeCliente != '') {
-      this.clientesFiltro = this.clientes.filter(cliente => {
-        return cliente.nomeCliente?.includes(this.nomeCliente.toUpperCase());
-      });
-      this.somaTotalClientesFiltro();
-    } else {
-      this.totalClientes = 0
-      this.clientesFiltro = [];
-      this.consultaFaturamentoMensalCliente();
+    this.clientesFiltro = this.clientes.filter(cliente => {
+      return cliente.nomeCliente?.includes(this.nomeCliente.toUpperCase());
+    });
+    if (this.clientesFiltro.length == 0) {
+      this.clientesFiltro = [{ nomecliente: 'CLIENTE NÃO ENCONTRADO' }];
     }
+    this.somaTotalClientesFiltro();
   }
 
   public filtrarPorBeneficiamento() {
-    if (this.nomeBeneficiamento != '') {
-      this.beneficiamentosFiltro = this.beneficiamentos.filter(beneficiamento => {
-        return beneficiamento.nomeBeneficiamento?.includes(this.nomeBeneficiamento.toUpperCase());
-      });
-      this.somaTotalBeneficiamentoFiltro();
-    } else {
-      this.totalBeneficiamentos = 0
-      this.beneficiamentosFiltro = [];
-      this.consultaFaturamentoMensalBeneficiamento();
+    this.beneficiamentosFiltro = this.beneficiamentos.filter(beneficiamento => {
+      return beneficiamento.nomeBeneficiamento?.includes(this.nomeBeneficiamento.toUpperCase());
+    });
+    if (this.beneficiamentosFiltro.length == 0) {
+      this.beneficiamentosFiltro = [{ nomeBeneficiamento: 'BENEFICIAMENTO NÃO ENCONTRADO' }];
     }
+    this.somaTotalBeneficiamentoFiltro();
   }
 
   public filtrarPorProduto() {
-    if (this.nomeProduto != '') {
+
       this.produtosFiltro = this.produtos.filter(produto => {
         return produto.nomeProduto?.includes(this.nomeProduto.toUpperCase());
       });
-      console.log(this.produtosFiltro);
+      if(this.produtosFiltro.length == 0){
+        this.produtosFiltro = [{nomeProduto: 'PRODUTO NÃO ENCONTRADO'}];
+      }
       this.somaTotalProdutoFiltro();
-    } else {
-      this.totalProdutos = 0
-      this.produtosFiltro = [];
-      this.consultaFaturamentoMensalProduto();
-    }
   }
 
   public somaTotalClientesFiltro() {
     this.totalClientes = 0
-    this.clientesFiltro.forEach(e => {
+    this.clientesFiltro.forEach((e: any) => {
       this.totalClientes += e.valor
     })
   }
 
   public somaTotalBeneficiamentoFiltro() {
     this.totalBeneficiamentos = 0
-    this.beneficiamentosFiltro.forEach(e => {
+    this.beneficiamentosFiltro.forEach((e: any) => {
       this.totalBeneficiamentos += e.valor
     })
   }

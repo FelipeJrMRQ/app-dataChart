@@ -2,7 +2,7 @@
     <label class="bold">HISTÓRICO DE FATURAMENTO POR CLIENTE</label>
 </header>
 
-<section class="mb-2" *ngIf="historicoMesesFiltro.length != 0">
+<section class="mb-2">
     <form>
         <div class="row">
             <div class="col-12 col-md-4">
@@ -30,7 +30,7 @@
 </div>
 
 <section class="mb-5" *ngIf="historicoMesesFiltro.length != 0">
-    <div class="table mb-2">
+    <div class="table-responsive-sm mb-2">
         <table class="table table-sm table-striped">
             <thead>
                 <tr>
@@ -41,16 +41,30 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let cliente of historicoMesesFiltro">
-                    <td>{{cliente.nomeCliente}}</td>
+                <tr *ngFor="let cliente of historicoMesesFiltro | paginate: {itemsPerPage: itensPagina, currentPage: pagina, id: 'tbl-faturamento-cliente'}">
+                    <td class=" text-truncate" style="max-width: 220px;">{{cliente.nomeCliente}}</td>
                     <td class="select-data {{valorClass(mes.valor)}}" *ngFor="let mes of cliente.valoresMes" (click)="selecionarFaturamento(cliente, mes.mesAno)">{{mes.valor | currency: 'BRL'}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div *ngIf="exportarDadosExcel" class="text-end text-success c-pointer f-15 mb-2" (click)="exportarDados()">
-        <i class="fas fa-download" title="Exportar dados" ></i>
+    
+    <div class="row">
+        <div class="col-7">
+            <pagination-controls id='tbl-faturamento-cliente' (pageChange)="pagina = $event" nextLabel="" previousLabel=""[maxSize]="5"></pagination-controls>
+        </div>
+        <div class="col-4 text-end">
+            <strong class="me-2">Itens por página</strong>
+            <select name="itensPagina" [(ngModel)]="itensPagina">
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        </div>
+        <div *ngIf="exportarDadosExcel" class="col-1 text-center text-success c-pointer f-15" (click)="exportarDados()">
+            <i class="fas fa-download" title="Exportar dados" ></i>
+        </div>
     </div>
-
     <button class="btn btn-sm btn-danger" (click)="voltar()">Voltar</button>
 </section>

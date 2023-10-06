@@ -8,6 +8,16 @@
 </section>
 
 <section >
+    <div class="row">
+        <div class="col-12 col-lg-4 mb-2">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control" name="nomeProduto" (keyup)="filtrar()"  placeholder="Digite o nome do produto para filtrar" [(ngModel)]="nomeProduto"/>
+                <button class="input-group-text btn btn-primary" >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+        </div>
+    </div>
     <div class="table">
         <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortProduto($event)">
             <thead>
@@ -21,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr (click)="openDetalhesProduto(produto)" *ngFor="let produto of produtos | paginate: {itemsPerPage:itensPagina,currentPage:paginasCarteiraProduto,id:'tbCarteiraProduto'}, let i = index" class="c-pointer">
+                <tr (click)="openDetalhesProduto(produto)" *ngFor="let produto of produtosTemp | paginate: {itemsPerPage:itensPagina,currentPage:paginasCarteiraProduto,id:'tbCarteiraProduto'}, let i = index" class="c-pointer">
                     <td class="d-none d-lg-table-cell ">{{produto.nomeCliente}}</td>
                     <td class=" text-truncate" style="max-width: 200px;">{{produto.nomeProduto}}</td>
                     <td class="d-none d-lg-table-cell ">{{produto.quantidade | number}}</td>
@@ -55,5 +65,5 @@
 </section>
 
 <section class="mb-5" *ngIf="cdCliente">
-    <button class="btn btn btn-danger" (click)="voltarPaginaAnterior()" >Voltar</button>
+    <button class="btn btn-sm btn btn-danger" (click)="voltarPaginaAnterior()" >Voltar</button>
 </section>

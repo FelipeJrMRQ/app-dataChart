@@ -9,38 +9,14 @@
         <!-- CLIENTES -->
         <div class="col-12 col-lg-4">
             <!-- CAMPO DE FILTRO POR CLIENTE -->
-            <div class=" mt-1 mb-1" >
-                <input type="text" class="form-control upper-case" placeholder="Digite o nome do cliente para filtrar"
-                    [(ngModel)]="nomeCliente" (keyup)="filtrarPorCliente()">
+            <div class="input-group input-group-sm mb-1 mt-1">
+                <input type="text" class="form-control" name="nomeProduto" (keyup)="filtrarPorCliente()"  placeholder="Digite o nome do produto para filtrar" [(ngModel)]="nomeCliente"/>
+                <button class="input-group-text btn btn-primary" >
+                  <i class="fas fa-search"></i>
+                </button>
             </div>
             <!-- TABELA DE CLIENTES SEM FILTRO -->
-            <div class="table" *ngIf="this.clientesFiltro.length == 0">
-                <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortCliente($event)">
-                    <thead>
-                        <tr>
-                            <th scope="col" mat-sort-header="nomeCliente">Cliente</th>
-                            <th scope="col" class="text-end">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr (click)="detalheCliente(cliente.cdCliente, cliente.nomeCliente)" class="c-pointer"
-                            *ngFor="let cliente of clientes | paginate:{itemsPerPage:itensPagina,currentPage:paginaCliente,id:'tblFatCliente'}let i = index">
-                            <td class="text-truncate" style="max-width: 220px;">{{cliente.nomeCliente}}</td>
-                            <td class="text-end">{{cliente.valor | currency: 'BRL'}}</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>Total</td>
-                            <td class="text-end">{{totalClientes| currency : 'BRL'}}</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
-
-            <!-- TABELA DE FILTRO DO CLIENTE -->
-            <div class="table" *ngIf="this.clientesFiltro.length != 0" >
+            <div class="table" >
                 <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortCliente($event)">
                     <thead>
                         <tr>
@@ -63,6 +39,7 @@
                     </tfoot>
                 </table>
             </div>
+
             <!-- METODO DE PAGINAÇÃO CLIENTE -->
             <div class="row" *ngIf="this.clientesFiltro.length == 0">
                 <pagination-controls class="col-11" id="tblFatCliente" (pageChange)="paginaCliente =$event" nextLabel=""
@@ -78,39 +55,15 @@
         <div class="col-12 col-lg-4">
             <!-- METODO DE FILTRO POR BENEFICIAMENTO -->
             <div class=" mt-1 mb-1" >
-                <input type="text" class="form-control" placeholder="Digite o nome do beneficiamento para filtrar"
-                    [(ngModel)]="nomeBeneficiamento" (keyup)="filtrarPorBeneficiamento()">
+                <div class="input-group input-group-sm mb-1 mt-1">
+                    <input type="text" class="form-control" name="nomeProduto" (keyup)="filtrarPorBeneficiamento()"  placeholder="Digite o nome do produto para filtrar" [(ngModel)]="nomeBeneficiamento"/>
+                    <button class="input-group-text btn btn-primary" >
+                      <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
             <!-- TABELA CLIENTE SEM FILTRO -->
-            <div class="table" *ngIf="beneficiamentosFiltro.length == 0">
-                <table class="table table-sm table-hover table-striped" matSort
-                    (matSortChange)="sortBeneficiamento($event)">
-                    <thead>
-                        <tr>
-                            <th scope="col" mat-sort-header="nomeBeneficiamento">Beneficiamento</th>
-                            <th scope="col" class="text-end">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr (click)="detalheBeneficiamento(beneficiamento.cdBeneficiamento, beneficiamento.nomeBeneficiamento)"
-                            class="c-pointer"
-                            *ngFor="let beneficiamento of beneficiamentos | paginate:{itemsPerPage:itensPagina,currentPage:paginaBeneficiamento,id:'tblFatBeneficiamento'}let i = index">
-                            <td class="text-truncate" style="max-width: 220px;">{{beneficiamento.nomeBeneficiamento}}
-                            </td>
-                            <td class="text-end">{{beneficiamento.valor | currency: 'BRL'}}</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>Total</td>
-                            <td class="text-end">{{totalBeneficiamentos | currency : 'BRL'}}</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
-            <!-- TABELA DE FILTRO DO BENEFICIAMENTO -->
-            <div class="table" *ngIf="beneficiamentosFiltro.length != 0">
+            <div class="table">
                 <table class="table table-sm table-hover table-striped" matSort
                     (matSortChange)="sortBeneficiamento($event)">
                     <thead>
@@ -136,6 +89,7 @@
                     </tfoot>
                 </table>
             </div>
+
             <!-- METODO DE PAGINAÇÃO DO BENEFICIAMENTO -->
             <div class="row" *ngIf="beneficiamentosFiltro.length == 0">
                 <pagination-controls class="col-11" id="tblFatBeneficiamento"
@@ -152,8 +106,12 @@
         <div class="col-12 col-lg-4">
             <!-- METODO DO FILTRO POR PRODUTO -->
             <div class=" mt-1 mb-1" >
-                <input type="text" class="form-control" placeholder="Digite o nome do produto para filtrar"
-                    [(ngModel)]="nomeProduto" (keyup)="filtrarPorProduto()">
+                <div class="input-group input-group-sm mb-1 mt-1">
+                    <input type="text" class="form-control" name="nomeProduto" (keyup)="filtrarPorProduto()"  placeholder="Digite o nome do produto para filtrar" [(ngModel)]="nomeProduto"/>
+                    <button class="input-group-text btn btn-primary" >
+                      <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
             <!-- TABELA DE PRODUTOS SEM FILTRO -->
             <div class="table" *ngIf="produtosFiltro.length == 0">
@@ -217,5 +175,5 @@
         </div>
     </div>
 
-    <button class="btn btn-danger" (click)="voltar()">Voltar</button>
+    <button class="btn  btn-sm btn-danger" (click)="voltar()">Voltar</button>
 </section>

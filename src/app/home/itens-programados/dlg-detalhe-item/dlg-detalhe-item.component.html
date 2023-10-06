@@ -27,16 +27,13 @@
         <div class="col-12 col-lg-6">
             <form>
                 <label class="form-label">Data</label>
-                <input type="date" class="form-control" name="dataProgramacao" [(ngModel)]="data.data"
-                    [value]="data.data">
+                <input type="date" class="form-control" name="dataProgramacao" [(ngModel)]="data.data" [value]="data.data">
 
                 <label class="form-label mt-2">Quantidade programada</label>
-                <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="data.qtdeProgramada"
-                    [value]="data.qtdeProgramada">
+                <input type="number" class="form-control" name="qtdeProgramada" [(ngModel)]="data.qtdeProgramada" [value]="data.qtdeProgramada">
 
                 <label class="form-label mt-2">Linha</label>
-                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao"
-                    (change)="verificaAlteracaoLinhaTurnoPrioridade()">
+                <select class="form-select" name="linha" [(ngModel)]="idLinhaDeProducao" (change)="verificaAlteracaoLinhaTurnoPrioridade()">
                     <option selected [value]="linha.id" *ngFor="let linha of linhas">{{linha.nome}}</option>
                 </select>
 
@@ -64,11 +61,10 @@
                 </select>
 
                 <label class="mt-2 form-label">Observação</label>
-                <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao"
-                    [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
+                <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao" [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
 
                 <div class="row">
-                    <div class="col-12 col-lg-4" *ngIf="!exibirSequencia">
+                    <div class="col-12 col-lg-4" *ngIf="sequencia">
                         <button class="btn btn-primary mt-2 form-control"
                             (click)="alterarProgramacao()">Alterar</button>
                     </div>
@@ -80,6 +76,7 @@
                         <button class="btn btn-danger mt-2 form-control" (click)="fecharDialogo(false)">Fechar</button>
                     </div>
                 </div>
+
             </form>
         </div>
     </div>
@@ -87,24 +84,6 @@
 
 
 <section *ngIf="data.length > 0">
-    <!-- <table class="table table-striped table-sm">
-        <thead>
-            <tr>
-                <th scope="col" class="text-center">CONTROLE</th>
-                <th scope="col" class="text-center">ITEM</th>
-                <th scope="col" class="text-center">CLIENTE</th>
-                <th scope="col" class="text-center">PRODUTO</th>
-            </tr>
-        </thead>
-        <tbody *ngFor="let item of itens">
-            <tr>
-                <td>{{item.cdProduto}}</td>
-                <td>{{item.item}}</td>
-                <td>{{item.nomeCliente}}</td>
-                <td>{{item.nomeProduto}}</td>
-            </tr>
-        </tbody>
-    </table> -->
     <div class="row">
         <div class="col-12 col-lg-12">
             <form>
@@ -126,11 +105,9 @@
                 </select>
 
                 <label for="" class="mt-2 form-label">Observação</label>
-                <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao"
-                    [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
+                <textarea name="" id="" cols="40" rows="4" class="form-control" name="observacao" [(ngModel)]="data.observacao">{{data.observacao}}</textarea>
                 <div class="d-flex justify-content-center align-items-center mt-3">
-                    <button class="btn btn-sm btn-primary col-5 me-1"
-                        (click)="salvarTodosItensAlterados()">Alterar</button>
+                    <button class="btn btn-sm btn-primary col-5 me-1"(click)="salvarTodosItensAlterados()">Alterar</button>
                     <button class="btn btn-sm  btn-danger col-5" (click)="fecharDialogo(false)">Fechar</button>
                 </div>
             </form>

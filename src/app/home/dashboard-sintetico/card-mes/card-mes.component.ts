@@ -64,7 +64,9 @@ export class CardMesComponent implements OnInit {
         next:(res)=>{
          try {
           this.valorFaturamento = res[0].valor;
-         } catch (error) {}
+         } catch (error) {
+          this.valorFaturamento = 0;
+         }
         },
         complete:()=>{
           this.consultaParametrosMeta();
@@ -127,6 +129,10 @@ export class CardMesComponent implements OnInit {
   calcularPercentualDoGrafico() {
     let i = 45;
     let valorPercentual = (180 / this.parametrosMeta.valorMetaMensal);
+    if(valorPercentual == 0){
+      i = 225;
+      return;
+    }
     i += (valorPercentual * this.valorFaturamento);
     if (i <= 134) {
       this.bgColorGrafico = 'bg-color-chart-30';
@@ -144,7 +150,11 @@ export class CardMesComponent implements OnInit {
   }
 
   public calculaPercentualFaturamento() {
-    this.percentualFaturamento = ((this.valorFaturamento / this.metaFaturamentoDoMes) * 100);
+    if(this.parametrosMeta.valorMetaMensal != 0){
+      this.percentualFaturamento = ((this.valorFaturamento / this.metaFaturamentoDoMes) * 100);
+    }else{
+      this.percentualFaturamento = 0;
+    }
   }
 
   receberDataDeConsulta() {

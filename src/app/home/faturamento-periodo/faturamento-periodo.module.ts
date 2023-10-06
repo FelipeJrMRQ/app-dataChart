@@ -6,6 +6,7 @@ import { TblFaturamentoClienteComponent } from './tbl-faturamento-cliente/tbl-fa
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.modu
     FormsModule,
     ReactiveFormsModule,
     MatProgressBarModule,
-    LoadingPageModule
+    LoadingPageModule,
+    NgxPaginationModule,
   ]
 })
 export class FaturamentoPeriodoModule { }

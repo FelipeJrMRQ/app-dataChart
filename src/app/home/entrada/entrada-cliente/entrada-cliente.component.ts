@@ -23,7 +23,7 @@ export class EntradaClienteComponent implements OnInit {
   entradas: EntradaCliente[];
   valorTotal: any = 0;
   exportarDados: boolean = false;
-  public itensPagina: number = 15;
+  public itensPagina: number = 20;
   public paginaEntradaCliente: number = 1;
   private nomeTela = "entrada";
 
@@ -73,6 +73,10 @@ export class EntradaClienteComponent implements OnInit {
         console.log(e)
       }
     });
+  }
+
+  public voltar(){
+    this.router.navigate(['/dashboard-sintetico'])
   }
 
   private receberData() {

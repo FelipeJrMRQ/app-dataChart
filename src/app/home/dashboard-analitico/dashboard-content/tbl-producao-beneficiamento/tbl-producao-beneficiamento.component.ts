@@ -21,6 +21,7 @@ export class TblProducaoBeneficiamentoComponent implements OnInit {
   peso:number = 0;
   area:number = 0;
   valor: number = 0;
+  itensPagina:number =  10;
 
   constructor(
     private dateService: DateControllerService,

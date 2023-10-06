@@ -28,7 +28,7 @@ export class DetalhamentoClienteFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.controleService.registrarLog('ACESSOU A TELA DETALHAMENTO DO CLIENTE', 'DATALHAMENTO CLIENTE');
+    this.controleService.registrarLog('ACESSOU A TELA DETALHAMENTO DO CLIENTE', 'DETALHAMENTO CLIENTE');
     this.activeRoute.params.subscribe((res: any) => {
       this.dataRecebida = res.data;
       this.nomeCliente = res.nomeCliente;
@@ -88,4 +88,6 @@ export class DetalhamentoClienteFormComponent implements OnInit {
       this.router.navigate([`detalhamento-cliente/${this.codigo}/${cdCliente[1]}/${this.dataRecebida}`]);
     }
   }
+
+  
 }

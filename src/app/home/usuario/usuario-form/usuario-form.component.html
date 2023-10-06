@@ -9,15 +9,15 @@
             <section class="row mt-3">
                 <div class="col-12 col-lg-4">
                     <label class="form-label">Nome</label>
-                    <input type="text" class="form-control" name="nome" [(ngModel)]="usuario.nome">
+                    <input type="text" class="form-control form-control-sm" name="nome" [(ngModel)]="usuario.nome">
                 </div>
                 <div class="col-12 col-lg-4">
                     <label class="form-label">E-mail</label>
-                    <input type="email" required class="form-control" name="username" [(ngModel)]="usuario.username">
+                    <input type="email" required class="form-control form-control-sm" name="username" [(ngModel)]="usuario.username">
                 </div>
                 <div class="col-12 col-lg-4">
                     <label class="form-label">Home page</label>
-                    <input type="email" required class="form-control" name="homePage">
+                    <input type="email" required class="form-control form-control-sm " name="homePage">
                 </div>
             </section>
 
@@ -36,10 +36,10 @@
                 </div>
             </section>
             <div>
-                <button class="btn btn-primary mt-2 mb-2" (click)="cadastrarUsuario()" *ngIf="!modoDeEdicao">Convidar</button>
-                <button class="btn btn-primary mt-2 mb-2" (click)="alterarUsuario()"
+                <button class="btn btn-sm btn-primary mt-2 mb-2" (click)="cadastrarUsuario()" *ngIf="!modoDeEdicao">Convidar</button>
+                <button class="btn btn-sm btn-primary mt-2 mb-2" (click)="alterarUsuario()"
                     *ngIf="modoDeEdicao">Alterar</button>
-                <button class="btn btn-danger ms-2" (click)="limparDados()">Limpar</button>
+                <button class="btn btn-sm btn-danger ms-2" (click)="limparDados()">Limpar</button>
             </div>            
         </form>
 
@@ -53,7 +53,7 @@
             </header>
             <form>
                 <div class="mt-3">
-                    <div class="input-group mb-3">
+                    <div class="input-group input-group-sm mb-3">
                         <input type="text" class="form-control" name="email" placeholder="Digite o email do usuário"
                             [(ngModel)]="email">
                         <button class="btn btn-outline-secondary" (click)="consultarUsuario()">

@@ -1,8 +1,6 @@
-export class ExtratoProduto {
+export class ExtratoBeneficiamento {
     cdCliente: number;
     nomeCliente: string;
-    cdProduto: any;
-    nomeProduto: string;
     cdBeneficiamento: number;
     nomeBeneficiamento: string;
     mes: number;
@@ -14,8 +12,6 @@ export class ExtratoProduto {
     constructor(
         cdCliente: number,
         nomeCliente: string,
-        cdProduto: number,
-        nomeProduto: string,
         cdBeneficiamento: number,
         nomeBeneficiamento: string,
         mes: number,
@@ -25,9 +21,7 @@ export class ExtratoProduto {
         valor: number) {
         this.cdCliente = cdCliente;
         this.nomeCliente = nomeCliente;
-        this.cdProduto = cdProduto;
         this.nomeCliente = nomeCliente;
-        this.nomeProduto = nomeProduto;
         this.cdBeneficiamento = cdBeneficiamento;
         this.nomeBeneficiamento = nomeBeneficiamento;
         this.mes = mes;

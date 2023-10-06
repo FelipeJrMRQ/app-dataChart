@@ -67,9 +67,18 @@
         </table>
     </div>
     <div class="row">
-        <div class="col-11">
+        <div class="col-7">
             <pagination-controls id='tbEntradaProduto' (pageChange)="paginaEntradaProduto = $event" nextLabel=""
                 previousLabel="" [maxSize]="5"></pagination-controls>
+        </div>
+        <div class="col-4 text-end align-middle d-none d-lg-table-cell">
+            <strong class="bold">Itens por página: </strong>
+            <select name="itens_pagina" [(ngModel)]="itensPagina">
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
         </div>
         <div *ngIf="exportarDados" class="col-1 align-middle p-1 text-center text-success c-pointer" data-bs-toggle="tooltip"
             data-bs-placement="left" title="Exportar dados" (click)="gerarArquivo()">
@@ -94,7 +103,7 @@
             </thead>
             <tbody>
                 <tr class="c-pointer"
-                    *ngFor="let beneficiamento of beneficiamentos | paginate: { itemsPerPage:itensPaginaB, currentPage:paginaProdutoBeneficiamento,id:'tbEntradaBeneficiamento' } ; let j = index"
+                    *ngFor="let beneficiamento of beneficiamentos | paginate: { itemsPerPage:itensPagina, currentPage:paginaProdutoBeneficiamento,id:'tbEntradaBeneficiamento' } ; let j = index"
                     (click)="mudarPagina(beneficiamento.cdBeneficiamento,dataRecebida)">
                     <td class="text-truncate" style="max-width: 210px;">{{beneficiamento.nomeBeneficiamento}}</td>
                     <td class="d-none d-lg-table-cell">{{beneficiamento.area | number:'1.0-2'}}</td>
@@ -111,9 +120,18 @@
         </table>
     </div>
     <div class="row">
-        <div class="col-11">
+        <div class="col-7">
             <pagination-controls id='tbEntradaBeneficiamento' (pageChange)="paginaProdutoBeneficiamento = $event"
                 nextLabel="" previousLabel="" [maxSize]="5"></pagination-controls>
+        </div>
+        <div class="col-4 text-end align-middle d-none d-lg-table-cell">
+            <strong class="bold">Itens por página: </strong>
+            <select name="itens_pagina" [(ngModel)]="itensPagina">
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
         </div>
         <div *ngIf="exportarDados" class="col-1 align-middle p-1 text-center text-success c-pointer" data-bs-toggle="tooltip"
             data-bs-placement="left" title="Exportar dados" (click)="gerarArquivoB()">
@@ -122,7 +140,7 @@
     </div>
 </section>
 
-<button class="btn btn-danger" routerLink="/entrada/cliente/{{dataRecebida}}">Voltar</button>
+<button class="btn btn-sm btn-danger" routerLink="/entrada/cliente/{{dataRecebida}}">Voltar</button>
 
 <div class="mb-5">
 </div>

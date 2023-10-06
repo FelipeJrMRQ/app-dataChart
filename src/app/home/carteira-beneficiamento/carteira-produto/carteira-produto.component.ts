@@ -31,6 +31,8 @@ export class CarteiraProdutoComponent implements OnInit {
   valorTQuantidade: number = 0;
   valorTotalArea: number = 0;
   toolTip = [];
+  nomeProduto: any = '';
+  produtosTemp: any = [];
   dialogRef: any;
   public exportarDados: boolean = false;
   public visualizarDetalhesProduto: boolean = false;
@@ -105,6 +107,9 @@ export class CarteiraProdutoComponent implements OnInit {
           this.valorTQuantidade += e.quantidade;
           this.valorTotalArea += e.area;
         });
+      },
+      complete:()=>{
+        this.produtosTemp = [...this.produtos];
       }
     });
   }
@@ -120,7 +125,9 @@ export class CarteiraProdutoComponent implements OnInit {
           this.valorTQuantidade += e.quantidade;
           this.valorTotalArea += e.area;
         });
-
+      },
+      complete:()=>{
+        this.produtosTemp = [...this.produtos];
       }
     })
   }
@@ -172,6 +179,17 @@ export class CarteiraProdutoComponent implements OnInit {
       verticalPosition: "top",
     });
   }
+
+  public filtrar(){
+    let temp: any = this.produtos.filter(p=> {
+      return p.nomeProduto.includes(this.nomeProduto.toUpperCase());
+    });
+    if(temp.length == 0){
+      temp = [{ nomeProduto: 'PRODUTO NÃO ENCONTRADO.' }];
+    }
+    this.produtosTemp = [...temp];
+  }
+
 
 }
 

@@ -33,7 +33,7 @@
             </thead>
             <tbody>
                 <tr
-                    *ngFor="let beneficiamento of beneficiamentos | paginate: { itemsPerPage: 30, currentPage:pagina,id:'tbFatuDiario' };let j =index">
+                    *ngFor="let beneficiamento of beneficiamentos | paginate: { itemsPerPage: itensPagina, currentPage:pagina,id:'tbFatuDiario' };let j =index">
                     <td class="text-truncate" style="max-width: 150px;">{{beneficiamento.nomeBeneficiamento}}</td>
                     <td class="d-none d-lg-table-cell">{{beneficiamento.quantidade | number}}</td>
                     <td class="d-none d-lg-table-cell">{{beneficiamento.peso | number}}</td>
@@ -52,11 +52,21 @@
     </div>
 
     <div class="row">
-        <div class="col-10">
+        <div class="col-7">
             <pagination-controls id='tbFatuDiario' (pageChange)="pagina = $event" nextLabel="" previousLabel=""
                 [maxSize]="5"></pagination-controls>
         </div>
-        <div class="col-2 text-success text-end c-pointer" (click)="exportarDados()" title="Exportar dados">
+        <div class="col-4 text-end align-middle d-none d-lg-table-cell">
+            <strong class="bold">Itens por página: </strong>
+            <select name="itens_pagina" [(ngModel)]="itensPagina">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        </div>
+        <div class="col-1 text-success text-center c-pointer" (click)="exportarDados()" title="Exportar dados">
             <i class="fas fa-download iconeExcell me-2 " ></i>
         </div>
     </div>

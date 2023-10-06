@@ -1,7 +1,7 @@
 <app-loading *ngIf="loadingPage"></app-loading>
 <div class="row" *ngIf="!loadingPage">
   <div class="col-8 col-md-4 col-lg-4 mt-1">
-    <div class="input-group">
+    <div class="input-group input-group-sm">
       <input type="date" class="form-control bgInput text-center" [(ngModel)]="dataEscolhida" />
       <button class="input-group-text btn btn-primary" (click)="emitirData()">
         <i class="fas fa-search-dollar"></i>
@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="col-4 col-md-8 col-lg-8 text-end mt-1">
-    <button class="btn btn-primary" (click)="alterarParaModoAnalitico()">Analítico
+    <button class="btn btn-sm btn-primary" (click)="alterarParaModoAnalitico()">Analítico
       <i class="fas fa-table ms-1"></i>
     </button>
   </div>

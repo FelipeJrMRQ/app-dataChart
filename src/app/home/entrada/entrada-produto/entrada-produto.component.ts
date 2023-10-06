@@ -35,10 +35,8 @@ export class EntradaProdutoComponent implements OnInit {
   exportarDados: boolean = false;
   private visualizarDetalhesProduto: boolean = false;
   public paginaEntradaProduto: number = 1;
-  public itensPagina: number = 15;
-
+  public itensPagina: number = 20;
   public paginaProdutoBeneficiamento: number = 1;
-  public itensPaginaB: number = 15;
   private nomeTela: string = "entrada"
   private snackBarErro = 'my-snack-bar-erro';
   private snackBarSucesso = 'my-snack-bar-sucesso';

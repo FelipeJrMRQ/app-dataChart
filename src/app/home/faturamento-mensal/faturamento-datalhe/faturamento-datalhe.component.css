@@ -14,16 +14,3 @@
 .bold {
   font-weight: bold;
 }
-
-.fa-search {
-  font-size: 20px;
-}
-
-.tt {
-  position: relative;
-  right: 0;
-  padding: 8px;
-  background: transparent;
-  border: none;
-}
-

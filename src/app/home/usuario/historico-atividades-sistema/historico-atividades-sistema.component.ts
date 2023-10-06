@@ -21,7 +21,6 @@ export class HistoricoAtividadesSistemaComponent implements OnInit {
   dataFinal = moment().format('yyyy-MM-DD');
   @ViewChild('elemento', { static: false, read: ElementRef }) elemento: ElementRef | undefined;
 
-
   constructor(
     private controleExibicaoService: ControleExibicaoService,
     private logSistemaService: LogSistemaService,
@@ -37,6 +36,7 @@ export class HistoricoAtividadesSistemaComponent implements OnInit {
     this.controleExibicaoService.registrarLog('ACESSOU A TELA DE HISTORICO DE ATIVIDADES DO USUARIO', 'HISTORICO ATIVIDADE');
     this.consultarLogsDoUsuario();
   }
+
   public consultarLogsDoUsuario() {
     this.logs = [];
     this.logView = [];
@@ -124,4 +124,5 @@ export class HistoricoAtividadesSistemaComponent implements OnInit {
       this.render.addClass(icon, 'fa-minus-circle');
     }, 400);
   }
+  
 }

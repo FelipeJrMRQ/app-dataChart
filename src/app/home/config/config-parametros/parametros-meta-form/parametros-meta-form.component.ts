@@ -43,6 +43,7 @@ export class ParametrosMetaFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.parametrosMeta.valorMetaMensal)
     this.controleExibicaoService.registrarLog('ACESSOU A TELA DE CONFIGURACAO DE META', 'CONFIGURACAO META');
     this.consultarParametros();
     this.consultaParetrosDoMes();

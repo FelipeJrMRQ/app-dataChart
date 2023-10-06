@@ -148,7 +148,11 @@ export class CardDiaComponent implements OnInit {
   }
 
   private calcularPercentualDeFaturamentoDoDia() {
+   if(this.metaFaturamentoDoDia != 0){
     this.percentualFaturamento = ((this.valorFaturamentoDia / this.metaFaturamentoDoDia) * 100);
+   }else{
+    this.percentualFaturamento = 100;
+   }
     this.calculaPercentualGrafico();
   }
 

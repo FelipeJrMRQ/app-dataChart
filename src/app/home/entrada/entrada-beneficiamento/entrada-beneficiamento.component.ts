@@ -24,7 +24,7 @@ export class EntradaBeneficiamentoComponent implements OnInit {
   areaTotal: any = 0;
   valorTotal: any = 0;
   exportarDados: boolean = false;
-  public itensPagina: number = 15;
+  public itensPagina: number = 20;
   public paginaEntradaBeneficiamento: number = 1;
   public toolTip = [];
   private nomeTela = "entrada";

@@ -14,9 +14,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { ProdutosBeneficiamentoComponent } from './entrada-produto/produtos-beneficiamento/produtos-beneficiamento.component';
 import { EntradaBeneficiamentoClienteComponent } from './entrada-beneficiamento/entrada-beneficiamento-cliente/entrada-beneficiamento-cliente.component';
 import { BeneficiamentoProdutosComponent } from './entrada-beneficiamento/entrada-beneficiamento-cliente/entrada-beneficiamento-produtos/beneficiamento-produtos.component';
-import { ExtratoAnualComponent } from './extrato-anual/extrato-anual.component';
+import { ExtratoAnualComponent } from './extrato-anual-produto/extrato-anual.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
+import { ExtratoAnualBeneficiamentoComponent } from './extrato-anual-beneficiamento/extrato-anual-beneficiamento.component';
 
 
 
@@ -30,6 +31,7 @@ import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.modu
     EntradaBeneficiamentoClienteComponent,
     BeneficiamentoProdutosComponent,
     ExtratoAnualComponent,
+    ExtratoAnualBeneficiamentoComponent,
   ],
   imports: [
     CommonModule,

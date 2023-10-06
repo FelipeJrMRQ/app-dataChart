@@ -55,7 +55,11 @@ export class EntradaService {
     return this.http.get<any>(`${this.urlApi2}/entrada`);
   }
 
-  public consultaExtratoAnualDeEntradasDoCliente(dataInicial: any, dataFinal: any, cdCliente:any):Observable<any>{
-      return this.http.get<any>(`${this.urlApi}/extrato-anual/${dataInicial}/${dataFinal}/${cdCliente}`);
+  public consultaExtratoAnualDeEntradasPorProdutoDoCliente(dataInicial: any, dataFinal: any, cdCliente:any):Observable<any>{
+      return this.http.get<any>(`${this.urlApi}/extrato-anual-entrada-produto/${dataInicial}/${dataFinal}/${cdCliente}`);
   }
+
+  public consultaExtratoAnualDeEntradasPorBeneficiamentoDoCliente(dataInicial: any, dataFinal: any, cdCliente:any):Observable<any>{
+    return this.http.get<any>(`${this.urlApi}/extrato-anual-entrada-beneficiamento/${dataInicial}/${dataFinal}/${cdCliente}`);
+}
 }

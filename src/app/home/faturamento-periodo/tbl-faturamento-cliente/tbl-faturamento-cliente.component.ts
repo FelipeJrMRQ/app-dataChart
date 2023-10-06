@@ -31,6 +31,8 @@ export class TblFaturamentoClienteComponent implements OnInit {
   nomeTela = '';
   visualizarDetalhes: boolean = false;
   exportarDadosExcel: boolean = false;
+  pagina = 1;
+  itensPagina= 20;
 
   constructor(
     private dateService: DateControllerService,
@@ -55,7 +57,6 @@ export class TblFaturamentoClienteComponent implements OnInit {
         this.consultaHistoricoDeFaturamentoPorCliente();
     });
   }
-  
 
   public consultaHistoricoDeFaturamentoPorCliente() {
     this.historico = [];
@@ -111,8 +112,10 @@ export class TblFaturamentoClienteComponent implements OnInit {
       let indexMes = this.historicoMeses[index].valoresMes.findIndex(vm => vm.mesAno == `${h.mes}-${h.ano}`);
       this.historicoMeses[index].valoresMes[indexMes].valor = h.valor;
     });
-    this.historicoMesesFiltro = this.historicoMeses;
+    this.historicoMesesFiltro =[...this.historicoMeses];
   }
+
+  
 
   /**
    * Quando o usuário clicar em qualquer celula da tabela ele será redirecionado
@@ -184,9 +187,13 @@ export class TblFaturamentoClienteComponent implements OnInit {
   }
 
   public filtrarPorCliente() {
-    let temp = this.historicoMeses.filter(cli => {
+    let temp: any = this.historicoMeses.filter(cli => {
       return cli.nomeCliente.includes(this.nomeCliente.toUpperCase());
     });
+    if(temp.length == 0){
+     temp =  [{nomeCliente: 'CLIENTE NÃO ENCONTRADO.'}]
+    }
+   
     this.historicoMesesFiltro = temp;
   }
 

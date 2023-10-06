@@ -6,13 +6,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { EntradaFormComponent } from './entrada-form/entrada-form.component';
 import { EntradaProdutoComponent } from './entrada-produto/entrada-produto.component';
 import { BeneficiamentoProdutosComponent } from './entrada-beneficiamento/entrada-beneficiamento-cliente/entrada-beneficiamento-produtos/beneficiamento-produtos.component';
-import { ExtratoAnualComponent } from './extrato-anual/extrato-anual.component';
+import { ExtratoAnualComponent } from './extrato-anual-produto/extrato-anual.component';
 import { AuthGuardService } from 'src/app/guards/auth-guard.service';
+import { ExtratoAnualBeneficiamentoComponent } from './extrato-anual-beneficiamento/extrato-anual-beneficiamento.component';
 
 const routes: Routes = [
   
   { path: 'entrada/cliente/:data', component: EntradaFormComponent , canActivate: [AuthGuardService] },
   { path: 'entrada-extrato-anual/:data/:cdCliente/:nomeCliente', component: ExtratoAnualComponent, canActivate: [AuthGuardService] },
+  { path: 'entrada-extrato-anual-beneficiamento/:data/:cdCliente/:nomeCliente', component: ExtratoAnualBeneficiamentoComponent},
   
   //Entrada-beneficiamento rotas
   { path: 'entrada/beneficiamento/cliente/:cdBeneficiamento/:data/:nomeBeneficiamento', component: EntradaBeneficiamentoClienteComponent, canActivate: [AuthGuardService] },

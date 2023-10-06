@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   urlApi: "http://125.67.2.20:8083/api",
   obterToken: "http://125.67.2.20:8083/login",
-  versaoApp: '1.39.22',
+  versaoApp: '1.41.24',
 };
 
 /**
@@ -126,6 +126,19 @@ export const environment = {
  * Visualização de detalhe do periodo selecionado
  * Exportação de dados do periodo selecionado
  * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.39.23
+ * Correção no bug de exibição da tabela de histórico anual de entrada 
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.40.23
+ * Inclusão da consulta do extrato de faturamento e entrada por beneficiamento na tela de detalhamento do cliente.
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.41.24
+ * Inclusão filtro de consulta nas telas de carteira por cliente e por beneficiamento
+ * Correção no métodos de filtro da tela de faturamento do mês
+ * Redução de codigo ao aplicar novos métodos de filtro
  * 
  */
  

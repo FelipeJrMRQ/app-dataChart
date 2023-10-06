@@ -237,6 +237,10 @@ tfoot {
     font-size: 20px;
 }
 
+table{
+    font-size: 11px;
+  }
+
 
 html, body { height: 100%; }
 

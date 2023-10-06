@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   urlApi: "http://125.67.2.242:8083/api",
   obterToken: "http://125.67.2.242:8083/login",
-  versaoApp: '1.39.22'
+  versaoApp: '1.41.24'
 };
 
 /**
@@ -124,5 +124,20 @@ export const environment = {
  * Correção do bug no vinculo de componente, onde era apenas alterado o usuario dono do componente e não era 
  * feito um novo componente para o usuário
  * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.39.23
+ * Correção no bug de exibição da tabela de histórico anual de entrada
+ * Correção nos metodos de voltar das páginas de entrada 
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.40.23
+ * Inclusão da consulta do extrato de faturamento e entrada por beneficiamento na tela de detalhamento do cliente.
+ * 
+ * 
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.41.24
+ * Inclusão filtro de consulta nas telas de carteira por cliente e por beneficiamento
+ * Correção no métodos de filtro da tela de faturamento do mês
+ * Redução de codigo ao aplicar novos métodos de filtro
  * 
  */

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { observable, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FeriadoService } from '../services/feriado.service';
 
 @Injectable({

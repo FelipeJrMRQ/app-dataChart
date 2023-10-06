@@ -9,14 +9,14 @@ import { FaturamentoBeneficiamentoComponent } from './faturamento-beneficiamento
 import { ClienteDetalheComponent } from './faturamento-beneficiamento/cliente-detalhe/cliente-detalhe.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatDialogModule } from '@angular/material/dialog';
-import { DlgFatMensalProdutoComponent } from 'src/app/shared/dialog/dlg-fat-mensal-produto/dlg-fat-mensal-produto.component';
 import { DialogModule } from '@angular/cdk/dialog';
 import { MatSortModule } from '@angular/material/sort';
-import { ExtratoProdutoAnualComponent } from './extrato-produto-anual/extrato-produto-anual.component';
+import { ExtratoProdutoAnualComponent } from './extrato-anual-produto/extrato-produto-anual.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
+import { ExtratoBeneficiamentoAnualComponent } from './extrato-anual-beneficiamento/extrato-beneficiamento-anual.component';
 
 
 
@@ -28,6 +28,7 @@ import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.modu
     FaturamentoBeneficiamentoComponent,
     ClienteDetalheComponent,
     ExtratoProdutoAnualComponent,
+    ExtratoBeneficiamentoAnualComponent,
   ],
   imports: [
     CommonModule,

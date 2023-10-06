@@ -25,6 +25,7 @@ export class CarteiraProdutoComponent implements OnInit {
   dataRecebida: any;
   modeloConsulta: ModeloConsulta;
   produtos: CarteiraProduto[];
+  produtosTemp: any = [];
   qtde: any = 0;
   area: any = 0;
   valorTotal: any = 0;
@@ -32,6 +33,7 @@ export class CarteiraProdutoComponent implements OnInit {
   paginaAtual: any = 1;
   toolTip = [];
   dialogRef: any;
+  nomeProduto: any = '';
   public exportarDados: boolean = false;
   public visualizarDetalhesProduto: boolean = false;
   private nomeTela = 'carteira-cliente';
@@ -88,7 +90,7 @@ export class CarteiraProdutoComponent implements OnInit {
   }
 
   public voltarPaginaAnterior() {
-    this.router.navigate([`carteira-cliente/${this.cdCliente}/${this.dataRecebida}/${this.nomeCliente}`]);
+    window.history.back();
   }
 
   public consultarCarteiraPorBeneficiamentoDeProdutos() {
@@ -100,9 +102,12 @@ export class CarteiraProdutoComponent implements OnInit {
           this.qtde += e.quantidade;
           this.area += e.area;
           this.valorTotal += e.valor;
-        })
+        });
+      }, complete:()=>{
+        this.produtosTemp = [...this.produtos];
       }
     });
+    
   }
 
   private limparVariaveis() {
@@ -123,21 +128,24 @@ export class CarteiraProdutoComponent implements OnInit {
           this.qtde += e.quantidade;
           this.area += e.area;
           this.valorTotal += e.valor;
-        })
+        });
       }, error: (e) => {
         console.log(e);
+      },complete:()=>{
+        this.produtosTemp = [...this.produtos];
       }
-    })
+    });
+   
   }
 
   public sortProduto(sort: Sort) {
-    const data = this.produtos.slice();
+    const data = this.produtosTemp.slice();
     if (!sort.active || sort.direction === '') {
-      this.produtos = data;
+      this.produtosTemp = data;
       return;
     }
 
-    this.produtos = data.sort((a, b) => {
+    this.produtosTemp = data.sort((a:any, b:any) => {
       const isAsc = sort.direction === 'desc';
       switch (sort.active) {
         case 'nomeProduto':
@@ -165,6 +173,17 @@ export class CarteiraProdutoComponent implements OnInit {
       });
     }
   }
+
+  public filtrar(){
+    let temp: any = this.produtos.filter(p=> {
+      return p.nomeProduto.includes(this.nomeProduto.toUpperCase());
+    });
+    if(temp.length == 0){
+      temp = [{ nomeProduto: 'PRODUTO NÃO ENCONTRADO.' }];
+    }
+    this.produtosTemp = [...temp];
+  }
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

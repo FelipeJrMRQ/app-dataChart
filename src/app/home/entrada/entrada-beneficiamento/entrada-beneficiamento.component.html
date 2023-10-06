@@ -28,13 +28,22 @@
         </table>
     </div>
     <div class="row">
-        <div class="col-11">
+        <div class="col-7">
             <pagination-controls id='tbEntradaBeneficiamento' (pageChange)="paginaEntradaBeneficiamento = $event" nextLabel="" previousLabel=""
             [maxSize]="5"></pagination-controls>
         </div>
-        <div *ngIf="exportarDados" class="col-1 align-middle p-1 text-center text-success c-pointer"  (click)="gerarArquivo()">
+        <div class="col-4 text-end align-middle d-none d-lg-table-cell">
+            <strong class="bold">Itens por página: </strong>
+            <select name="itens_pagina" [(ngModel)]="itensPagina">
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        </div>
+        <div *ngIf="exportarDados" class="col-1 align-middle text-center text-success c-pointer"  (click)="gerarArquivo()">
             <i data-bs-toggle="tooltip" data-bs-placement="left" title="Exportar dados" class="fas fa-download iconeExcell " ></i>
         </div>
     </div>
 
-    <button class="btn btn-danger" routerLink="/">Voltar</button>
+    <button class="btn btn-danger" routerLink="/dashboard-sintetico">Voltar</button>

@@ -17,7 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TblItensMovimentacaoComponent } from './tbl-itens-movimentacao/tbl-itens-movimentacao.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 

@@ -1,0 +1,95 @@
+<header>
+    <div class="bgCor card-label d-flex between align-middle">
+        <label class="color-text bold">EXTRATO ANUAL DE FATURAMENTO POR BENEFICIAMENTO</label>
+    </div>
+</header>
+<div class="text-center mt-3">
+    <h3 class="bold">{{this.nomeCliente}}</h3>
+</div>
+<!-- COMPONENTE DE FILTRO POR PRODUTO -->
+<div class="row mb-3">
+    <div class="col-12 col-lg-2 mt-1">
+        <input type="date" class="form-control" [(ngModel)]="dataRecebida" (change)="consultarFaturamentoAnualDeProdutosDoCliente()">
+    </div>
+    <div class="col-12 col-lg-2">
+        <select name="tipo" id="tipo_consulta" class="form-select mt-1" (change)="visualizarExtratoAnualDeFaturamentoPorProduto()">
+            <option value="" selected>BENEFICIAMENTO</option>
+            <option value="" >PRODUTO</option>
+        </select>
+    </div>
+    <div class="col-12 col-lg-6 mt-1">
+        <input type="text" class="form-control upper-case" placeholder="Digite o nome do produto para filtrar"
+            [(ngModel)]="nomeBeneficiamento" (keyup)="filtrarDadosPorProduto()">
+    </div>
+    <div class="col-12 col-lg-2 mt-1">
+        <button class="btn btn-primary form-control" tabindex="" (click)="alterarModoDeVisualizacao()">Visualizar
+            {{nomeBtn}}</button>
+    </div>
+</div>
+
+<!-- COMPONENTE DE CARREGAMENTO -->
+<div class=" d-flex justify-content-center ">
+    <div class="center" *ngIf="this.dados.length == 0">
+        <app-loading></app-loading>
+    </div>
+</div>
+
+<section class="mb-5" *ngIf="this.dados.length != 0">
+    <div class="table-responsive font-11">
+        <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>BENEFICIAMENTO</th>
+                    <th class="c-pointer" (click)="ordenarPorValoresMes(mesAno)" *ngFor="let mesAno of colunasTabela">{{mesAno}}
+                        <i class="ms-2 fas fa-sort"></i>
+                    </th>
+                    <th class="c-pointer" (click)="ordenarPorTotais()">Total
+                        <i class="ms-2 fas fa-sort"></i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="c-pointer"
+                    *ngFor="let beneficiamento of dadosFiltro | paginate:{itemsPerPage:itensPagina ,currentPage:pagina,id:'extrato-faturamento'} let i = index">
+                    <td class=" text-truncate" style="max-width: 300px;">{{beneficiamento.nomeBeneficiamento}}</td>
+                    <td class="{{valorClass(mes.valor)}}" [ngClass]="visualizaValor" *ngFor="let mes of beneficiamento.meses">{{mes.valor | currency: 'BRL'}}</td>
+                    <td class="{{valorClass(mes.quantidade)}}" [ngClass]="visualizarQtde" *ngFor="let mes of beneficiamento.meses">{{mes.quantidade | number}}</td>
+                    <td [ngClass]="visualizarQtde" class="bold">{{beneficiamento.totalQtd | number}}</td>
+                    <td [ngClass]="visualizaValor" class="bold">{{beneficiamento.totalValor | currency: 'BRL'}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total</td>
+                    <td [ngClass]="visualizarQtde" *ngFor="let mes of totaisMes">{{mes.quantidadeTotal | number}}</td>
+                    <td [ngClass]="visualizaValor" *ngFor="let mes of totaisMes">{{mes.valorTotal | currency: 'BRL'}}</td>
+                    <td [ngClass]="visualizaValor">{{totaisMes.totalGeral | currency: 'BRL'}}</td>
+                    <td [ngClass]="visualizarQtde">{{totaisMes.quantidadeGeral | number}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <pagination-controls id='extrato-faturamento' (pageChange)="pagina = $event" nextLabel="" previousLabel="" [maxSize]="5"></pagination-controls>
+        </div>
+        <div class="col-2 text-end align-middle">
+            <strong>Itens por página: </strong>
+        </div>
+        <div class="col-1">
+            <select name="" id="" [(ngModel)]="itensPagina">
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        </div>
+        <div class="col-1">
+            <div *ngIf="exportarDadosExcel" class="text-center text-success c-pointer f-20 mb-2" (click)="exportarDados()">
+                <i class="fas fa-download" title="Exportar dados"></i>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-sm btn-danger" (click)="voltar()">Voltar</button>
+</section>

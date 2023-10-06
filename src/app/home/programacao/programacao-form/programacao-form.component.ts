@@ -127,7 +127,6 @@ export class ProgramacaoFormComponent implements OnInit {
     this.programacaoService.consultarPorData(moment().format('yyyy-MM-DD')).subscribe({
       next: (res) => {
         this.itensProgramados = res;
-        console.log(this.itensProgramados)
       },
       error: (e) => {
         console.log(e);

@@ -5,7 +5,7 @@
     </div>
 </div>
 
-<div class="row mb-2 nao-imprime" *ngIf="itensFiltro.length <= 0 && itens.length >0">
+<div class="row mb-2 nao-imprime" *ngIf="itensFiltro.length != 0 || itens.length != 0">
     <div class="col-12 col-lg-4">
         <label class="form-label">Cliente</label>
         <input type="text" class="form-control form-control-sm upper-case" (keyup)="filtrar()"
