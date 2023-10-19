@@ -8,6 +8,7 @@ import { ProdutoDetalheComponent } from './faturamento-cliente/produto-detalhe/p
 import { FaturamentoDatalheComponent } from './faturamento-datalhe/faturamento-datalhe.component';
 import { AuthGuardService } from 'src/app/guards/auth-guard.service';
 import { ExtratoBeneficiamentoAnualComponent } from './extrato-anual-beneficiamento/extrato-beneficiamento-anual.component';
+import { ProdutosExtratoBeneficiamentoComponent } from './extrato-anual-beneficiamento/produtos-extrato-beneficiamento/produtos-extrato-beneficiamento.component';
 
 const routes: Routes = [
   { path: '', component: FaturamentoDatalheComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'faturamento-mensal/detalhe-beneficiamento/:cdCliente/:cdBeneficiamento/:nomeCliente/:data', component: ProdutoDetalheComponent },
   { path: 'faturamento-extrato-anual/cliente/:data/:cdCliente/:nomeCliente', component: ExtratoProdutoAnualComponent, canActivate:[AuthGuardService]}, 
   { path: 'faturamento-extrato-anual-beneficiamento/cliente/:data/:cdCliente/:nomeCliente', component: ExtratoBeneficiamentoAnualComponent}, 
+  { path: 'faturamento-extrato-anual-beneficiamento/produto/:data/:cdCliente/:nomeCliente/:cdBeneficiamento', component: ProdutosExtratoBeneficiamentoComponent},
 ]
 
 @NgModule({

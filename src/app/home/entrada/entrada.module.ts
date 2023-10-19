@@ -8,7 +8,6 @@ import { EntradaFormComponent } from './entrada-form/entrada-form.component';
 import { EntradaBeneficiamentoComponent } from './entrada-beneficiamento/entrada-beneficiamento.component';
 import { EntradaClienteComponent } from './entrada-cliente/entrada-cliente.component';
 import { EntradaProdutoComponent } from './entrada-produto/entrada-produto.component';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatSortModule } from '@angular/material/sort';
 import { ProdutosBeneficiamentoComponent } from './entrada-produto/produtos-beneficiamento/produtos-beneficiamento.component';
@@ -18,8 +17,7 @@ import { ExtratoAnualComponent } from './extrato-anual-produto/extrato-anual.com
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
 import { ExtratoAnualBeneficiamentoComponent } from './extrato-anual-beneficiamento/extrato-anual-beneficiamento.component';
-
-
+import { ProdutosExtratoBeneficiamentoComponent } from './extrato-anual-beneficiamento/produtos-extrato-beneficiamento/produtos-extrato-beneficiamento.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +30,7 @@ import { ExtratoAnualBeneficiamentoComponent } from './extrato-anual-beneficiame
     BeneficiamentoProdutosComponent,
     ExtratoAnualComponent,
     ExtratoAnualBeneficiamentoComponent,
+    ProdutosExtratoBeneficiamentoComponent
   ],
   imports: [
     CommonModule,

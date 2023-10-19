@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   urlApi: "http://125.67.2.242:8083/api",
   obterToken: "http://125.67.2.242:8083/login",
-  versaoApp: '1.41.24'
+  versaoApp: '1.42.24'
 };
 
 /**
@@ -139,5 +139,13 @@ export const environment = {
  * Inclusão filtro de consulta nas telas de carteira por cliente e por beneficiamento
  * Correção no métodos de filtro da tela de faturamento do mês
  * Redução de codigo ao aplicar novos métodos de filtro
+ *
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.42.24
+ * Inclusão da visualização de produtos do beneficiamento nas telas de:
+ * Extrato anual entrada 
+ * Extrato anual faturamento
+ * 
+ * 
  * 
  */

@@ -154,7 +154,7 @@ export class TblFaturamentoClienteComponent implements OnInit {
   }
 
   /**
-   * Utilizado pelo metodo de ordenação para definir sua ascendência
+   * Utilizado pelo metodo de ordenação para definir sua classificação
    * 
    * ASC - DESC
    */

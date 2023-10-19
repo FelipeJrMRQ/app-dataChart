@@ -1,7 +1,6 @@
-import { ExcelService } from '../../../services/excel.service';
+import { ExcelService } from 'src/app/services/excel.service';
 import { MatDialog } from '@angular/material/dialog';
 
-import { ExtratoProduto } from 'src/app/models/extratos/extrato-produto';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
@@ -23,6 +22,7 @@ import { ExtratoBeneficiamento } from 'src/app/models/extratos/extrato-beneficia
 export class ExtratoAnualBeneficiamentoComponent implements OnInit {
   public nomeCliente: any;
   public cdCliente: any;
+  public cdBeneficiamento: any;
   public dataRecebida: any;
   public nomeBeneficiamento = "";
   snackBarErro = 'my-snack-bar-erro';
@@ -91,6 +91,10 @@ export class ExtratoAnualBeneficiamentoComponent implements OnInit {
         this.montarColunasParaTabela();
       }
     });
+  }
+
+  public visualizarProdutosDoBeneficiamento(cdBeneficiamento: any){
+    this.router.navigate([`entrada-extrato-anual-beneficiamento-produto/${this.dataRecebida}/${this.cdCliente}/${cdBeneficiamento}/${this.nomeCliente}`]);
   }
 
   private montarColunasParaTabela() {

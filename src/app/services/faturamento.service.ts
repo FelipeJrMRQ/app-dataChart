@@ -40,6 +40,10 @@ export class FaturamentoService {
     return this.http.post(`${this.urlApi}/extrato-anual-beneficiamento`, modeloConsulta);
   }
 
+  public consultaExtratoAnualDeFaturamentoPorProdutoDoBeneficiamento(dataInicial: any, dataFinal:any, cdCliente:any, cdBeneficiamento:any): Observable<any>{
+    return this.http.get(`${this.urlApi}/extrato-anual-beneficiamento-produto/${dataInicial}/${dataFinal}/${cdCliente}/${cdBeneficiamento}`);
+  }
+
   public consultaFaturamentoPorCliente(modeloConsulta:ModeloConsulta):Observable<any>{
     return this.http.post<ModeloConsulta>(`${this.urlApi}/faturamento-cliente`,modeloConsulta);
   }

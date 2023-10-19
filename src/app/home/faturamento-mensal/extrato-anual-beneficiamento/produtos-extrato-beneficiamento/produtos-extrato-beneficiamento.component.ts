@@ -9,25 +9,28 @@ import { DateControllerService } from 'src/app/utils/date-controller.service';
 import { forkJoin } from 'rxjs';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ExtratoProduto } from 'src/app/models/extratos/extrato-produto';
 import { DlgFatMensalProdutoComponent } from 'src/app/shared/dialog/dlg-fat-mensal-produto/dlg-fat-mensal-produto.component';
-import { ExtratoBeneficiamento } from 'src/app/models/extratos/extrato-beneficiamento';
+
 
 @Component({
-  selector: 'app-extrato-beneficiamento-anual',
-  templateUrl: './extrato-beneficiamento-anual.component.html',
-  styleUrls: ['./extrato-beneficiamento-anual.component.css']
+  selector: 'app-produtos-beneficiamento',
+  templateUrl: './produtos-extrato-beneficiamento.component.html',
+  styleUrls: ['./produtos-extrato-beneficiamento.component.css']
 })
-export class ExtratoBeneficiamentoAnualComponent implements OnInit {
+export class ProdutosExtratoBeneficiamentoComponent implements OnInit {
 
   public nomeCliente: any;
   public cdCliente: any;
+  public cdBeneficiamento: any;
+  public nomeBeneficiamento: any;
   public dataRecebida: any;
-  public nomeBeneficiamento = "";
+  public nomeProduto = "";
   private nomeTela = 'faturamento-extrato-anual';
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
   private modeloConsulta: ModeloConsulta;
-  private extrato: ExtratoBeneficiamento[] = [];
+  private extrato: ExtratoProduto[] = [];
   colunasTabela: any = [];
   dados: any = [];
   dadosFiltro: any = [];
@@ -43,6 +46,7 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
   itensPagina: any = 20;
   totaisMes: any = [];
 
+
   constructor(
     private router: Router,
     private faturamentoService: FaturamentoService,
@@ -57,11 +61,12 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA EXTRATO ANUAL FATURAMENTO ', 'EXTRATO ANUAL FATURAMENTO');
+    this.controleExibicaoService.registrarLog('ACESSOU A TELA EXTRATO ANUAL FATURAMENTO', 'EXTRATO ANUAL FATURAMENTO');
     this.activeRoute.params.subscribe((param: any) => {
       this.dataRecebida = param.data;
       this.cdCliente = param.cdCliente;
       this.nomeCliente = param.nomeCliente;
+      this.cdBeneficiamento = param.cdBeneficiamento;
       this.verificaPermissaoDeAcesso();
     });
   }
@@ -76,27 +81,9 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
         this.visualizarDetalhesDoProduto == s2;
       },
       complete: () => {
-        this.consultarExtratoAnualDeFaturamentoPorBeneficiamentoDoCliente();
+        this.consultarFaturamentoAnualDeProdutosDoCliente();
       },
       error: (e) => {
-      }
-    });
-  }
-
-  public visualizarExtratoAnualDeFaturamentoPorProduto(){
-    this.router.navigate([`faturamento-extrato-anual/cliente/${this.dataRecebida}/${this.cdCliente}/${this.nomeCliente}`])
-  }
-
-  public  consultarExtratoAnualDeFaturamentoPorBeneficiamentoDoCliente(){
-    let dataInicial = moment(moment(this.dateService.getInicioDoMes(this.dataRecebida)).subtract(11, 'months')).format('yyyy-MM-DD');
-    this.faturamentoService.consultaExtratoAnualDeFaturamentoPorBeneficiamentoDoCliente(
-      this.modeloConsulta.getInstance(dataInicial, this.dataRecebida, '', '', this.cdCliente)
-    ).subscribe({
-      next: (res) => {
-        this.extrato = res;
-      },
-      complete: () => {
-        this.montarColunasParaTabela();
       }
     });
   }
@@ -108,10 +95,13 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
     this.extrato = [];
     this.colunasTabela = [];
     let dataInicial = moment(moment(this.dateService.getInicioDoMes(this.dataRecebida)).subtract(11, 'months')).format('yyyy-MM-DD');
-    this.faturamentoService.consultaExtratoAnualDeFaturamentoPorProdutoDoCliente(
-      this.modeloConsulta.getInstance(dataInicial, this.dataRecebida, '', '', this.cdCliente)
-    ).subscribe({
+    this.faturamentoService.consultaExtratoAnualDeFaturamentoPorProdutoDoBeneficiamento(dataInicial, this.dataRecebida, this.cdCliente, this.cdBeneficiamento).subscribe({
       next: (res) => {
+        try {
+          this.nomeBeneficiamento = res[0].nomeBeneficiamento;
+        } catch (error) {
+          console.log(error);
+        }
         this.extrato = res;
       },
       complete: () => {
@@ -133,32 +123,28 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
   private prepararDadosParaExibicao() {
     this.extrato.forEach(e => {
         let dataTemp = {
-          'cdBeneficiamento': e.cdBeneficiamento,
-          'nomeBeneficiamento': e.nomeBeneficiamento,
+          'cdProduto': e.cdProduto,
+          'nomeProduto': e.nomeProduto,
           'totalQtd': 0,
           'totalValor': 0,
           'meses': [...this.meses.map((mes: any) => ({ ...mes }))]
         }
-        if (!this.dados.some((dt: any) => dt.nomeBeneficiamento == e.nomeBeneficiamento)) {
+        if (!this.dados.some((dt: any) => dt.nomeProduto == e.nomeProduto)) {
           this.dados.push(dataTemp);
         }      
     });
     this.preencherValoresDosMeses();
   }
 
-  public visualizarProdutosDoBeneficiamento(cdBeneficamento: any){
-      this.router.navigate([`faturamento-extrato-anual-beneficiamento/produto/${this.dataRecebida}/${this.cdCliente}/${this.nomeCliente}/${cdBeneficamento}`])
-  }
-
   private preencherValoresDosMeses() {
     this.dados.forEach((dt: any) => {
       dt.meses.forEach((mes: any) => {
-        let benef = this.extrato.find((p: any) => p.nomeBeneficiamento == dt.nomeBeneficiamento && p.mes == mes.mesAno.split('-')[0]);
-        if (benef) {
-          dt.totalValor += benef?.valor;
-          dt.totalQtd += benef?.quantidade;
-          mes.valor = benef?.valor;
-          mes.quantidade = benef.quantidade;
+        let prod = this.extrato.find((p: any) => p.nomeProduto == dt.nomeProduto && p.mes == mes.mesAno.split('-')[0]);
+        if (prod) {
+          dt.totalValor += prod?.valor;
+          dt.totalQtd += prod?.quantidade;
+          mes.valor = prod?.valor;
+          mes.quantidade = prod.quantidade;
         }
       });
     });
@@ -179,11 +165,11 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
   }
 
   public filtrarDadosPorProduto() {
-    let temp = this.dados.filter((d: any) => {
-      return d.nomeBeneficiamento.includes(this.nomeBeneficiamento.toUpperCase());
+    let temp:any = this.dados.filter((d: any) => {
+      return d.nomeProduto.includes(this.nomeProduto.toUpperCase());
     });
     if (temp.length == 0) {
-      temp = [{ nomeBeneficiamento: 'BENEFICIAMENTO NÃO ENCONTRADO.' }]
+      temp = [{ nomeProduto: 'PRODUTO NÃO ENCONTRADO.' }]
     }
     this.dadosFiltro = [...temp];
   }
@@ -242,17 +228,17 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
   public exportarDados() {
     if (this.exportarDadosExcel) {
       let dataExport: any = [];
-      this.dadosFiltro.forEach((beneficiamento: any) => {
+      this.dadosFiltro.forEach((produto: any) => {
         let obj: any = {
-          'BENEFICIAMENTO': beneficiamento.nomeBeneficiamento
+          'PRODUTO': produto.nomeProduto
         }
-        let benef = this.dadosFiltro.find((b: any) => b.cdBeneficiamento == beneficiamento.cdBeneficiamento);
-        if (benef) {
-          benef.meses.forEach((b: any) => {
+        let prod = this.dadosFiltro.find((p: any) => p.cdProduto == produto.cdProduto);
+        if (prod) {
+          prod.meses.forEach((p: any) => {
             if (this.visualizarQtde == '') {
-              obj[b.mesAno] = b.quantidade;//Exporta dados por quantidade
+              obj[p.mesAno] = p.quantidade;//Exporta dados por quantidade
             } else {
-              obj[b.mesAno] = b.valor; //Exporta dados por valor
+              obj[p.mesAno] = p.valor; //Exporta dados por valor
             }
           });
         }
@@ -305,7 +291,7 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
   }
 
   voltar() {
-    this.router.navigate([`/detalhamento-cliente/${this.cdCliente}/${this.nomeCliente}/${this.dataRecebida}`]);
+    window.history.back();
   }
 
 }

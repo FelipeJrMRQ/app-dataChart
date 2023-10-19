@@ -13,10 +13,11 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { MatSortModule } from '@angular/material/sort';
 import { ExtratoProdutoAnualComponent } from './extrato-anual-produto/extrato-produto-anual.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
 import { ExtratoBeneficiamentoAnualComponent } from './extrato-anual-beneficiamento/extrato-beneficiamento-anual.component';
+import { ProdutosExtratoBeneficiamentoComponent } from './extrato-anual-beneficiamento/produtos-extrato-beneficiamento/produtos-extrato-beneficiamento.component';
 
 
 
@@ -29,6 +30,7 @@ import { ExtratoBeneficiamentoAnualComponent } from './extrato-anual-beneficiame
     ClienteDetalheComponent,
     ExtratoProdutoAnualComponent,
     ExtratoBeneficiamentoAnualComponent,
+    ProdutosExtratoBeneficiamentoComponent,
   ],
   imports: [
     CommonModule,

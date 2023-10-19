@@ -1,38 +1,38 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { ModeloConsulta } from 'src/app/models/modelo-consulta';
-import { FaturamentoService } from 'src/app/services/faturamento.service';
-import * as moment from 'moment';
 import { MatDialog } from '@angular/material/dialog';
-import { ExcelService } from 'src/app/services/excel.service';
+
+import { ExtratoProduto } from 'src/app/models/extratos/extrato-produto';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
+
+import { EntradaService } from 'src/app/services/entrada.service';
+import { DlgFatMensalProdutoComponent } from 'src/app/shared/dialog/dlg-fat-mensal-produto/dlg-fat-mensal-produto.component';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 import { forkJoin } from 'rxjs';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ExtratoProduto } from 'src/app/models/extratos/extrato-produto';
-import { DlgFatMensalProdutoComponent } from 'src/app/shared/dialog/dlg-fat-mensal-produto/dlg-fat-mensal-produto.component';
+import { ExcelService } from 'src/app/services/excel.service';
 
 @Component({
-  selector: 'app-extrato-produto-anual',
-  templateUrl: './extrato-produto-anual.component.html',
-  styleUrls: ['./extrato-produto-anual.component.css']
+  selector: 'app-produtos-extrato-beneficiamento',
+  templateUrl: './produtos-extrato-beneficiamento.component.html',
+  styleUrls: ['./produtos-extrato-beneficiamento.component.css']
 })
-export class ExtratoProdutoAnualComponent implements OnInit {
+export class ProdutosExtratoBeneficiamentoComponent implements OnInit {
 
   public nomeCliente: any;
   public cdCliente: any;
   public dataRecebida: any;
+  public cdBeneficiamento: any;
+  public nomeBeneficiamento: any;
   public nomeProduto = "";
-  private nomeTela = 'faturamento-extrato-anual';
   snackBarErro = 'my-snack-bar-erro';
   snackBarSucesso = 'my-snack-bar-sucesso';
-  private modeloConsulta: ModeloConsulta;
-  private extrato: ExtratoProduto[] = [];
   colunasTabela: any = [];
   dados: any = [];
   dadosFiltro: any = [];
   exportarDadosExcel: boolean = true;
-  visualizarDetalhesDoProduto: boolean = true;
+  visualizarDetalhesProduto: boolean = true;
   dialogRef: any;
   meses: any = [];
   visualizarQtde: string = ''
@@ -42,63 +42,53 @@ export class ExtratoProdutoAnualComponent implements OnInit {
   pagina: any = 1;
   itensPagina: any = 20;
   totaisMes: any = [];
+  extrato: ExtratoProduto[] = [];
+  private nomeTela: string  = "entrada-extrato-anual";
+
 
   constructor(
-    private router: Router,
-    private faturamentoService: FaturamentoService,
-    private activeRoute: ActivatedRoute,
+    private activeRouter: ActivatedRoute,
+    private entradaService: EntradaService,
     private dialogo: MatDialog,
     private excelService: ExcelService,
-    private dateService: DateControllerService,
+    private dataService: DateControllerService,
     private controleExibicaoService: ControleExibicaoService,
     private snackBar: MatSnackBar,
+    private router: Router,
   ) {
-    this.modeloConsulta = new ModeloConsulta();
+   
   }
 
   ngOnInit(): void {
-    this.controleExibicaoService.registrarLog('ACESSOU A TELA EXTRATO ANUAL FATURAMENTO', 'EXTRATO ANUAL FATURAMENTO');
-    this.activeRoute.params.subscribe((param: any) => {
-      this.dataRecebida = param.data;
-      this.cdCliente = param.cdCliente;
-      this.nomeCliente = param.nomeCliente;
-      this.verificaPermissaoDeAcesso();
+    this.verificaPermissaoDeAcesso();
+  }
+
+  private verificaPermissaoDeAcesso(){
+    forkJoin({
+      s1: this.controleExibicaoService.verificaPermissaoDeAcesso('visualizar_detalhes_produto', this.nomeTela),
+      s2: this.controleExibicaoService.verificaPermissaoDeAcesso('exportar_dados', this.nomeTela)
+    }).subscribe(({s1, s2})=>{
+      this.visualizarDetalhesProduto = s1;
+      this.exportarDadosExcel = s2;
+      this.activeRouter.params.subscribe((res: any) => {
+        this.dataRecebida = res.data;
+        this.cdCliente = res.cdCliente;
+        this.nomeCliente = res.nomeCliente;
+        this.cdBeneficiamento = res.cdBeneficiamento;
+        this.consultaExtratoAnual();
+      });
     });
   }
 
-  teste(){
-    this.router.navigate([`faturamento-extrato-anual-beneficiamento/cliente/${this.dataRecebida}/${this.cdCliente}/${this.nomeCliente}`])
-  }
-
-  private verificaPermissaoDeAcesso() {
-    forkJoin({
-      s1: this.controleExibicaoService.verificaPermissaoDeAcesso('exportar_dados', this.nomeTela),
-      s2: this.controleExibicaoService.verificaPermissaoDeAcesso('visualizar_detalhes_produto', this.nomeTela)
-    }).subscribe({
-      next: ({ s1, s2 }) => {
-        this.exportarDadosExcel = s1;
-        this.visualizarDetalhesDoProduto == s2;
-      },
-      complete: () => {
-        this.consultarFaturamentoAnualDeProdutosDoCliente();
+  public consultaExtratoAnual() {
+    let dataInicial = moment(this.dataService.getInicioDoMes(this.dataRecebida)).subtract(11, 'months').format('yyyy-MM-DD');
+    this.entradaService.consultaExtratoAnualDeEntradasPorProdutoDoBeneficiamento(dataInicial, this.dataRecebida, this.cdCliente, this.cdBeneficiamento).subscribe({
+      next: (res) => {
+        try {this.nomeBeneficiamento = res[0].nomeBeneficiamento;} catch (error) {}
+        this.extrato = res
       },
       error: (e) => {
-      }
-    });
-  }
-
-  public consultarFaturamentoAnualDeProdutosDoCliente() {
-    this.dados = [];
-    this.meses = [];
-    this.dadosFiltro = [];
-    this.extrato = [];
-    this.colunasTabela = [];
-    let dataInicial = moment(moment(this.dateService.getInicioDoMes(this.dataRecebida)).subtract(11, 'months')).format('yyyy-MM-DD');
-    this.faturamentoService.consultaExtratoAnualDeFaturamentoPorProdutoDoCliente(
-      this.modeloConsulta.getInstance(dataInicial, this.dataRecebida, '', '', this.cdCliente)
-    ).subscribe({
-      next: (res) => {
-        this.extrato = res;
+        console.log(e);
       },
       complete: () => {
         this.montarColunasParaTabela();
@@ -107,8 +97,10 @@ export class ExtratoProdutoAnualComponent implements OnInit {
   }
 
   private montarColunasParaTabela() {
-    let data = moment(this.dateService.getInicioDoMes(this.dataRecebida)).subtract(12, 'months').format('yyyy-MM-DD');
-    while (moment(data).isBefore(this.dateService.getInicioDoMes(this.dataRecebida))) {
+    this.meses = [];
+    this.colunasTabela = [];
+    let data = moment(this.dataService.getInicioDoMes(this.dataRecebida)).subtract(12, 'months').format('yyyy-MM-DD');
+    while (moment(data).isBefore(this.dataService.getInicioDoMes(this.dataRecebida))) {
       data = moment(data).add(1, 'month').format('yyyy-MM-DD');
       this.colunasTabela.push(moment(data).format('M-YY'));
       this.meses.push({ 'mesAno': `${moment(data).format('M-YY')}`, 'valor': 0, 'quantidade': 0 });
@@ -117,17 +109,18 @@ export class ExtratoProdutoAnualComponent implements OnInit {
   }
 
   private prepararDadosParaExibicao() {
+    this.dados = [];
     this.extrato.forEach(e => {
-        let dataTemp = {
-          'cdProduto': e.cdProduto,
-          'nomeProduto': e.nomeProduto,
-          'totalQtd': 0,
-          'totalValor': 0,
-          'meses': [...this.meses.map((mes: any) => ({ ...mes }))]
-        }
-        if (!this.dados.some((dt: any) => dt.nomeProduto == e.nomeProduto)) {
-          this.dados.push(dataTemp);
-        }      
+      let dataTemp = {
+        'cdProduto': e.cdProduto,
+        'nomeProduto': e.nomeProduto,
+        'totalQtd': 0,
+        'totalValor': 0,
+        'meses': [...this.meses.map((mes: any) => ({ ...mes }))]
+      }
+      if (!this.dados.some((dt: any) => dt.nomeProduto == e.nomeProduto)) {
+        this.dados.push(dataTemp);
+      }
     });
     this.preencherValoresDosMeses();
   }
@@ -152,20 +145,20 @@ export class ExtratoProdutoAnualComponent implements OnInit {
     if (this.visualizarQtde == 'd-none') {
       this.visualizarQtde = '';
       this.visualizaValor = 'd-none';
-      this.nomeBtn = 'valor'
+      this.nomeBtn = 'valor';
     } else {
       this.visualizarQtde = 'd-none';
       this.visualizaValor = '';
-      this.nomeBtn = 'quantidade'
+      this.nomeBtn = 'quantidade';
     }
   }
 
   public filtrarDadosPorProduto() {
-    let temp:any = this.dados.filter((d: any) => {
-      return d.nomeProduto.includes(this.nomeProduto.toUpperCase());
+    let temp = this.dados.filter((d: any) => {
+      return d.nomeProduto.includes(this.nomeProduto);
     });
     if (temp.length == 0) {
-      temp = [{ nomeProduto: 'PRODUTO NÃO ENCONTRADO.' }]
+      temp = [{ nomeProduto: 'PRODUTO NÃO ENCONTRADO.' }];
     }
     this.dadosFiltro = [...temp];
   }
@@ -228,7 +221,7 @@ export class ExtratoProdutoAnualComponent implements OnInit {
         let obj: any = {
           'PRODUTO': produto.nomeProduto
         }
-        let prod = this.dadosFiltro.find((p: any) => p.cdProduto == produto.cdProduto);
+        let prod = this.dadosFiltro.find((p: any) => p.nomeProduto == produto.nomeProduto);
         if (prod) {
           prod.meses.forEach((p: any) => {
             if (this.visualizarQtde == '') {
@@ -240,17 +233,17 @@ export class ExtratoProdutoAnualComponent implements OnInit {
         }
         dataExport.push(obj);
       });
-      this.excelService.geradorExcell(dataExport, 'extrato_faturamento_');
+      this.excelService.geradorExcell(dataExport, 'extrato_entrada_');
     } else {
       this.openSnackBar('Você não possui permissão de acesso a exportação de dados.', this.snackBarErro);
     }
   }
 
   public exibirDetalhesDoProduto(cdProduto: any) {
-    if (this.visualizarDetalhesDoProduto) {
+    if (this.visualizarDetalhesProduto) {
       this.dialogRef = this.dialogo.open(DlgFatMensalProdutoComponent, {
         data: {
-          cdProduto
+          cdProduto,
         },
         maxHeight: '95vh',
       });
@@ -286,11 +279,12 @@ export class ExtratoProdutoAnualComponent implements OnInit {
     }
   }
 
+  public visualizarExtratoAnualDeEntradasPorBeneficiamentoDoCliente(){
+    this.router.navigate([`/entrada-extrato-anual-beneficiamento/${this.dataRecebida}/${this.cdCliente}/${this.nomeCliente}`]);
+  } 
+
   voltar() {
     window.history.back();
   }
 
 }
-
-
-

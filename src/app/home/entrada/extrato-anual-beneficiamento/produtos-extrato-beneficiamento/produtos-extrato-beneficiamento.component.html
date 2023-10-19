@@ -5,21 +5,22 @@
 </header>
 <div class="text-center mt-3">
     <h3 class="bold">{{this.nomeCliente}}</h3>
+    <strong>{{this.nomeBeneficiamento}}</strong>
 </div>
 <!-- COMPONENTE DE FILTRO POR PRODUTO -->
 <div class="row mb-3">
     <div class="col-12 col-lg-2 mt-1">
         <input type="date" class="form-control" [(ngModel)]="dataRecebida" (change)="consultaExtratoAnual()">
     </div>
-    <div class="col-12 mt-1 col-lg-2">
-        <select name="tipo" id="tipo_consulta" class="form-select" (change)="visualizarExtratoAnualDeEntradasPorProduto()">
+    <!-- <div class="col-12 mt-1 col-lg-2">
+        <select name="tipo" id="tipo_consulta" class="form-select" (change)="visualizarExtratoAnualDeEntradasPorBeneficiamentoDoCliente()">
             <option value="">PRODUTO</option>
-            <option value="" selected>BENEFICIAMENTO</option>
+            <option value="">BENEFICIAMENTO</option>
         </select>
-    </div>
-    <div class="col-12 col-lg-6 mt-1">
+    </div> -->
+    <div class="col-12 col-lg-8 mt-1">
         <input type="text" class="form-control upper-case" placeholder="Digite o nome do produto para filtrar"
-            [(ngModel)]="nomeBeneficiamento" (keyup)="filtrarDadosPorProduto()">
+            [(ngModel)]="nomeProduto" (keyup)="filtrarDadosPorProduto()">
     </div>
     <div class="col-12 col-lg-2 mt-1">
         <button class="btn btn-primary form-control" tabindex="" (click)="alterarModoDeVisualizacao()">Visualizar
@@ -28,7 +29,7 @@
 </div>
 
 <!-- COMPONENTE DE CARREGAMENTO -->
-<div class=" d-flex justify-content-center">
+<div class=" d-flex justify-content-center ">
     <div class="center" *ngIf="this.dados.length == 0">
         <app-loading></app-loading>
     </div>
@@ -49,12 +50,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="c-pointer" (click)="visualizarProdutosDoBeneficiamento(beneficiamento.cdBeneficiamento)" *ngFor="let beneficiamento of dadosFiltro | paginate:{itemsPerPage:itensPagina ,currentPage:pagina,id:'extrato-entrada'} let i = index">
-                    <td class=" text-truncate" style="max-width: 300px;">{{beneficiamento.nomeBeneficiamento}}</td>
-                    <td class="{{valorClass(mes.valor)}}" [ngClass]="visualizaValor" *ngFor="let mes of beneficiamento.meses">{{mes.valor | currency: 'BRL'}}</td>
-                    <td class="{{valorClass(mes.quantidade)}}" [ngClass]="visualizarQtde" *ngFor="let mes of beneficiamento.meses">{{mes.quantidade | number}}</td>
-                    <td [ngClass]="visualizarQtde" class="bold">{{beneficiamento.totalQtd | number}}</td>
-                    <td [ngClass]="visualizaValor" class="bold">{{beneficiamento.totalValor | currency: 'BRL'}}</td>
+                <tr class="c-pointer"
+                    *ngFor="let produto of dadosFiltro | paginate:{itemsPerPage:itensPagina ,currentPage:pagina,id:'extrato-entrada'} let i = index" (click)="exibirDetalhesDoProduto(produto.cdProduto)">
+                    <td class=" text-truncate" style="max-width: 300px;">{{produto.nomeProduto}}</td>
+                    <td class="{{valorClass(mes.valor)}}" [ngClass]="visualizaValor" *ngFor="let mes of produto.meses">{{mes.valor | currency: 'BRL'}}</td>
+                    <td class="{{valorClass(mes.quantidade)}}" [ngClass]="visualizarQtde" *ngFor="let mes of produto.meses">{{mes.quantidade | number}}</td>
+                    <td [ngClass]="visualizarQtde" class="bold">{{produto.totalQtd | number}}</td>
+                    <td [ngClass]="visualizaValor" class="bold">{{produto.totalValor | currency: 'BRL'}}</td>
                 </tr>
             </tbody>
             <tfoot>

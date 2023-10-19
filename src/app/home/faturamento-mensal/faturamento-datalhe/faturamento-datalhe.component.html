@@ -15,7 +15,6 @@
                   <i class="fas fa-search"></i>
                 </button>
             </div>
-            <!-- TABELA DE CLIENTES SEM FILTRO -->
             <div class="table" >
                 <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortCliente($event)">
                     <thead>
@@ -62,7 +61,6 @@
                     </button>
                 </div>
             </div>
-            <!-- TABELA CLIENTE SEM FILTRO -->
             <div class="table">
                 <table class="table table-sm table-hover table-striped" matSort
                     (matSortChange)="sortBeneficiamento($event)">
@@ -113,34 +111,7 @@
                     </button>
                 </div>
             </div>
-            <!-- TABELA DE PRODUTOS SEM FILTRO -->
-            <div class="table" *ngIf="produtosFiltro.length == 0">
-                <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortProduto($event)">
-                    <thead>
-                        <tr>
-                            <th scope="col" mat-sort-header="nomeProduto">Produto</th>
-                            <th scope="col" class="text-end">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="c-pointer"
-                            *ngFor="let produto of produtos | paginate:{itemsPerPage:itensPagina,currentPage:paginaProduto,id:'tblFatProduto'}let i = index"
-                            (click)="openDetalhesProduto(produto)">
-                            <td class="text-truncate" style="max-width: 220px;">{{produto.nomeProduto}}</td>
-                            <td class="text-end">{{produto.valor | currency: 'BRL'}}</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>Total</td>
-                            <td class="text-end">{{totalProdutos | currency : 'BRL'}}</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
-            <!-- TABELA DE PRODUTOS COM FILTRO -->
-            <div class="table"  *ngIf="produtosFiltro.length != 0">
+            <div class="table" >
                 <table class="table table-sm table-hover table-striped" matSort (matSortChange)="sortProduto($event)">
                     <thead>
                         <tr>
@@ -164,6 +135,7 @@
                     </tfoot>
                 </table>
             </div>
+
             <div class="row" *ngIf="produtosFiltro.length == 0">
                 <pagination-controls class="col-11" id="tblFatProduto" (pageChange)="paginaProduto =$event" nextLabel=""
                     previousLabel="" [maxSize]="5"></pagination-controls>

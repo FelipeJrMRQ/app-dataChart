@@ -31,10 +31,10 @@ export class EntradaService {
     return this.http.post<any>(`${this.urlApi}/beneficiamentos`, modeloConsulta);
   }
 
-  public consultaEntradaDeClientePorBeneficiamento(modeloConsulta: ModeloConsulta):Observable<any>{
-    return this.http.post<any>(`${this.urlApi}/cliente-beneficiamento`,modeloConsulta);
+  public consultaEntradaDeClientePorBeneficiamento(modeloConsulta: ModeloConsulta): Observable<any> {
+    return this.http.post<any>(`${this.urlApi}/cliente-beneficiamento`, modeloConsulta);
   }
-  
+
   public consultaEntradasPorBeneficiamentoCliente(modeloConsulta: ModeloConsulta): Observable<any> {
     return this.http.post<any>(`${this.urlApi}/beneficiamentos-cliente`, modeloConsulta);
   }
@@ -43,23 +43,27 @@ export class EntradaService {
     return this.http.post<any>(`${this.urlApi}/produtos`, modeloConsulta);
   }
 
-  public consultarEntradasPorPeriodo(modeloConsulta : ModeloConsulta): Observable<any>{
-    return this.http.post<ModeloConsulta>(`${this.urlApi}/entradas`,modeloConsulta);
+  public consultarEntradasPorPeriodo(modeloConsulta: ModeloConsulta): Observable<any> {
+    return this.http.post<ModeloConsulta>(`${this.urlApi}/entradas`, modeloConsulta);
   }
 
-  public consultaEntradasPorBeneficiamentoECliente(cdBeneficiamento: any, cdCliente:any, data: any){
+  public consultaEntradasPorBeneficiamentoECliente(cdBeneficiamento: any, cdCliente: any, data: any) {
     return this.http.post<any>(`${this.urlApi}/entradas-beneficiamento-cliente/${cdBeneficiamento}/${cdCliente}/${data}`, null);
   }
 
-  public isUpdateEntradas():Observable<any>{
+  public isUpdateEntradas(): Observable<any> {
     return this.http.get<any>(`${this.urlApi2}/entrada`);
   }
 
-  public consultaExtratoAnualDeEntradasPorProdutoDoCliente(dataInicial: any, dataFinal: any, cdCliente:any):Observable<any>{
-      return this.http.get<any>(`${this.urlApi}/extrato-anual-entrada-produto/${dataInicial}/${dataFinal}/${cdCliente}`);
+  public consultaExtratoAnualDeEntradasPorProdutoDoCliente(dataInicial: any, dataFinal: any, cdCliente: any): Observable<any> {
+    return this.http.get<any>(`${this.urlApi}/extrato-anual-entrada-produto/${dataInicial}/${dataFinal}/${cdCliente}`);
   }
 
-  public consultaExtratoAnualDeEntradasPorBeneficiamentoDoCliente(dataInicial: any, dataFinal: any, cdCliente:any):Observable<any>{
+  public consultaExtratoAnualDeEntradasPorBeneficiamentoDoCliente(dataInicial: any, dataFinal: any, cdCliente: any): Observable<any> {
     return this.http.get<any>(`${this.urlApi}/extrato-anual-entrada-beneficiamento/${dataInicial}/${dataFinal}/${cdCliente}`);
-}
+  }
+
+  public consultaExtratoAnualDeEntradasPorProdutoDoBeneficiamento(dataInicial: any, dataFinal: any, cdCliente: any, cdBeneficiamento: any): Observable<any> {
+    return this.http.get<any>(`${this.urlApi}/extrato-anual-entrada-beneficiamento-produto/${dataInicial}/${dataFinal}/${cdCliente}/${cdBeneficiamento}`);
+  }
 }
