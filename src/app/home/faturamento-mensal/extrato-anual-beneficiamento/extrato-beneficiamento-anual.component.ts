@@ -42,6 +42,8 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
   pagina: any = 1;
   itensPagina: any = 20;
   totaisMes: any = [];
+  valorA: any = 0;
+  valorB: any = 0;
 
   constructor(
     private router: Router,
@@ -83,11 +85,11 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
     });
   }
 
-  public visualizarExtratoAnualDeFaturamentoPorProduto(){
+  public visualizarExtratoAnualDeFaturamentoPorProduto() {
     this.router.navigate([`faturamento-extrato-anual/cliente/${this.dataRecebida}/${this.cdCliente}/${this.nomeCliente}`])
   }
 
-  public  consultarExtratoAnualDeFaturamentoPorBeneficiamentoDoCliente(){
+  public consultarExtratoAnualDeFaturamentoPorBeneficiamentoDoCliente() {
     let dataInicial = moment(moment(this.dateService.getInicioDoMes(this.dataRecebida)).subtract(11, 'months')).format('yyyy-MM-DD');
     this.faturamentoService.consultaExtratoAnualDeFaturamentoPorBeneficiamentoDoCliente(
       this.modeloConsulta.getInstance(dataInicial, this.dataRecebida, '', '', this.cdCliente)
@@ -132,22 +134,22 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
 
   private prepararDadosParaExibicao() {
     this.extrato.forEach(e => {
-        let dataTemp = {
-          'cdBeneficiamento': e.cdBeneficiamento,
-          'nomeBeneficiamento': e.nomeBeneficiamento,
-          'totalQtd': 0,
-          'totalValor': 0,
-          'meses': [...this.meses.map((mes: any) => ({ ...mes }))]
-        }
-        if (!this.dados.some((dt: any) => dt.nomeBeneficiamento == e.nomeBeneficiamento)) {
-          this.dados.push(dataTemp);
-        }      
+      let dataTemp = {
+        'cdBeneficiamento': e.cdBeneficiamento,
+        'nomeBeneficiamento': e.nomeBeneficiamento,
+        'totalQtd': 0,
+        'totalValor': 0,
+        'meses': [...this.meses.map((mes: any) => ({ ...mes }))]
+      }
+      if (!this.dados.some((dt: any) => dt.nomeBeneficiamento == e.nomeBeneficiamento)) {
+        this.dados.push(dataTemp);
+      }
     });
     this.preencherValoresDosMeses();
   }
 
-  public visualizarProdutosDoBeneficiamento(cdBeneficamento: any){
-      this.router.navigate([`faturamento-extrato-anual-beneficiamento/produto/${this.dataRecebida}/${this.cdCliente}/${this.nomeCliente}/${cdBeneficamento}`])
+  public visualizarProdutosDoBeneficiamento(cdBeneficamento: any) {
+    this.router.navigate([`faturamento-extrato-anual-beneficiamento/produto/${this.dataRecebida}/${this.cdCliente}/${this.nomeCliente}/${cdBeneficamento}`])
   }
 
   private preencherValoresDosMeses() {
@@ -224,17 +226,41 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
     this.alternarOrdem();
   }
 
-  public ordenarPorValoresMes(coluna: string) {
+  /**
+   * Com base no nome da coluna e o tipo de consulta sendo ela por valor ou quantidade
+   * este método fara uma cosulta dos valores de A e B para efeito de comparacao no
+   * modelo de ordenacao
+   * @param a 
+   * @param b 
+   * @param nomeColuna 
+   */
+  private consultaValorParaOrdenacao(a:any, b:any, nomeColuna: any){
+    if (this.nomeBtn == 'quantidade') {
+      this.valorA = a.meses.find((vm: any) => vm.mesAno === nomeColuna)?.valor || 0;
+      this.valorB = b.meses.find((vm: any) => vm.mesAno === nomeColuna)?.valor || 0;
+    } else {
+      this.valorA = a.meses.find((vm: any) => vm.mesAno === nomeColuna)?.quantidade || 0;
+      this.valorB = b.meses.find((vm: any) => vm.mesAno === nomeColuna)?.quantidade || 0;
+    }
+  }
+  
+  /**
+   * Realiza a definição de sentido da ordenacao sendo ela ASC ou DESC
+   * conforme solicitado pelo usuário
+   * @returns 
+   */
+  private defineSentidoOrdenacao(){
+    if (this.ordenacaoAscendente) {
+      return this.valorA - this.valorB;
+    } else {
+      return this.valorB - this.valorA;
+    }
+  }
+  
+  public ordenar(nomeColuna: string) {
     this.dadosFiltro.sort((a: any, b: any) => {
-      const valorA = a.meses.find((vm: any) => vm.mesAno === coluna)?.quantidade || 0;
-      const valorB = b.meses.find((vm: any) => vm.mesAno === coluna)?.quantidade || 0;
-      let resultado = 0;
-      if (this.ordenacaoAscendente) {
-        resultado = valorA - valorB;
-      } else {
-        resultado = valorB - valorA;
-      }
-      return resultado;
+      this.consultaValorParaOrdenacao(a, b, nomeColuna);
+      return this.defineSentidoOrdenacao(); 
     });
     this.alternarOrdem();
   }

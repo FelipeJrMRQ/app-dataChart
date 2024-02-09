@@ -6,7 +6,10 @@
     </header>
     <div class="row">
         <div class="col-12 col-lg-6 alinhamento">
-            <div class="text-center mb-2 ">
+            <div class="text-center mb-2 " *ngIf="!urlImagem">
+                <app-loading ></app-loading >
+            </div>
+            <div class="text-center mb-2 " *ngIf="urlImagem">
                 <a [href]="urlImagem" target="_blank" rel="noopener noreferrer">
                     <img [src]="urlImagem" alt="Imagem não encontrada" class="image-size">
                 </a>

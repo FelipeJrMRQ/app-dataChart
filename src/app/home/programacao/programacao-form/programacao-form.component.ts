@@ -63,7 +63,7 @@ export class ProgramacaoFormComponent implements OnInit {
   processo1: any;
   processo2: any;
   observacao: any;
-  prioridade:any;
+  prioridade: any;
   cdBeneficiamento: number | undefined;
   btnSetup: any = 'Habilitar';
   setupClass: any = 'col-lg-2';
@@ -97,6 +97,20 @@ export class ProgramacaoFormComponent implements OnInit {
     this.consultarLinhasDeProducao();
     this.consultarTurnoDeTrabalho();
     this.resgistrarLog();
+  }
+
+  public calculaDiasNaCasa(dataEntrada: any) {
+    let hoje = moment();
+    let dataEntradaMoment = moment(dataEntrada);
+    let diasTotais = hoje.diff(dataEntradaMoment, 'days');
+    let diasSemFimDeSemana = 0;
+    for (let dia = 0; dia <= diasTotais; dia++) {
+      const data = moment(dataEntradaMoment).add(dia, 'days');
+      if (data.day() !== 0 && data.day() !== 6) {
+        diasSemFimDeSemana++;
+      }
+    }
+    return diasSemFimDeSemana;
   }
 
   private resgistrarLog() {
@@ -141,7 +155,7 @@ export class ProgramacaoFormComponent implements OnInit {
     this.itemNaoRetornadoService.consultarItensNaoRetornados().subscribe({
       next: (res) => {
         this.itens = res;
-        
+
       },
       error: (e) => {
         console.log(e);
@@ -175,10 +189,10 @@ export class ProgramacaoFormComponent implements OnInit {
     this.itens.forEach(item => {
       this.itensProgramados.forEach(res => {
         if (res.cdEntrada == item.cdEntrada && item.item == res.item) {
-          if(res.qtdeProgramada == item.saldoRetorno){
+          if (res.qtdeProgramada == item.saldoRetorno) {
             item.saldoRetorno = 0;
             item.programado = true;
-          }else{
+          } else {
             item.saldoRetorno! -= res.qtdeProgramada!;
             item.qtdeProgramada = res.qtdeProgramada
             item.programado = false;
@@ -243,8 +257,6 @@ export class ProgramacaoFormComponent implements OnInit {
     this.consultarItensNaoRetornados();
     this.openSnackBar("Itens programados com sucesso!", this.snackBarSucesso);
   }
-
-
 
   public selecionarTodas() {
     this.itensFiltro.forEach(item => {
@@ -342,7 +354,6 @@ export class ProgramacaoFormComponent implements OnInit {
         this.itensFiltro = []
       }
     });
-
   }
 
 

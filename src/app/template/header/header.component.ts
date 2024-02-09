@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit {
   usuario: Usuario;
   notificacao: any[];
   foto: Blob;
-  urlFoto: any;
+  urlFoto: any = 'assets/avatar.png';
   teste: any;
   public toolTip = [];
 
@@ -58,46 +58,45 @@ export class HeaderComponent implements OnInit {
     }
     UsuarioService.usuarioAutenticado.subscribe((res) => {
       this.usuario = res;
-      this.obterImagemDoPerfil();
     });
     LoginService.informarLogout.subscribe((res) => {
       this.usuario = new Usuario();
     });
   }
 
-  private obterImagemDoPerfil(){
-    this.usuarioService.obterFotoDePerfil(sessionStorage.getItem('user')).subscribe({
-      next:(res)=>{
-        this.foto = res;
-        this.urlFoto = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.foto));
-      },
-      error:(e)=>{
-        this.urlFoto = 'assets/avatar.png';
-      }
-    });
-  }
+  // private obterImagemDoPerfil(){
+  //   this.usuarioService.obterFotoDePerfil(sessionStorage.getItem('user')).subscribe({
+  //     next:(res)=>{
+  //       this.foto = res;
+  //       this.urlFoto = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.foto));
+  //     },
+  //     error:(e)=>{
+  //       this.urlFoto = 'assets/avatar.png';
+  //     }
+  //   });
+  // }
 
-  public alterarImagemPerfil(event: any) {
-    let imagemPerfil: File = event.target.files[0];
-    let tipoArquivo = [];
-    tipoArquivo = imagemPerfil.type.split('/');
-    if(tipoArquivo[0]=== 'image'){
-      let email: any = sessionStorage.getItem('user')?.toString();
-      let novoArquivo = new File([imagemPerfil], `${email}.${tipoArquivo[1]}`,{ type: imagemPerfil.type } )
-      let formData = new FormData();
-      formData.append('image', novoArquivo);
-      this.usuarioService.enviarFotoPerfil(formData, email).subscribe({  
-          next:(res)=>{
-            this.controleExibicaoService.registrarLog('ALTEROU A IMAGEM DE PERFIL', '');
-          },
-          complete:()=>{
-            this.obterImagemDoPerfil();
-          }
-        });
-    }else{
-      console.log('Erro');
-    }
-  }
+  // public alterarImagemPerfil(event: any) {
+  //   let imagemPerfil: File = event.target.files[0];
+  //   let tipoArquivo = [];
+  //   tipoArquivo = imagemPerfil.type.split('/');
+  //   if(tipoArquivo[0]=== 'image'){
+  //     let email: any = sessionStorage.getItem('user')?.toString();
+  //     let novoArquivo = new File([imagemPerfil], `${email}.${tipoArquivo[1]}`,{ type: imagemPerfil.type } )
+  //     let formData = new FormData();
+  //     formData.append('image', novoArquivo);
+  //     this.usuarioService.enviarFotoPerfil(formData, email).subscribe({  
+  //         next:(res)=>{
+  //           this.controleExibicaoService.registrarLog('ALTEROU A IMAGEM DE PERFIL', '');
+  //         },
+  //         complete:()=>{
+  //           //this.obterImagemDoPerfil();
+  //         }
+  //       });
+  //   }else{
+  //     console.log('Erro');
+  //   }
+  // }
 
   public exibirCabecalhoSeAutenticado(): boolean {
     if (this.usuario.nome != undefined) {

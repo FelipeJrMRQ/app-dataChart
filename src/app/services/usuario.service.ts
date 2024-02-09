@@ -27,13 +27,13 @@ export class UsuarioService {
   public cadastrarUsuario(usuario: Usuario): Observable<any> {
     return this.http.post(`${this.urlApi}/${sessionStorage.getItem('user')}`, usuario);
   }
-  public enviarFotoPerfil(imagem:any, email: any):Observable<any>{
-    return this.http.post(`${this.urlApi}/upload-imagem-pefil/${email}`,imagem);
-  }
+  // public enviarFotoPerfil(imagem:any, email: any):Observable<any>{
+  //   return this.http.post(`${this.urlApi}/upload-imagem-pefil/${email}`,imagem);
+  // }
 
-  public obterFotoDePerfil(email: any):Observable<Blob>{
-    return this.http.get(`${this.urlApi}/imagem-perfil/${email}`, {responseType: 'blob'});
-  }
+  // public obterFotoDePerfil(email: any):Observable<Blob>{
+  //   return this.http.get(`${this.urlApi}/imagem-perfil/${email}`, {responseType: 'blob'});
+  // }
 
   public alterarUsuario(usuario: Usuario): Observable<any> {
     return this.http.put(`${this.urlApi}`, usuario);

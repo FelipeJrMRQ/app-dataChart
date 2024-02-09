@@ -23,12 +23,12 @@ canvas {
     font-weight: bold;
 }
 
-@media screen and (max-width:1320px) {
+/* @media screen and (max-width:1320px) {
     canvas{
         max-width: 92%;
         max-height: 20vh;
     }
-}
+} */
 
 @media screen and (max-width:1040px) {
     canvas{

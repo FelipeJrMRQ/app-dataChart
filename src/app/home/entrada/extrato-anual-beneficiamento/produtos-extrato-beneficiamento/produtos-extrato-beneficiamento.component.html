@@ -1,6 +1,6 @@
 <header>
     <div class="bgCor card-label d-flex between align-middle">
-        <label class="color-text bold">EXTRATO ANUAL DE FATURAMENTO POR PRODUTO</label>
+        <label class="color-text bold">EXTRATO ANUAL DE ENTRADAS POR PRODUTO</label>
     </div>
 </header>
 <div class="text-center mt-3">
@@ -41,7 +41,7 @@
             <thead>
                 <tr>
                     <th>Produto</th>
-                    <th class="c-pointer" (click)="ordenarPorValoresMes(mesAno)" *ngFor="let mesAno of colunasTabela">{{mesAno}}
+                    <th class="c-pointer" (click)="ordenar(mesAno)" *ngFor="let mesAno of colunasTabela">{{mesAno}}
                         <i class="ms-2 fas fa-sort"></i>
                     </th>
                     <th class="c-pointer" (click)="ordenarPorTotais()">Total

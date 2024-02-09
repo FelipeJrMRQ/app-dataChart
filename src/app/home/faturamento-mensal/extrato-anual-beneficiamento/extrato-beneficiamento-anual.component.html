@@ -40,7 +40,7 @@
             <thead>
                 <tr>
                     <th>BENEFICIAMENTO</th>
-                    <th class="c-pointer" (click)="ordenarPorValoresMes(mesAno)" *ngFor="let mesAno of colunasTabela">{{mesAno}}
+                    <th class="c-pointer" (click)="ordenar(mesAno)" *ngFor="let mesAno of colunasTabela">{{mesAno}}
                         <i class="ms-2 fas fa-sort"></i>
                     </th>
                     <th class="c-pointer" (click)="ordenarPorTotais()">Total

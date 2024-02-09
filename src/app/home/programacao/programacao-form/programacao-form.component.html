@@ -31,7 +31,7 @@
         </div>
     </div>
 </div>
-<div class="row mb-4" *ngIf="itensFiltro.length <= 0 && itens.length >0">
+<div class="row mb-4">
     <div class="col-12 col-lg-2" [ngClass]="setupClass">
         <label class="form-label">Data</label>
         <input type="date" class="form-control form-control-sm  upper-case" [(ngModel)]="dataProgramacao">
@@ -89,6 +89,7 @@
                 <tr>
                     <th scope="col" class="color-text" mat-sort-header="programados">PG</th>
                     <th scope="col" class="color-text" mat-sort-header="data">ENTRADA</th>
+                    <th scope="col" class="color-text text-center" mat-sort-header="dias">DIAS</th>
                     <th scope="col" class="color-text nao-imprime" mat-sort-header="nf">NF</th>
                     <th scope="col" class="color-text" mat-sort-header="entrada">CONTROLE</th>
                     <th scope="col" class="color-text nao-imprime" mat-sort-header="item">ITEM</th>
@@ -105,6 +106,7 @@
                     *ngFor="let item of itens | paginate:{itemsPerPage:itensPagina,currentPage:pagina,id:'itensNaoRetornados'} let i index">
                     <td class="text-success"><i class="fas fa-check" *ngIf="item.programado"></i></td>
                     <td (click)="iniciarProgramacao(item)">{{item.dataEntrada | date : 'dd/MM/yyyy'}} {{item.hora}}</td>
+                    <td class="text-center" [ngClass]="{'color-red' : calculaDiasNaCasa(item.dataEntrada)>5}">{{calculaDiasNaCasa(item.dataEntrada)}}</td>
                     <td class="nao-imprime" (click)="iniciarProgramacao(item)">{{item.nf}}</td>
                     <td class="" (click)="iniciarProgramacao(item)">{{item.cdEntrada}}</td>
                     <td class="nao-imprime" (click)="iniciarProgramacao(item)">{{item.item}}</td>

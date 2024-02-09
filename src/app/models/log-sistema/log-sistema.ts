@@ -1,11 +1,13 @@
+import * as moment from "moment";
 import { Usuario } from "../usuario";
+import "moment-timezone";
 
 
 export class LogSistema{
     id: number ;
     descricao: string;
     tela: string;
-    data: Date = new Date();
+    data: any;
     usuario: Usuario;
 
     constructor(id: any, descricao: string, usuario: Usuario, tela: string){
@@ -13,5 +15,6 @@ export class LogSistema{
         this.usuario = usuario;
         this.descricao = descricao;
         this.tela = tela;
+        this.data = moment(this.data).tz('America/Sao_Paulo').toDate();
     }
 }

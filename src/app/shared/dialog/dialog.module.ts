@@ -11,6 +11,7 @@ import { DlgExclusaoComponent } from './dlg-exclusao/dlg-exclusao.component';
 import { DlgLoadingComponent } from './dlg-loading/dlg-loading.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NotificacaoComponent } from './notificacao/notificacao.component';
+import { LoadingPageModule } from '../loading-page/loading-page.module';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { NotificacaoComponent } from './notificacao/notificacao.component';
     ReactiveFormsModule,
     MatSnackBarModule,
     MatProgressBarModule,
+    LoadingPageModule
   ]
 })
 export class DialogModule { }

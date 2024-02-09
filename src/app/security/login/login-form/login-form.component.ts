@@ -37,7 +37,7 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {
       
-  }
+  } 
 
   public fazerLogin() {
     let token = "";
