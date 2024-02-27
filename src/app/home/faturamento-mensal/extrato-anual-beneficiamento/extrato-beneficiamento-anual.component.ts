@@ -44,6 +44,8 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
   totaisMes: any = [];
   valorA: any = 0;
   valorB: any = 0;
+  totalA: any = 0;
+  totalB: any = 0;
 
   constructor(
     private router: Router,
@@ -213,17 +215,22 @@ export class ExtratoBeneficiamentoAnualComponent implements OnInit {
 
   public ordenarPorTotais() {
     this.dadosFiltro.sort((a: any, b: any) => {
-      const valorA = a.totalQtd || 0;
-      const valorB = b.totalQtd || 0;
-      let resultado = 0;
-      if (this.ordenacaoAscendente) {
-        resultado = valorA - valorB;
-      } else {
-        resultado = valorB - valorA;
+      if(this.nomeBtn == 'valor'){
+       this.totalA = a.totalQtd || 0;
+       this.totalB = b.totalQtd || 0;
+      }else{
+       this.totalA = a.totalValor || 0;
+       this.totalB = b.totalValor || 0;
       }
-      return resultado;
-    });
-    this.alternarOrdem();
+       let resultado = 0;
+       if (this.ordenacaoAscendente) {
+         resultado = this.totalA - this.totalB;
+       } else {
+         resultado =this.totalB - this.totalA;
+       }
+       return resultado;
+     });
+     this.alternarOrdem();
   }
 
   /**

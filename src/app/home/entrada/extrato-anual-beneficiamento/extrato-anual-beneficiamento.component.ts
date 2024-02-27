@@ -44,6 +44,8 @@ export class ExtratoAnualBeneficiamentoComponent implements OnInit {
   extrato: ExtratoBeneficiamento[] = [];
   private nomeTela: string  = "entrada-extrato-anual";
   valorA: any = 0;
+  totalA: any = 0;
+  totalB: any = 0;
   valorB: any = 0;
 
 
@@ -188,14 +190,20 @@ export class ExtratoAnualBeneficiamentoComponent implements OnInit {
   }
 
   public ordenarPorTotais() {
+    console.log(this.dadosFiltro)
     this.dadosFiltro.sort((a: any, b: any) => {
-      const valorA = a.totalQtd || 0;
-      const valorB = b.totalQtd || 0;
+     if(this.nomeBtn == 'valor'){
+      this.totalA = a.totalQtd || 0;
+      this.totalB = b.totalQtd || 0;
+     }else{
+      this.totalA = a.totalValor || 0;
+      this.totalB = b.totalValor || 0;
+     }
       let resultado = 0;
       if (this.ordenacaoAscendente) {
-        resultado = valorA - valorB;
+        resultado = this.totalA - this.totalB;
       } else {
-        resultado = valorB - valorA;
+        resultado =this.totalB - this.totalA;
       }
       return resultado;
     });
