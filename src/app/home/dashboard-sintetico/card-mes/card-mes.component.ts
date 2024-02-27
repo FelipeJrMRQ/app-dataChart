@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import * as bootstrap from 'bootstrap';
 import { ModeloConsulta } from 'src/app/models/modelo-consulta';
 import { ParametrosMeta } from 'src/app/models/parametros-meta';
 import { FaturamentoService } from 'src/app/services/faturamento.service';
@@ -15,7 +16,7 @@ import { FaturamentoMensalService } from 'src/app/services/faturamento-mensal.se
   templateUrl: './card-mes.component.html',
   styleUrls: ['./card-mes.component.css']
 })
-export class CardMesComponent implements OnInit {
+export class CardMesComponent implements OnInit, OnDestroy, AfterViewInit {
   arrowGap: string;
   valorFaturamento: number = 0;
   valorFaturamendoAno: number = 0;
@@ -30,6 +31,8 @@ export class CardMesComponent implements OnInit {
   percentualFaturamento: any = 0;
   colorTextGapDia: any = 'text-danger';
   private nomeTela = "dashboard-sintetico";
+  private toolTipElements: Element[] = [];
+  private tooltips: bootstrap.Tooltip[] = [];
 
   constructor(
     private faturamentoService: FaturamentoMensalService,
@@ -37,6 +40,7 @@ export class CardMesComponent implements OnInit {
     private parametrosService: ParametrosMetaService,
     private router: Router,
     private controleDeExibicaoService: ControleExibicaoService,
+    private el: ElementRef
   ) {
     this.arrowGap = "text-danger fa-angle-double-down";
     this.modeloDeConsulta = new ModeloConsulta();
@@ -47,6 +51,25 @@ export class CardMesComponent implements OnInit {
     this.receberDataDeConsulta();
     this.verificaPermissaoDeAcesso();
   }
+
+  ngAfterViewInit() {
+    // Selecione os elementos com o atributo data-bs-toggle="tooltip"
+    this.toolTipElements = [].slice.call(this.el.nativeElement.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+    // Inicialize os tooltips
+    this.tooltips = this.toolTipElements.map((tooltipTriggerEl: Element) => {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }
+
+  ngOnDestroy(): void{
+    // Destrua os tooltips ao sair da página
+    this.tooltips.forEach(tooltip => {
+     if (tooltip && typeof tooltip.dispose === 'function') {
+       tooltip.dispose();
+     }
+    });
+   }
 
   private verificaPermissaoDeAcesso() {
     forkJoin({

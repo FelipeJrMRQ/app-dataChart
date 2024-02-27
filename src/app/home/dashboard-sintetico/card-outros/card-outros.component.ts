@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import * as bootstrap from 'bootstrap';
 import { CarteiraCliente } from 'src/app/models/carteira/carteira-cliente';
 import { ModeloConsulta } from 'src/app/models/modelo-consulta';
 import { ClienteService } from 'src/app/services/cliente.service';
@@ -15,7 +16,7 @@ import { ControleExibicaoService } from 'src/app/services/permissoes-componentes
   templateUrl: './card-outros.component.html',
   styleUrls: ['./card-outros.component.css']
 })
-export class CardOutrosComponent implements OnInit {
+export class CardOutrosComponent implements OnInit, OnDestroy, AfterViewInit {
 
   valorEmCarteira: any = 0;
   valorEntradasDoDia: any = 0;
@@ -27,6 +28,9 @@ export class CardOutrosComponent implements OnInit {
   exibirValorEntradas: boolean = false;
   exibirValorMetaProjetada: boolean = false;
   private nomeTela = "dashboard-sintetico";
+  private toolTipElements: Element[] = [];
+  private tooltips: bootstrap.Tooltip[] = [];
+
 
   constructor(
     private metaProjetadaService: MetaProjetadaService,
@@ -34,6 +38,7 @@ export class CardOutrosComponent implements OnInit {
     private entradaService: EntradaService,
     private router: Router,
     private controleExibicaoService: ControleExibicaoService,
+    private el: ElementRef
   ) {
     this.modeloDeConsulta = new ModeloConsulta();
   }
@@ -41,6 +46,25 @@ export class CardOutrosComponent implements OnInit {
   ngOnInit(): void {
     this.receberDataEscolhida();
     this.verificaPermissoesDeAcesso();
+  }
+
+  ngAfterViewInit() {
+    // Selecione os elementos com o atributo data-bs-toggle="tooltip"
+    this.toolTipElements = [].slice.call(this.el.nativeElement.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+    // Inicialize os tooltips
+    this.tooltips = this.toolTipElements.map((tooltipTriggerEl: Element) => {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }
+
+  ngOnDestroy(): void{
+   // Destrua os tooltips ao sair da página
+   this.tooltips.forEach(tooltip => {
+    if (tooltip && typeof tooltip.dispose === 'function') {
+      tooltip.dispose();
+    }
+   });
   }
 
   private verificaPermissoesDeAcesso() {

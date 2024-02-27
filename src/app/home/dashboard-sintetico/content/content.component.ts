@@ -5,7 +5,7 @@ import { FaturamentoService } from 'src/app/services/faturamento.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import * as bootstrap from 'bootstrap';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { NotificacaoComponent } from 'src/app/shared/dialog/notificacao/notificacao.component';
 import { Usuario } from 'src/app/models/usuario';
 import { UsuarioDTO } from 'src/app/models/usuario-dto';

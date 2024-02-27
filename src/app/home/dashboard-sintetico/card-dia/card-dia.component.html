@@ -2,7 +2,7 @@
     <header class="header-cartao text-center align-middle">
         <label class="text-white bold">Faturamento do dia</label>
     </header>
-    <div class="position-chart mb-3 mt-2 c-pointer " (click)="visualizarDetalhesFaturamentoDoDia()">
+    <div class="position-chart mb-3 mt-2 c-pointer " (click)="visualizarDetalhesFaturamentoDoDia()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clique para visualizar mais detalhes.">
         <div class="fat-percent">
             <label>{{percentualFaturamento | number : '1.0-1'}}%</label>
         </div>
@@ -26,7 +26,7 @@
         </div>
     </section>
     <section class="m-2">
-        <div class="row">
+        <div class="row" data-bs-toggle="tooltip" data-bs-placement="top" title="Meta diária cálculada automaticamente com base na meta do mês e o faturamento já realizado.">
             <div class="col-6">
                 <label class="d-block bold">Meta do dia</label>
             </div>

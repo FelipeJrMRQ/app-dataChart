@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Renderer2 } from '@angular/core';
 import * as moment from 'moment';
 import { EntradaDiaria } from 'src/app/models/entrada/entrada-diaria';
 import { FaturamentoDiario } from 'src/app/models/faturamento/faturamento-diario';
@@ -11,6 +11,7 @@ import { ControleExibicaoService } from 'src/app/services/permissoes-componentes
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 import { forkJoin } from 'rxjs';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-card-media',
@@ -40,6 +41,7 @@ export class CardMediaComponent implements OnInit {
   exibirMediaFatComSabado: boolean = false;
   exibirMediaFatSemSabado: boolean = false;
   private nomeTela = "dashboard-sintetico";
+  public toolTip = [];
 
   constructor(
     private usuarioService: UsuarioService,
@@ -47,6 +49,7 @@ export class CardMediaComponent implements OnInit {
     private faturamentoService: FaturamentoService,
     private dataService: DateControllerService,
     private controleExibicaoService: ControleExibicaoService,
+    private renderer: Renderer2,
   ) {
     this.modeloDeConsulta = new ModeloConsulta();
     this.usuario = new Usuario();
@@ -55,6 +58,10 @@ export class CardMediaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
+    var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
     this.dataRecebida = moment().format("yyyy-MM-DD");
     this.verificaPermissaoDeAcesso();
     this.receberDataEscolhida();

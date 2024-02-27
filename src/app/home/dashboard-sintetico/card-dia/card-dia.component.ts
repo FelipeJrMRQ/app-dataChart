@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import * as bootstrap from 'bootstrap';
 import { FaturamentoDiario } from 'src/app/models/faturamento/faturamento-diario';
 import { ModeloConsulta } from 'src/app/models/modelo-consulta';
 import { ParametrosMeta } from 'src/app/models/parametros-meta';
@@ -35,6 +36,8 @@ export class CardDiaComponent implements OnInit {
   usuario: Usuario;
   telasUsuario: TelaUsuario[];
   private nomeTela = "dashboard-sintetico";
+  private toolTipElements: Element[] = [];
+  private tooltips: bootstrap.Tooltip[] = [];
 
 
   // ###### Este componente pertence a tela dashboard-sintetico
@@ -46,6 +49,7 @@ export class CardDiaComponent implements OnInit {
     private metaDiariaService: MetaDiariaService,
     private controleDeExibicao: ControleExibicaoService,
     private router: Router,
+    private el: ElementRef
   ) {
     this.arrowGap = "text-danger fa-angle-double-down";
     this.modeloDeConsulta = new ModeloConsulta();
@@ -57,6 +61,25 @@ export class CardDiaComponent implements OnInit {
   ngOnInit(): void {
     this.receberDataEscolhida();
     this.verificaPermissaoDeAcesso();
+  }
+
+  ngAfterViewInit() {
+    // Selecione os elementos com o atributo data-bs-toggle="tooltip"
+    this.toolTipElements = [].slice.call(this.el.nativeElement.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+    // Inicialize os tooltips
+    this.tooltips = this.toolTipElements.map((tooltipTriggerEl: Element) => {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Destrua os tooltips ao sair da página
+    this.tooltips.forEach(tooltip => {
+      if (tooltip && typeof tooltip.dispose === 'function') {
+        tooltip.dispose();
+      }
+    });
   }
 
   private verificaPermissaoDeAcesso() {
@@ -148,11 +171,11 @@ export class CardDiaComponent implements OnInit {
   }
 
   private calcularPercentualDeFaturamentoDoDia() {
-   if(this.metaFaturamentoDoDia != 0){
-    this.percentualFaturamento = ((this.valorFaturamentoDia / this.metaFaturamentoDoDia) * 100);
-   }else{
-    this.percentualFaturamento = 100;
-   }
+    if (this.metaFaturamentoDoDia != 0) {
+      this.percentualFaturamento = ((this.valorFaturamentoDia / this.metaFaturamentoDoDia) * 100);
+    } else {
+      this.percentualFaturamento = 100;
+    }
     this.calculaPercentualGrafico();
   }
 
