@@ -17,7 +17,7 @@ export const environment = {
  * #   |   |   |
  * #   |   |   |-->  Indica a correção de bugs 
  * #   |   |
- * #   |   |--> Indica adição ou exclusao de novas funcionalidades
+ * #   |   |--> Indica adição ou exclusão de novas funcionalidades
  * #   |
  * #   |--> Indica alteração de tecnologia ou versao do angular
  * 

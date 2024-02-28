@@ -14,7 +14,6 @@ import { GraficoFaturamentoDiarioComponent } from './grafico-faturamento-diario/
 import { GraficoFaturamentoMensalComponent } from './grafico-faturamento-mensal/grafico-faturamento-mensal.component';
 import { GraficoComparativoAnualComponent } from './grafico-comparativo-anual/grafico-comparativo-anual.component';
 import { GraficoEntradasMesComponent } from './grafico-entradas-mes/grafico-entradas-mes.component';
-import { GraficoFaturamentoAnoAnteriorComponent } from './grafico-faturamento-ano-anterior/grafico-faturamento-ano-anterior.component';
 import { GraficoEvolucaoCarteiraComponent } from './grafico-evolucao-carteira/grafico-evolucao-carteira.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogModule } from 'src/app/shared/dialog/dialog.module';
@@ -25,6 +24,7 @@ import { GraficoItensNaoRetornadosComponent } from './grafico-movimentacao-produ
 import { CardMovimentacaoComponent } from './tbl-movimento-produtos/tbl-movimento-produtos.component';
 import { GraficoMovimentoMensalComponent } from './grafico-movimento-mensal/grafico-movimento-mensal.component';
 import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
+import { GraficoFaturamentoAcumuladoComponent } from './grafico-faturamento-acumulado/grafico-faturamento-acumulado.component';
 
 
 @NgModule({
@@ -40,7 +40,7 @@ import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.modu
     GraficoFaturamentoMensalComponent,
     GraficoComparativoAnualComponent,
     GraficoEntradasMesComponent,
-    GraficoFaturamentoAnoAnteriorComponent,
+    GraficoFaturamentoAcumuladoComponent,
     GraficoEvolucaoCarteiraComponent,
     GraficoNovosItensComponent,
     GraficoItensNaoRetornadosComponent,

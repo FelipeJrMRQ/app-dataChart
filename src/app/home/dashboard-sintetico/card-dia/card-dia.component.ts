@@ -61,6 +61,7 @@ export class CardDiaComponent implements OnInit {
   ngOnInit(): void {
     this.receberDataEscolhida();
     this.verificaPermissaoDeAcesso();
+
   }
 
   ngAfterViewInit() {
