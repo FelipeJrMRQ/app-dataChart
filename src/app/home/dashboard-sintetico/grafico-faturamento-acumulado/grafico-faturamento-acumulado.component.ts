@@ -25,7 +25,7 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
   valoresDosUltimosTresAnos: any = [];
   metaMes: any = [];
   arrowGap: any;
-  valoresDosUltimosTresAnos: any = [];
+  FaturamentoAcumuladoAnos: any[] = [];
   faturamentoDoAno: FaturamentoMensal[];
   faturamentoDoAnoPassado: FaturamentoMensal[];
   faturamentoDoAnoRetrasado: FaturamentoMensal[];
@@ -67,9 +67,9 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
   }
 
   private consultarFaturamentoDoAno() {
-    this.valorAcumuladoDoAno = [];
-    this.valorAcumuladoDoPassado = [];
-    this.valorAcumuladoDoRetrasado = []
+    this.faturamentoDoAno = [];
+    this.faturamentoDoAnoPassado = [];
+    this.faturamentoDoAnoRetrasado = []
     this.contadorAnos = 0;
     while (this.contadorAnos < 3) {
       let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(this.contadorAnos, 'year').format('yyyy-MM-DD'));
