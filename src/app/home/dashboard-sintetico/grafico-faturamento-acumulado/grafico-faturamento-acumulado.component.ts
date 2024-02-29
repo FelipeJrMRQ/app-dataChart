@@ -25,6 +25,7 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
   valoresDosUltimosTresAnos: any = [];
   metaMes: any = [];
   arrowGap: any;
+  valoresDosUltimosTresAnos: any = [];
   faturamentoDoAno: FaturamentoMensal[];
   faturamentoDoAnoPassado: FaturamentoMensal[];
   faturamentoDoAnoRetrasado: FaturamentoMensal[];
