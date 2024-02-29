@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BarController, Chart } from 'chart.js';
 import * as moment from 'moment';
-import { Observable, forkJoin } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { FaturamentoMensal } from 'src/app/models/faturamento/faturamento-mensal';
-import { ParametrosMeta } from 'src/app/models/parametros-meta';
 import { FaturamentoMensalService } from 'src/app/services/faturamento-mensal.service';
 import { FaturamentoService } from 'src/app/services/faturamento.service';
-import { ParametrosMetaService } from 'src/app/services/parametros-meta.service';
+
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 
@@ -22,28 +21,23 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
   public elementChart: any;
   public chartBarMonth: any;
 
-  valoresDosUltimosTresAnos: any = [];
+  fatuamentoDosUltimosAnos: FaturamentoMensal[] = [];
   metaMes: any = [];
   arrowGap: any;
-  faturamentoDoAno: FaturamentoMensal[];
-  faturamentoDoAnoPassado: FaturamentoMensal[];
-  faturamentoDoAnoRetrasado: FaturamentoMensal[];
   dataRecebida: any = moment().format('yyyy-MM-DD');
   private nomeTela = "dashboard-sintetico";
   valorAcumuladoDoAno: any = [];
-  valorAcumuladoDoPassado: any = [];
-  valorAcumuladoDoRetrasado: any = [];
+  valorAcumuladoDoAnoPassado: any = [];
+  valorAcumuladoDoAnoRetrasado: any = [];
+  private delayed: any;
 
   constructor(
     private faturamentoMensalService: FaturamentoMensalService,
     private dateService: DateControllerService,
     private controleExibicaoService: ControleExibicaoService,
   ) {
-    this.faturamentoDoAno = [];
-    this.faturamentoDoAnoPassado = [];
-    this.faturamentoDoAnoRetrasado = [];
-  }
 
+  }
   ngOnInit(): void {
     this.receberData();
     this.verificaPermissaoDeAcesso();
@@ -61,98 +55,73 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
       s1: this.controleExibicaoService.verificaPermissaoDeAcesso('grafico_faturamento_ano_anterior', this.nomeTela)
     }).subscribe(({ s1 }) => {
       if (s1) {
-        this.consultarFaturamentoDoAno();
+        this.consultarFaturamento();
       }
     });
   }
 
-  private consultarFaturamentoDoAno() {
-    this.faturamentoDoAno = [];
-    let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(0, 'year').format('yyyy-MM-DD'));
+  private consultarFaturamento() {
+    let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(2, 'year').format('yyyy-MM-DD'));
     let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(0, 'year').format('yyyy-MM-DD'));
     this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
       next: (res) => {
-        this.faturamentoDoAno = res;
+        this.fatuamentoDosUltimosAnos = res;
       },
       complete: () => {
-        this.calcularFaturamentoAcumuladoDoAno();
+        this.calculaFaturamentoAcumulado(dataInicial, dataFinal);
       }
     });
   }
 
-  public calcularFaturamentoAcumuladoDoAno() {
+  /**
+   * Realiza o cálculo acumulativo do faturamento somando o valor do mês anterior ao mes corrente
+   * Exemplo:
+   * 
+   * o Valor acumulado de março será representado pelo soma do faturamento de (JAN + FEV + MAR)
+   * 
+   * @param dataInicial 
+   * @param dataFinal 
+   */
+  public calculaFaturamentoAcumulado(dataInicial: any, dataFinal: any) {
+    let totalAnoRetrasado = 0;
+    let totalAnoPassado = 0;
+    let totalDoAno = 0;
     this.valorAcumuladoDoAno = [];
-    let valor = 0;
-    this.faturamentoDoAno.forEach((e: any) => {
-      valor += e.valor;
-      this.valorAcumuladoDoAno.push(valor);
-    });
-    this.consultarFaturamentoDoAnoPassado();
-  }
-
-  private consultarFaturamentoDoAnoPassado() {
-    this.faturamentoDoAnoPassado = [];
-    let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(1, 'year').format('yyyy-MM-DD'));
-    let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(1, 'year').format('yyyy-MM-DD'));
-    this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
-      next: (res) => {
-        this.faturamentoDoAnoPassado = res;
-      },
-      complete: () => {
-        this.calcularFaturamentoAcumuladoDoAnoPassado();
+    this.valorAcumuladoDoAnoPassado = [];
+    this.valorAcumuladoDoAnoRetrasado = [];
+    this.fatuamentoDosUltimosAnos.forEach(e => {
+      if (e.ano == moment(dataInicial).year()) {
+        totalAnoRetrasado += e.valor;
+        this.valorAcumuladoDoAnoRetrasado.push(totalAnoRetrasado);
+      } else if (e.ano > moment(dataInicial).year() && e.ano < moment(dataFinal).year()) {
+        totalAnoPassado += e.valor;
+        this.valorAcumuladoDoAnoPassado.push(totalAnoPassado);
+      } else {
+        totalDoAno += e.valor;
+        this.valorAcumuladoDoAno.push(totalDoAno);
       }
-    });
-  }
-
-  public calcularFaturamentoAcumuladoDoAnoPassado() {
-    this.valorAcumuladoDoPassado = [];
-    let valor = 0;
-    this.faturamentoDoAnoPassado.forEach((e: any) => {
-      valor += e.valor;
-      this.valorAcumuladoDoPassado.push(valor);
-    });
-    this.consultarFaturamentoDoAnoRetradaso();
-  }
-
-  private consultarFaturamentoDoAnoRetradaso() {
-    this.faturamentoDoAnoRetrasado = [];
-    let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(2, 'year').format('yyyy-MM-DD'));
-    let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(2, 'year').format('yyyy-MM-DD'));
-    this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
-      next: (res) => {
-        this.faturamentoDoAnoRetrasado = res;
-      },
-      complete: () => {
-        this.calcularFaturamentoAcumuladoDoAnoRetrasado();
-      }
-    });
-  }
-
-  public calcularFaturamentoAcumuladoDoAnoRetrasado() {
-    this.valorAcumuladoDoRetrasado = [];
-    let valor = 0;
-    this.faturamentoDoAnoRetrasado.forEach((e: any) => {
-      valor += e.valor;
-      this.valorAcumuladoDoRetrasado.push(valor);
     });
     this.atualizaGrafico();
   }
 
+
   public atualizaGrafico() {
     if (this.elementChart) {
-      this.chartBarMonth.data.datasets[0].data = this.valorAcumuladoDoRetrasado;
+      this.chartBarMonth.data.datasets[0].data = this.valorAcumuladoDoAnoRetrasado;
       this.chartBarMonth.data.datasets[0].backgroundColor = 'rgb(77, 77, 77, 0.7)';
-      this.chartBarMonth.data.datasets[1].data = this.valorAcumuladoDoPassado;
+      this.chartBarMonth.data.datasets[0].label = `${moment(this.dataRecebida).year() - 2}`;
+      this.chartBarMonth.data.datasets[1].data = this.valorAcumuladoDoAnoPassado;
       this.chartBarMonth.data.datasets[1].backgroundColor = 'rgb(176, 176, 128)';
+      this.chartBarMonth.data.datasets[1].label = `${moment(this.dataRecebida).year() - 1}`;
       this.chartBarMonth.data.datasets[2].data = this.valorAcumuladoDoAno;
       this.chartBarMonth.data.datasets[2].backgroundColor = 'rgb(0, 128, 0)';
+      this.chartBarMonth.data.datasets[2].label = `${moment(this.dataRecebida).year()}`;
       this.chartBarMonth.update();
     } else {
       this.gerarGraficoFaturamentoMensal();
     }
   }
 
-  delayed: any;
   public gerarGraficoFaturamentoMensal() {
     this.elementChart = document.getElementById('myChartBarAnoAnterior');
     this.chartBarMonth = new Chart(this.elementChart, {
@@ -161,19 +130,19 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
         datasets: [
           {
             type: 'bar',
-            label: `2022`,
-            data: this.valorAcumuladoDoRetrasado,
+            label: `${moment(this.dataRecebida).year() - 2}`,
+            data: this.valorAcumuladoDoAnoRetrasado,
             backgroundColor: 'rgb(77, 77, 77, 0.7)',
           },
           {
             type: 'bar',
-            label: '2023',
-            data: this.valorAcumuladoDoPassado,
+            label: `${moment(this.dataRecebida).year() - 1}`,
+            data: this.valorAcumuladoDoAnoPassado,
             backgroundColor: 'rgb(176, 176, 128)',
           },
           {
             type: 'bar',
-            label: '2024',
+            label: `${moment(this.dataRecebida).year()}`,
             data: this.valorAcumuladoDoAno,
             backgroundColor: 'rgb(0, 128, 0)',
           },
@@ -222,5 +191,4 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
       }
     });
   }
-
 }
