@@ -43,8 +43,7 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
     this.faturamentoDoAnoPassado = [];
     this.faturamentoDoAnoRetrasado = [];
   }
-
-  ngOnInit(): void {
+ ngOnInit(): void {
     this.receberData();
     this.verificaPermissaoDeAcesso();
   }
@@ -67,79 +66,49 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
   }
 
   private consultarFaturamentoDoAno() {
-    this.faturamentoDoAno = [];
-    let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(0, 'year').format('yyyy-MM-DD'));
-    let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(0, 'year').format('yyyy-MM-DD'));
-    console.log(dataInicial, dataFinal);
-    this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.faturamentoDoAno = res;
-      },
-      complete: () => {
-        this.calcularFaturamentoAcumuladoDoAno();
-      }
-    });
-  }
-
-  public calcularFaturamentoAcumuladoDoAno() {
     this.valorAcumuladoDoAno = [];
-    let valor = 0;
-    this.faturamentoDoAno.forEach((e: any) => {
-      valor += e.valor;
-      this.valorAcumuladoDoAno.push(valor);
-    });
-    this.consultarFaturamentoDoAnoPassado();
-  }
-
-  private consultarFaturamentoDoAnoPassado() {
-    this.faturamentoDoAnoPassado = [];
-    let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(1, 'year').format('yyyy-MM-DD'));
-    let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(1, 'year').format('yyyy-MM-DD'));
-    this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
-      next: (res) => {
-        this.faturamentoDoAnoPassado = res;
-      },
-      complete: () => {
-        this.calcularFaturamentoAcumuladoDoAnoPassado();
-      }
-    });
-  }
-
-  public calcularFaturamentoAcumuladoDoAnoPassado() {
     this.valorAcumuladoDoPassado = [];
-    let valor = 0;
-    this.faturamentoDoAnoPassado.forEach((e: any) => {
-      valor += e.valor;
-      this.valorAcumuladoDoPassado.push(valor);
-    });
-    this.consultarFaturamentoDoAnoRetradaso();
+    this.valorAcumuladoDoRetrasado = []
+    this.contadorAnos = 0;
+    while (this.contadorAnos < 3) {
+      let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(this.contadorAnos, 'year').format('yyyy-MM-DD'));
+      let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(this.contadorAnos, 'year').format('yyyy-MM-DD'));
+      this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
+        next: (res) => {
+          this.FaturamentoAcumuladoAnos.push(res)
+        },
+        complete: () => {
+          this.calcularFaturamentoAcumuladoDoAno(this.FaturamentoAcumuladoAnos);
+        }
+      });
+      this.contadorAnos++
+    }
   }
 
-  private consultarFaturamentoDoAnoRetradaso() {
-    this.faturamentoDoAnoRetrasado = [];
-    let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(2, 'year').format('yyyy-MM-DD'));
-    let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(2, 'year').format('yyyy-MM-DD'));
-    this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.faturamentoDoAnoRetrasado = res;
-      },
-      complete: () => {
-        this.calcularFaturamentoAcumuladoDoAnoRetrasado();
-      }
-    });
-  }
-
-  public calcularFaturamentoAcumuladoDoAnoRetrasado() {
-    this.valorAcumuladoDoRetrasado = [];
-    let valor = 0;
-    this.faturamentoDoAnoRetrasado.forEach((e: any) => {
-      valor += e.valor;
-      this.valorAcumuladoDoRetrasado.push(valor);
-    });
+  public calcularFaturamentoAcumuladoDoAno(listaDeFaturamentoAcumulados: any[]) {
+    let contadorCal = 0
+    this.valorAcumuladoDoAno = [];
+    this.valorAcumuladoDoPassado = [];
+    this.valorAcumuladoDoRetrasado = []
+    while (contadorCal < 3) {
+      let valor = 0;
+      listaDeFaturamentoAcumulados[contadorCal].forEach((e: any) => {
+        if (contadorCal == 0) {
+          valor += e.valor;
+          this.valorAcumuladoDoAno.push(valor);
+        } else if (contadorCal == 1) {
+          valor += e.valor;
+          this.valorAcumuladoDoPassado.push(valor);
+        } else if (contadorCal == 2) {
+          valor += e.valor;
+          this.valorAcumuladoDoRetrasado.push(valor);
+        }
+      });
+      contadorCal++
+    }
     this.atualizaGrafico();
   }
+
 
   public atualizaGrafico() {
     if (this.elementChart) {
@@ -225,5 +194,5 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
       }
     });
   }
-
+  
 }
