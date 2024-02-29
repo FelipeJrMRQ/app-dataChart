@@ -70,10 +70,8 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
     this.faturamentoDoAno = [];
     let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(0, 'year').format('yyyy-MM-DD'));
     let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(0, 'year').format('yyyy-MM-DD'));
-    console.log(dataInicial, dataFinal);
     this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
       next: (res) => {
-        console.log(res);
         this.faturamentoDoAno = res;
       },
       complete: () => {
@@ -122,7 +120,6 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
     let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(2, 'year').format('yyyy-MM-DD'));
     this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
       next: (res) => {
-        console.log(res);
         this.faturamentoDoAnoRetrasado = res;
       },
       complete: () => {
