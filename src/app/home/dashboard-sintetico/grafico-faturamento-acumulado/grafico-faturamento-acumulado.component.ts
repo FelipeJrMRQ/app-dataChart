@@ -17,10 +17,8 @@ Chart.register(BarController)
   styleUrls: ['./grafico-faturamento-acumulado.component.css']
 })
 export class GraficoFaturamentoAcumuladoComponent implements OnInit {
-
   public elementChart: any;
   public chartBarMonth: any;
-
   fatuamentoDosUltimosAnos: FaturamentoMensal[] = [];
   metaMes: any = [];
   arrowGap: any;
@@ -104,7 +102,6 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
     this.atualizaGrafico();
   }
 
-
   public atualizaGrafico() {
     if (this.elementChart) {
       this.chartBarMonth.data.datasets[0].data = this.valorAcumuladoDoAnoRetrasado;
@@ -128,7 +125,7 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
       data: {
         labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
         datasets: [
-          {
+          { 
             type: 'bar',
             label: `${moment(this.dataRecebida).year() - 2}`,
             data: this.valorAcumuladoDoAnoRetrasado,
