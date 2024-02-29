@@ -90,7 +90,24 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
     let contadorCal = 0
     this.valorAcumuladoDoAno = [];
     this.valorAcumuladoDoPassado = [];
-    this.valorAcumuladoDoRetrasado = []
+    this.valorAcumuladoDoRetrasado = [];
+
+    // desça forma não precisa usar o contador eu acho kk  
+    // for(let i = 0; i <  listaDeFaturamentoAcumulados.length;i++ ){
+    //     let valor = 0;
+    //     listaDeFaturamentoAcumulados[i].forEach((e: any) => {
+    //     if (i == 0) {
+    //       valor += e.valor;
+    //       this.valorAcumuladoDoAno.push(valor);
+    //     } else if (i == 1) {
+    //       valor += e.valor;
+    //       this.valorAcumuladoDoPassado.push(valor);
+    //     } else if (i == 2) {
+    //       valor += e.valor;
+    //       this.valorAcumuladoDoRetrasado.push(valor);
+    //     }
+    //   });
+    // }
     while (contadorCal < 3) {
       let valor = 0;
       listaDeFaturamentoAcumulados[contadorCal].forEach((e: any) => {
