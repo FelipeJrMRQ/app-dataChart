@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { FaturamentoService } from 'src/app/services/faturamento.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import * as bootstrap from 'bootstrap';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificacaoComponent } from 'src/app/shared/dialog/notificacao/notificacao.component';
@@ -20,32 +19,23 @@ export class ContentComponent implements OnInit, OnDestroy {
   private usuario: UsuarioDTO;
   dataEscolhida: any = moment().format('yyyy-MM-DD');
   private intervalo: any;
-  public toolTip = [];
   loadingPage: boolean = true;
 
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
-    private renderer: Renderer2,
     private controleExibicaoService: ControleExibicaoService,
     private dialog: MatDialog,
   ) {
     this.usuario = new UsuarioDTO();
   }
 
- 
-
   ngOnInit(): void {
-    this.renderer.selectRootElement(this.toolTip = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')));
-    var tootipList = this.toolTip.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
     window.scroll(0, 0);
     this.consultaPorIntervalo();
     this.registraLog();
     this.consultaUsuario();
   }
-
 
   ngOnDestroy(): void {
     this.cancelarIntervalo();

@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { BarController, CategoryScale, Chart, LinearScale, LineController } from 'chart.js';
+import { BarController, Chart } from 'chart.js';
 import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 import { EntradaDiaria } from 'src/app/models/entrada/entrada-diaria';
 import { FaturamentoDiario } from 'src/app/models/faturamento/faturamento-diario';
-import { MetaDiaria } from 'src/app/models/meta-diaria';
 import { ModeloConsulta } from 'src/app/models/modelo-consulta';
 import { EntradaService } from 'src/app/services/entrada.service';
 import { FaturamentoService } from 'src/app/services/faturamento.service';
-import { MetaDiariaService } from 'src/app/services/meta-diaria.service';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
-import { ManipuladorArrayService } from 'src/app/utils/manipulador-array.service';
 
 Chart.register(BarController)
 

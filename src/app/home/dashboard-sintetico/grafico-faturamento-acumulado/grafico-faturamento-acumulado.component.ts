@@ -57,10 +57,11 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
       }
     });
   }
-
+  
   private consultarFaturamento() {
+    this.fatuamentoDosUltimosAnos = [];
     let dataInicial = this.dateService.getInicioDoMes(moment(this.dataRecebida).startOf('year').subtract(2, 'year').format('yyyy-MM-DD'));
-    let dataFinal = (moment(this.dataRecebida).endOf('year').subtract(0, 'year').format('yyyy-MM-DD'));
+    let dataFinal = (moment(this.dataRecebida).format('yyyy-MM-DD'));
     this.faturamentoMensalService.consultaTotalFaturamentoPorMes(dataInicial, dataFinal).subscribe({
       next: (res) => {
         this.fatuamentoDosUltimosAnos = res;

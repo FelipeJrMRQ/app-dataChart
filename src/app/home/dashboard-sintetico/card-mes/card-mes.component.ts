@@ -62,14 +62,14 @@ export class CardMesComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngOnDestroy(): void{
+  ngOnDestroy(): void {
     // Destrua os tooltips ao sair da página
     this.tooltips.forEach(tooltip => {
-     if (tooltip && typeof tooltip.dispose === 'function') {
-       tooltip.dispose();
-     }
+      if (tooltip && typeof tooltip.dispose === 'function') {
+        tooltip.dispose();
+      }
     });
-   }
+  }
 
   private verificaPermissaoDeAcesso() {
     forkJoin({
@@ -84,46 +84,46 @@ export class CardMesComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public consultaValorFaturamento() {
     this.faturamentoService.consultaTotalFaturamentoPorMes(this.dateService.getInicioDoMes(moment(this.dataRecebida).format('yyyy-MM-DD')), this.dataRecebida).subscribe({
-        next:(res)=>{
-         try {
+      next: (res) => {
+        try {
           this.valorFaturamento = res[0].valor;
-         } catch (error) {
+        } catch (error) {
           this.valorFaturamento = 0;
-         }
-        },
-        complete:()=>{
-          this.consultaParametrosMeta();
         }
+      },
+      complete: () => {
+        this.consultaParametrosMeta();
+      }
     });
   }
 
   public consultaValorFaturamentoDoAno() {
     this.faturamentoService.consultaTotalFaturamentoPorMes(this.dateService.getInicioDoAno(moment(this.dataRecebida).format('yyyy-MM-DD')), this.dataRecebida).subscribe({
-        next:(res)=>{
-          this.valorFaturamendoAno = 0;
-         try {
-          res.forEach(e=>{
+      next: (res) => {
+        this.valorFaturamendoAno = 0;
+        try {
+          res.forEach(e => {
             this.valorFaturamendoAno += e.valor;
           })
-         } catch (error) {}
-        },
-        complete:()=>{
-          this.consultaParametrosMeta();
-        }
+        } catch (error) { }
+      },
+      complete: () => {
+        this.consultaParametrosMeta();
+      }
     });
   }
 
-  public visualizarFaturamentoPeriodo(){
+  public visualizarFaturamentoPeriodo() {
     this.router.navigate(['faturamento-periodo']);
   }
 
   public consultaParametrosMeta() {
     this.parametrosService.consultarParamentrosMeta(moment(this.dataRecebida).format('yyyy-MM-DD')).subscribe({
       next: (res) => {
-       try {
-        this.metaFaturamentoDoMes = res.valorMetaMensal;
-        this.parametrosMeta = res;
-       } catch (error) {}
+        try {
+          this.metaFaturamentoDoMes = res.valorMetaMensal;
+          this.parametrosMeta = res;
+        } catch (error) { }
       },
       error: (e) => {
         console.log(e);
@@ -152,7 +152,7 @@ export class CardMesComponent implements OnInit, OnDestroy, AfterViewInit {
   calcularPercentualDoGrafico() {
     let i = 45;
     let valorPercentual = (180 / this.parametrosMeta.valorMetaMensal);
-    if(valorPercentual == 0){
+    if (valorPercentual == 0) {
       i = 225;
       return;
     }
@@ -173,9 +173,9 @@ export class CardMesComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public calculaPercentualFaturamento() {
-    if(this.parametrosMeta.valorMetaMensal != 0){
+    if (this.parametrosMeta.valorMetaMensal != 0) {
       this.percentualFaturamento = ((this.valorFaturamento / this.metaFaturamentoDoMes) * 100);
-    }else{
+    } else {
       this.percentualFaturamento = 0;
     }
   }
