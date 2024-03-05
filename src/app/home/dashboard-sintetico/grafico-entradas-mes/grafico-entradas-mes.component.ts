@@ -77,6 +77,7 @@ export class GraficoEntradasMesComponent implements OnInit {
       )
     ).subscribe({
       next: (res) => {
+        console.log(res);
         this.faturamentoDiario = res.objeto;
       },
       complete: () => {
@@ -96,6 +97,7 @@ export class GraficoEntradasMesComponent implements OnInit {
       )
     ).subscribe({
       next: (res) => {
+        console.log(res);
         this.entradaDiaria = res.objeto;
       },
       complete: () => {
