@@ -105,30 +105,24 @@ export class GraficoEntradasMesComponent implements OnInit {
       }
     });
   }
-
+  
   public verificarArray() {
-    if (this.entradaDiaria.length != this.faturamentoDiario.length) {
-      const t: any = this.faturamentoDiario.filter(obg => !this.entradaDiaria.some(ob => ob.data === obg.data));
-      t.forEach((v: any) => {
-        this.entradaDiaria.push({ id: v.id, data: v.data, valor: 0 });
-      });
-      this.entradaDiaria = this.entradaDiaria.sort((a: any, b: any) => b.data.localeCompare(a.data));
+    if (this.entradaDiaria.length > this.faturamentoDiario.length) {
+      this.faturamentoDiario = this.manipuladorArrayService.verificarDifenreçaDeAtributoDataEntreLista(this.entradaDiaria,this.faturamentoDiario);
+    }if (this.faturamentoDiario.length > this.entradaDiaria.length) {
+       this.entradaDiaria = this.manipuladorArrayService.verificarDifenreçaDeAtributoDataEntreLista(this.faturamentoDiario,this.entradaDiaria)
     }
+    this.entradaDiaria = this.manipuladorArrayService.ordernarArrayPorData(this.entradaDiaria);
+    this.faturamentoDiario = this.manipuladorArrayService.ordernarArrayPorData(this.faturamentoDiario);
     this.criarValoresGraficos();
   }
 
   public criarValoresGraficos() {
-    this.faturamentos = [];
-    this.dias = [];
-    this.faturamentoDiario.forEach((f: any) => {
-      this.faturamentos.push(f.valor);
-      this.dias.push(moment(f.data).date());
-    });
-    this.entradas = [];
-    this.entradaDiaria.forEach((e: any) => {
-      this.entradas.push(e.valor)
-    });
-    this.atualizarGrafico();
+      this.faturamentos = [];
+      this.dias = [];
+      this.faturamentos = this.manipuladorArrayService.calcularValoresGraficos(this.faturamentoDiario,this.dias);
+      this.entradas = this.manipuladorArrayService.calcularValoresGraficos(this.entradaDiaria);
+      this.atualizarGrafico();
   }
 
   public atualizarGrafico() {
