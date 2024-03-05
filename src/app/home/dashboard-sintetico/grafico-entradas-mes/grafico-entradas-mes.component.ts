@@ -34,6 +34,7 @@ export class GraficoEntradasMesComponent implements OnInit {
 
   constructor(
     private faturamentoService: FaturamentoService,
+    private manipuladorArrayService:ManipuladorArrayService,
     private dataService: DateControllerService,
     private entradaService: EntradaService,
     private controleExibicaoService: ControleExibicaoService,
