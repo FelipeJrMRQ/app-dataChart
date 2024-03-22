@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { FeriadoService } from '../services/feriado.service';
@@ -8,6 +8,8 @@ import { FeriadoService } from '../services/feriado.service';
 })
 export class DateControllerService {
 
+  static emitirData = new EventEmitter<any>();
+  
   constructor(
     private feriadoService: FeriadoService,
   ) { }

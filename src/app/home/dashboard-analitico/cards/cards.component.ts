@@ -14,7 +14,6 @@ import { DateControllerService } from 'src/app/utils/date-controller.service';
 import { ModeloConsulta } from 'src/app/models/modelo-consulta';
 import { FaturamentoDiario } from 'src/app/models/faturamento/faturamento-diario';
 import { Usuario } from 'src/app/models/usuario';
-import { UsuarioService } from 'src/app/services/usuario.service';
 import { Router } from '@angular/router';
 
 @Component({

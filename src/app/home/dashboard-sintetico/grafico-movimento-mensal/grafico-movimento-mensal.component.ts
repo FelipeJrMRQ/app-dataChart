@@ -6,6 +6,7 @@ import { ControleExibicaoService } from 'src/app/services/permissoes-componentes
 import { ProdutoService } from 'src/app/services/produto.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 import { forkJoin } from 'rxjs';
+import { FaturamentoService } from 'src/app/services/faturamento.service';
 
 @Component({
   selector: 'app-grafico-movimento-mensal',
@@ -36,6 +37,7 @@ export class GraficoMovimentoMensalComponent implements OnInit {
     this.verificaPermissaoDeAcesso();
   }
 
+
   private verificaPermissaoDeAcesso() {
     forkJoin({
       s1: this.controleExibicaoService.verificaPermissaoDeAcesso('grafico_movimentacao_produto', this.nomeTela)
@@ -43,7 +45,15 @@ export class GraficoMovimentoMensalComponent implements OnInit {
       if (s1) {
         this.controle = s1;
         this.subtrairDataFinal();
+        this.receberDataPorEvento();
       }
+    });
+  }
+
+  private receberDataPorEvento(){
+    FaturamentoService.emitirData.subscribe((res: any)=>{
+      this.dataInicial = res;
+      this.subtrairDataFinal();
     });
   }
 
@@ -53,8 +63,7 @@ export class GraficoMovimentoMensalComponent implements OnInit {
   * @param meses 
   */
   public subtrairDataFinal() {
-    let diasDoMes = moment().daysInMonth();
-    this.dataFinal = moment().subtract(diasDoMes+1, 'days').format('yyyy-MM-DD');
+    this.dataFinal = moment(this.dataInicial).subtract(1, 'month').format('yyyy-MM-DD');
     this.dataInicial = this.dateService.getInicioDoAno(this.dataInicial);
     this.consultarMovimentacaoDeProdutosMensal();
   }
@@ -75,9 +84,18 @@ export class GraficoMovimentoMensalComponent implements OnInit {
       this.quantidades.push(e.quantidade);
       this.labes.push(`${moment().month(e.mes - 1).format('MM')}-${moment().year(e.ano).format('YY')}`);
     });
-    this.gerarGrafico();
+    this.atualizarGrafico();
   }
 
+  private atualizarGrafico(){
+    if (this.elementChart) {
+      this.chartBarNovosItens.data.labels = this.labes;
+      this.chartBarNovosItens.data.datasets[0].data = this.quantidades;
+      this.chartBarNovosItens.update();
+    } else {
+      this.gerarGrafico();
+    }
+  }
 
   private gerarGrafico() {
     this.elementChart = document.getElementById('myChartBarMovimentoMensal');

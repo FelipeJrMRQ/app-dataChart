@@ -1,0 +1,53 @@
+<section>
+    <div class="row">
+        <div class="col-12 col-lg-4">
+            <div class="input-group input-group-sm">
+                <input type="date" class="form-control bgInput text-center" [(ngModel)]="dataAtual">
+                <button class="input-group-text btn btn-primary" (click)="emitirData()">
+                    <i class="fas fa-search-dollar"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <app-grafico-backlog-total></app-grafico-backlog-total>
+    </div>
+    <div class="col-12 col-lg-6">
+        <app-grafico-backlog-comparativo></app-grafico-backlog-comparativo>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <app-grafico-faturamento-acumulado></app-grafico-faturamento-acumulado>
+    </div>
+    <div class="col-12 col-lg-6">
+        <app-grafico-faturamento-mensal></app-grafico-faturamento-mensal>
+    </div>
+</div>
+
+<div class="row">
+    <section class="col-6 text-start">
+        <header class="card-label">DADOS FATURAMENTO ACUMULADO</header>
+    </section>
+    <section class="col-6">
+        <header class="card-label">DADOS FATURAMENTO MENSAL</header>
+    </section>
+
+</div>
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <app-tbl-faturamento-acumulado></app-tbl-faturamento-acumulado>
+    </div>
+    <div class="col-12 col-lg-6">
+        <app-tbl-faturamento-mensal></app-tbl-faturamento-mensal>
+     </div>
+</div>
+
+
+<div class="mb-5">
+
+</div>

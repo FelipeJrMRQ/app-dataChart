@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   urlApi: "http://125.67.2.9:8080/api",
   obterToken: "http://125.67.2.9:8080/login",
-  versaoApp: '1.42.25',
+  versaoApp: '1.42.26',
 };
 
 /**
@@ -161,6 +161,13 @@ export const environment = {
  * Versão 1.42.25
  * Correção na ordenação das colunas no historico anual de faturamento
  * Correção na ordenação das colunas no historico anual de entradas
+ *
+ * -------------------------------------------------------------------------------------------------------------------
+ * Versão 1.42.26
+ * Correção na gráfico de entrada vs futuramento para quando uma das lista e maior que a outra.
+ * Para este caso será necessário igualar as lista criando um objeto do mesmo tipo com o valor 0
+ * 
+ * 
  * 
  */
 

@@ -23,7 +23,8 @@ const routes: Routes = [
   { path: 'detalhamento-cliente/:cdCliente/:nomeCliente/:data/:meses', loadChildren:()=> import('./home/detalhamento-cliente/detalhamento-cliente.module').then(i=>i.DetalhamentoClienteModule), canActivate: [AuthGuardService]},
   { path: 'notificacao', loadChildren:()=> import ('./home/notificacao/notificacao.module').then(i => i.NotificacaoModule),canActivate: [AuthGuardService]},
   { path: 'administracao', loadChildren:()=> import('./home/config/administracao/administracao.module').then(i => i.AdministracaoModule), canActivate: [AuthGuardService]},
-  { path: 'faturamento-periodo', loadChildren:()=> import('./home/faturamento-periodo/faturamento-periodo.module').then(i => i.FaturamentoPeriodoModule), canActivate: [AuthGuardService]}
+  { path: 'faturamento-periodo', loadChildren:()=> import('./home/faturamento-periodo/faturamento-periodo.module').then(i => i.FaturamentoPeriodoModule), canActivate: [AuthGuardService]},
+  { path: 'gestao' , loadChildren:()=> import('./home/dashboard-gestao/dashboard-gestao.module').then(i => i.DashboardGestaoModule)}
 ];
 
 @NgModule({

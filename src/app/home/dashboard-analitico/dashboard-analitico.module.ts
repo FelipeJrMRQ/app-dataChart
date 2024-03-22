@@ -14,8 +14,6 @@ import { TblEntradasDiariaComponent } from './dashboard-content/tbl-entradas-dia
 import { TblFaturamentoDiarioComponent } from './dashboard-content/tbl-faturamento-diario/tbl-faturamento-diario.component';
 import { TblCarteiraClienteComponent } from './dashboard-content/tbl-carteira-cliente/tbl-carteira-cliente.component';
 import { TblCarteiraBeneficiamentoComponent } from './dashboard-content/tbl-carteira-beneficiamento/tbl-carteira-beneficiamento.component';
-import { CardMesComponent } from './cards/card-mes/card-mes.component';
-import { CardDiaComponent } from './cards/card-dia/card-dia.component';
 import { MatSortModule } from '@angular/material/sort';
 import { TblProducaoBeneficiamentoComponent } from './dashboard-content/tbl-producao-beneficiamento/tbl-producao-beneficiamento.component';
 
@@ -30,8 +28,6 @@ import { TblProducaoBeneficiamentoComponent } from './dashboard-content/tbl-prod
     TblFaturamentoDiarioComponent,
     TblCarteiraClienteComponent,
     TblCarteiraBeneficiamentoComponent,
-    CardMesComponent,
-    CardDiaComponent,
     TblProducaoBeneficiamentoComponent,
   ],
   imports: [

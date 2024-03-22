@@ -44,7 +44,6 @@ export class TblNovosItensComponent implements OnInit, OnDestroy, AfterViewInit 
       this.dataRecebida = res;
       this.verificaPermissaoDeAcesso();
     });
-
   }
 
   ngAfterViewInit(): void {

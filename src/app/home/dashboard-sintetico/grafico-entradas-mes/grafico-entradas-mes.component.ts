@@ -9,6 +9,8 @@ import { EntradaService } from 'src/app/services/entrada.service';
 import { FaturamentoService } from 'src/app/services/faturamento.service';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
+import { ManipuladorArrayService } from 'src/app/utils/manipulador-array.service';
+import { read } from 'xlsx';
 
 Chart.register(BarController)
 
@@ -34,7 +36,7 @@ export class GraficoEntradasMesComponent implements OnInit {
 
   constructor(
     private faturamentoService: FaturamentoService,
-    private manipuladorArrayService:ManipuladorArrayService,
+    private manipuladorArrayService: ManipuladorArrayService,
     private dataService: DateControllerService,
     private entradaService: EntradaService,
     private controleExibicaoService: ControleExibicaoService,
@@ -78,7 +80,6 @@ export class GraficoEntradasMesComponent implements OnInit {
       )
     ).subscribe({
       next: (res) => {
-        console.log(res);
         this.faturamentoDiario = res.objeto;
       },
       complete: () => {
@@ -98,7 +99,6 @@ export class GraficoEntradasMesComponent implements OnInit {
       )
     ).subscribe({
       next: (res) => {
-        console.log(res);
         this.entradaDiaria = res.objeto;
       },
       complete: () => {
@@ -106,24 +106,51 @@ export class GraficoEntradasMesComponent implements OnInit {
       }
     });
   }
-  
+
   public verificarArray() {
     if (this.entradaDiaria.length > this.faturamentoDiario.length) {
-      this.faturamentoDiario = this.manipuladorArrayService.verificarDifenreçaDeAtributoDataEntreLista(this.entradaDiaria,this.faturamentoDiario);
-    }if (this.faturamentoDiario.length > this.entradaDiaria.length) {
-       this.entradaDiaria = this.manipuladorArrayService.verificarDifenreçaDeAtributoDataEntreLista(this.faturamentoDiario,this.entradaDiaria)
+      this.faturamentoDiario = this.verificarDifenreçaDeAtributoDataEntreLista(this.entradaDiaria, this.faturamentoDiario);
+    } if (this.faturamentoDiario.length > this.entradaDiaria.length) {
+      this.entradaDiaria = this.verificarDifenreçaDeAtributoDataEntreLista(this.faturamentoDiario, this.entradaDiaria)
     }
     this.entradaDiaria = this.manipuladorArrayService.ordernarArrayPorData(this.entradaDiaria);
     this.faturamentoDiario = this.manipuladorArrayService.ordernarArrayPorData(this.faturamentoDiario);
-    this.criarValoresGraficos();
+    this.organizaValoresParaOGrafico();
   }
 
-  public criarValoresGraficos() {
-      this.faturamentos = [];
-      this.dias = [];
-      this.faturamentos = this.manipuladorArrayService.calcularValoresGraficos(this.faturamentoDiario,this.dias);
-      this.entradas = this.manipuladorArrayService.calcularValoresGraficos(this.entradaDiaria);
-      this.atualizarGrafico();
+  /**
+   * Dentro da função de filtro, estamos usando some no array this.faturamentoDiario.
+   * O método some verifica se pelo menos um elemento no array satisfaz a condição especificada.
+   * Estamos verificando se não há nenhum faturamento cuja data corresponda à data da entrada atual.
+   * Se nenhum faturamento tiver a mesma data da entrada, isso significa que é uma data diferente e,portanto, retornamos true, caso contrário,retornamos false.
+  **/
+  private verificarDifenreçaDeAtributoDataEntreLista(lista: any, lista2: any) {
+    let diferença = lista.filter((entrada: any) => !lista2.some((valor: any) => valor.data === entrada.data));
+    diferença.forEach((v: any) => {
+      lista2.push({
+        id: v.id,
+        data: v.data,
+        valor: 0,
+      });
+    });
+    return lista2;
+  }
+
+  private calcularValoresGraficos(lista: any, listaData?: any[]) {
+    let listaValores: any[] = [];
+    lista.forEach((e: any) => {
+      listaValores.push(e.valor);
+      listaData?.push(moment(e.data).date());
+    });
+    return listaValores;
+  }
+
+  public organizaValoresParaOGrafico() {
+    this.faturamentos = [];
+    this.dias = [];
+    this.faturamentos = this.calcularValoresGraficos(this.faturamentoDiario, this.dias);
+    this.entradas = this.calcularValoresGraficos(this.entradaDiaria);
+    this.atualizarGrafico();
   }
 
   public atualizarGrafico() {

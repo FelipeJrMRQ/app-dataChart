@@ -1,0 +1,38 @@
+<div class="table-responsive">
+    <table class="table table-sm table-striped">
+        <thead>
+            <th>ANO</th>
+            <th>JAN</th>
+            <th>FEV</th>
+            <th>MAR</th>
+            <th>ABR</th>
+            <th>MAI</th>
+            <th>JUN</th>
+            <th>JUL</th>
+            <th>AGO</th>
+            <th>SET</th>
+            <th>OUT</th>
+            <th>NOV</th>
+            <th>DEZ</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="p-2 bold">{{anoRetrasado}}</td>
+                <td class="p-2" *ngFor="let faturamento of valorAcumuladoDoAnoRetrasado">{{faturamento | number: '1.0-0'}}</td>
+            </tr>
+            <tr>
+                <td class="p-2 bold">{{anoPassado}}</td>
+                <td class="p-2" *ngFor="let faturamento of valorAcumuladoDoAnoPassado">{{faturamento | number: '1.0-0'}}
+                </td>
+            </tr>
+            <tr>
+                <td class="p-2 bold">{{anoAtual}}</td>
+                <td class="p-2" *ngFor="let faturamento of valorAcumuladoDoAno">{{faturamento | number: '1.0-0'}}</td>
+            </tr>
+            <tr>
+                <td class="bold">x Y-1</td>
+                <td *ngFor="let percentual of xY1" class="text-center" [ngClass]="percentual< 0? 'text-danger bold': 'text-primary bold'">{{percentual | number:'1.0-2'}} %</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

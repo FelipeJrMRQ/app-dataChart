@@ -12,14 +12,12 @@ import { HistoricoFaturamentoClienteDTO } from '../models/faturamento/historico-
 })
 export class FaturamentoService {
 
-
   static emitirValorCarteira = new EventEmitter<any>();
   static emitirValorFaturamentoMes = new EventEmitter<any>();
   static emitirValorFaturamentoDia = new EventEmitter<any>();
   static emitirValorMediaFaturamento = new EventEmitter<any>();
   static emitirvalorFaturamentoDiasUteis = new EventEmitter<any>();
   static emitirData = new EventEmitter<any>();
-
   
   private urlApi: string = `${environment.urlApi}/faturamento`;
   private urlApi2: string = `${environment.urlApi}/atualizacoes`;

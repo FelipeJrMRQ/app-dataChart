@@ -20,7 +20,6 @@ import { DialogModule } from 'src/app/shared/dialog/dialog.module';
 import { GraficoNovosItensComponent } from './grafico-novos-itens/grafico-novos-itens.component';
 import { TblNovosItensComponent } from './tbl-novos-itens/tbl-novos-itens.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { GraficoItensNaoRetornadosComponent } from './grafico-movimentacao-produtos/grafico-movimentacao-produtos.component';
 import { CardMovimentacaoComponent } from './tbl-movimento-produtos/tbl-movimento-produtos.component';
 import { GraficoMovimentoMensalComponent } from './grafico-movimento-mensal/grafico-movimento-mensal.component';
 import { LoadingPageModule } from 'src/app/shared/loading-page/loading-page.module';
@@ -43,7 +42,6 @@ import { GraficoFaturamentoAcumuladoComponent } from './grafico-faturamento-acum
     GraficoFaturamentoAcumuladoComponent,
     GraficoEvolucaoCarteiraComponent,
     GraficoNovosItensComponent,
-    GraficoItensNaoRetornadosComponent,
     TblNovosItensComponent,
     CardMovimentacaoComponent,
     GraficoMovimentoMensalComponent,
