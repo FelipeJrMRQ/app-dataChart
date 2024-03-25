@@ -110,7 +110,7 @@ export class GraficoFaturamentoAcumuladoComponent implements OnInit {
   public atualizaGrafico() {
     if (this.elementChart) {
       this.chartBarMonth.data.datasets[0].data = this.valorAcumuladoDoAnoRetrasado;
-      this.chartBarMonth.data.datasets[0].backgroundColor = 'rgb(77, 77, 77, 0.7)';
+      this.chartBarMonth.data.datasets[0].backgroundColor = 'rgb(145, 133, 132, 0.7)';
       this.chartBarMonth.data.datasets[0].label = `${moment(this.dataRecebida).year() - 2}`;
       this.chartBarMonth.data.datasets[1].data = this.valorAcumuladoDoAnoPassado;
       this.chartBarMonth.data.datasets[1].backgroundColor = 'rgb(176, 176, 128)';

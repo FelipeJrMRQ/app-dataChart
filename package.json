@@ -34,6 +34,7 @@
     "moment-timezone": "^0.5.44",
     "ng-canvas-gauges": "^6.0.4",
     "ngx-bootstrap": "^9.0.0",
+    "ngx-cookie-service": "^14.0.1",
     "ngx-pagination": "^6.0.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

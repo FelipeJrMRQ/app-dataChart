@@ -6,17 +6,17 @@ import { EntradaService } from 'src/app/services/entrada.service';
 import { DateControllerService } from 'src/app/utils/date-controller.service';
 
 @Component({
-  selector: 'app-grafico-entrada-acumulada',
-  templateUrl: './grafico-entrada-acumulada.component.html',
-  styleUrls: ['./grafico-entrada-acumulada.component.css']
+  selector: 'app-grafico-entrada-mensal',
+  templateUrl: './grafico-entrada-mensal.component.html',
+  styleUrls: ['./grafico-entrada-mensal.component.css']
 })
-export class GraficoEntradaAcumuladaComponent implements OnInit {
+export class GraficoEntradaMensalComponent implements OnInit {
 
   static entradas = new EventEmitter<any>();
   entradasMensais: EntradaMensal[] = [];
-  valorAcumuladoDoAnoRetrasado: any = [];
-  valorAcumuladoDoAnoPassado: any = [];
-  valorAcumuladoDoAno: any = [];
+  entradasAnoRetrasado: any = [];
+  entradasAnoPassado: any = [];
+  entradasAno: any = [];
   dataRecebida: any = moment().format('yyyy-MM-DD');
   public elementChart: any;
   public chartBarMonth: any;
@@ -24,104 +24,102 @@ export class GraficoEntradaAcumuladaComponent implements OnInit {
 
   constructor(
     private entradaService: EntradaService,
-    private dateService: DateControllerService,
+    private dateService: DateControllerService
+    
   ) { }
 
   ngOnInit(): void {
-    this.consultarEntradasMensasis();
+    this.consultarEntradasMensais();
   }
 
-  public consultarEntradasMensasis(){
-    let dataInicial = this.dateService.getInicioDoAno(moment(this.dataRecebida).subtract(2, 'year'));
-    this.entradaService.consultarEntradaMensal(dataInicial, this.dataRecebida).subscribe({
-      next:(res)=>{
+  public consultarEntradasMensais() {
+    this.entradaService.consultarEntradaMensal(this.dateService.getInicioDoAno(moment(this.dataRecebida).subtract(2,'year')), this.dataRecebida).subscribe({
+      next: (res) => {
         this.entradasMensais = res;
       },
-      complete:()=>{
-        this.calculaEntradaAcumulado(dataInicial, this.dataRecebida);
-        this.emitirEntradas();
+      complete: () => {
+        this.prepararDadosParaExibicao();
+        this.emitirDados();
       }
     });
   }
 
-  private emitirEntradas(){
-    GraficoEntradaAcumuladaComponent.entradas.emit(this.entradasMensais);
+  public emitirDados(){
+    GraficoEntradaMensalComponent.entradas.emit(this.entradasMensais);
   }
 
-   /**
-   * Realiza o cálculo acumulativo do faturamento somando o valor do mês anterior ao mes corrente
-   * Exemplo:
-   * 
-   * o Valor acumulado de março será representado pelo soma do faturamento de (JAN + FEV + MAR)
-   * 
-   * @param dataInicial 
-   * @param dataFinal 
-   */
-   public calculaEntradaAcumulado(dataInicial: any, dataFinal: any) {
-    let totalAnoRetrasado = 0;
-    let totalAnoPassado = 0;
-    let totalDoAno = 0;
-    this.valorAcumuladoDoAno = [];
-    this.valorAcumuladoDoAnoPassado = [];
-    this.valorAcumuladoDoAnoRetrasado = [];
-    this.entradasMensais.forEach(e => {
-      if (e.ano == moment(dataInicial).year()) {
-        totalAnoRetrasado += e.valor;
-        this.valorAcumuladoDoAnoRetrasado.push(totalAnoRetrasado);
-      } else if (e.ano > moment(dataInicial).year() && e.ano < moment(dataFinal).year()) {
-        totalAnoPassado += e.valor;
-        this.valorAcumuladoDoAnoPassado.push(totalAnoPassado);
-      } else {
-        totalDoAno += e.valor;
-        this.valorAcumuladoDoAno.push(totalDoAno);
+  public prepararDadosParaExibicao() {
+    this.entradasMensais.forEach((em) => {
+      switch (em.ano) {
+        case this.dataMenosDoisAnos(this.dataRecebida):
+          this.entradasAnoRetrasado.push(em.valor);
+          break;
+        case this.dataMenosUmAno(this.dataRecebida):
+          this.entradasAnoPassado.push(em.valor);
+          break;
+        case this.anoAtual(this.dataRecebida):
+          this.entradasAno.push(em.valor);
+          break;
       }
     });
     this.atualizaGrafico();
   }
 
+  private dataMenosDoisAnos(data: any) {
+    return moment(data).subtract(2, 'year').year();
+  }
+
+  private dataMenosUmAno(data: any) {
+    return moment(data).subtract(1, 'year').year();
+  }
+
+  private anoAtual(data: any) {
+    return moment(data).year();
+  }
+
 
   public atualizaGrafico() {
     if (this.elementChart) {
-      this.chartBarMonth.data.datasets[0].data = this.valorAcumuladoDoAnoRetrasado;
-      this.chartBarMonth.data.datasets[0].backgroundColor = 'rgb(145, 133, 132, 0.7)';
+      this.chartBarMonth.data.datasets[0].data = this.entradasAnoRetrasado;
+      this.chartBarMonth.data.datasets[0].backgroundColor = 'rgb(77, 77, 77, 0.3)';
       this.chartBarMonth.data.datasets[0].label = `${moment(this.dataRecebida).year() - 2}`;
-      this.chartBarMonth.data.datasets[1].data = this.valorAcumuladoDoAnoPassado;
+      this.chartBarMonth.data.datasets[1].data = this.entradasAnoPassado;
       this.chartBarMonth.data.datasets[1].backgroundColor = 'rgb(176, 176, 128)';
       this.chartBarMonth.data.datasets[1].label = `${moment(this.dataRecebida).year() - 1}`;
-      this.chartBarMonth.data.datasets[2].data = this.valorAcumuladoDoAno;
+      this.chartBarMonth.data.datasets[2].data = this.entradasAno;
       this.chartBarMonth.data.datasets[2].backgroundColor = 'rgb(0, 128, 0)';
       this.chartBarMonth.data.datasets[2].label = `${moment(this.dataRecebida).year()}`;
       this.chartBarMonth.update();
     } else {
-      this.gerarGraficoEvolucaoEntrada();
+      this.gerarGraficoFaturamentoMensal();
     }
   }
 
-  public gerarGraficoEvolucaoEntrada() {
-    this.elementChart = document.getElementById('chartEvolucaoEntradas');
+  public gerarGraficoFaturamentoMensal() {
+    this.elementChart = document.getElementById('chartEntradaMensal');
     this.chartBarMonth = new Chart(this.elementChart, {
       data: {
         labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
         datasets: [
-          { 
-            type: 'bar',
+          {
+            type: 'line',
             label: `${moment(this.dataRecebida).year() - 2}`,
-            data: this.valorAcumuladoDoAnoRetrasado,
-            backgroundColor: 'rgb(145, 133, 132, 0.7)',
+            data: this.entradasAnoRetrasado,
+            backgroundColor: 'rgb(145, 133, 132, 0.3)',
+            fill: true
           },
           {
             type: 'bar',
             label: `${moment(this.dataRecebida).year() - 1}`,
-            data: this.valorAcumuladoDoAnoPassado,
+            data: this.entradasAnoPassado,
             backgroundColor: 'rgb(176, 176, 128)',
           },
           {
             type: 'bar',
             label: `${moment(this.dataRecebida).year()}`,
-            data: this.valorAcumuladoDoAno,
+            data: this.entradasAno,
             backgroundColor: 'rgb(0, 128, 0)',
           },
-         
           // {
           //   type: 'line',
           //   label: '2024-O',

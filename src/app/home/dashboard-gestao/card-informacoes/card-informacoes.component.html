@@ -1,51 +1,51 @@
 <div class="row ajuste">
-    <div class="col-12 col-lg-2">
+    <div class="col-12 col-lg-2 mt-2">
         <div class="card-info">
             <div class="mb-3">
-                <strong>Faturamento do mês</strong>
+                <strong>Faturamento mês</strong>
             </div>
             <div class="">
-                <strong class="valor-faturamento">2.5 M</strong>
+                <strong class="valor-exibicao">{{valorFaturamento | numeroAbreviado}}</strong>
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-2">
+    <div class="col-12 col-lg-2 mt-2">
         <div class="card-info">
             <div class="mb-3">
-                <strong>Entrada do mês</strong>
+                <strong>Entradas mês</strong>
             </div>
             <div class="">
-                <strong class="valor-faturamento">2.3 M</strong>
+                <strong class="valor-exibicao">{{valorEntrada | numeroAbreviado}}</strong>
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-2">
+    <div class="col-12 col-lg-2 mt-2">
         <div class="card-info">
             <div class="mb-3">
-                <strong>Backlog do dia</strong>
+                <strong>Backlog dia</strong>
             </div>
             <div class="">
-                <strong class="valor-faturamento">{{2100 | number}}</strong>
+                <strong class="valor-exibicao">{{valorCarteira | numeroAbreviado}}</strong>
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-2">
+    <div class="col-12 col-lg-2 mt-2">
         <div class="card-info">
             <div class="mb-3">
                 <strong>Faturamento x Y-1</strong>
             </div>
             <div class="">
-                <strong class="valor-faturamento">3.6 %</strong>
+                <strong class="valor-exibicao">{{xy1Faturamento | number : '1.0-2'}}%</strong>
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-2">
+    <div class="col-12 col-lg-2 mt-2">
         <div class="card-info">
             <div class="mb-3">
                 <strong>Entrada x Y-1</strong>
             </div>
             <div class="">
-                <strong class="valor-faturamento">3.6 %</strong>
+                <strong class="valor-exibicao">{{ xy1Entrada| number: '1.0-2'}}%</strong>
             </div>
         </div>
     </div>

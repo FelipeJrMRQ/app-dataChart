@@ -1,4 +1,4 @@
-<header class="card-label">DADOS FATURAMENTO MENSAL</header>
+<header class="card-label">DADOS ENTRADA ACUMULADO</header>
 <div class="table-responsive">
     <table class="table table-sm table-striped">
         <thead>
@@ -19,16 +19,16 @@
         <tbody>
             <tr>
                 <td class="p-2 bold">{{anoRetrasado}}</td>
-                <td class="p-2" *ngFor="let faturamento of fatAnoRetrasado">{{faturamento | number: '1.0-0'}}</td>
+                <td class="p-2" *ngFor="let faturamento of valorAcumuladoDoAnoRetrasado">{{faturamento | number: '1.0-0'}}</td>
             </tr>
             <tr>
                 <td class="p-2 bold">{{anoPassado}}</td>
-                <td class="p-2" *ngFor="let faturamento of fatAnoPassado">{{faturamento | number: '1.0-0'}}
+                <td class="p-2" *ngFor="let faturamento of valorAcumuladoDoAnoPassado">{{faturamento | number: '1.0-0'}}
                 </td>
             </tr>
             <tr>
                 <td class="p-2 bold">{{anoAtual}}</td>
-                <td class="p-2" *ngFor="let faturamento of fatAnoAtual">{{faturamento | number: '1.0-0'}}</td>
+                <td class="p-2" *ngFor="let faturamento of valorAcumuladoDoAno">{{faturamento | number: '1.0-0'}}</td>
             </tr>
             <tr>
                 <td class="bold">x Y-1</td>

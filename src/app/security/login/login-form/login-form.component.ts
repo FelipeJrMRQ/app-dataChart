@@ -8,6 +8,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usuario } from 'src/app/models/usuario';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ControleExibicaoService } from 'src/app/services/permissoes-componentes/controle-exibicao.service';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({

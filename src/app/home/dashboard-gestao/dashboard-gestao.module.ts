@@ -10,6 +10,12 @@ import { GraficoFaturamentoMensalComponent } from './grafico-faturamento-mensal/
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TblFaturamentoAcumuladoComponent } from './tbl-faturamento-acumulado/tbl-faturamento-acumulado.component';
 import { TblFaturamentoMensalComponent } from './tbl-faturamento-mensal/tbl-faturamento-mensal.component';
+import { GraficoEntradaMensalComponent } from './grafico-entrada-mensal/grafico-entrada-mensal.component';
+import { TblEntradaAcumuladaComponent } from './tbl-entrada-acumulada/tbl-entrada-acumulada.component';
+import { TblEntradaMensalComponent } from './tbl-entrada-mensal/tbl-entrada-mensal.component';
+import { CardInformacoesComponent } from './card-informacoes/card-informacoes.component';
+import NumeroAbreviadoPipe from 'src/app/pipes/numero-abreviado.pipe';
+
 
 @NgModule({
   declarations: [
@@ -21,6 +27,11 @@ import { TblFaturamentoMensalComponent } from './tbl-faturamento-mensal/tbl-fatu
     GraficoFaturamentoMensalComponent,
     TblFaturamentoAcumuladoComponent,
     TblFaturamentoMensalComponent,
+    GraficoEntradaMensalComponent,
+    TblEntradaAcumuladaComponent,
+    TblEntradaMensalComponent,
+    CardInformacoesComponent,
+    NumeroAbreviadoPipe,
   ],
   imports: [
     CommonModule,

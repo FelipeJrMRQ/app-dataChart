@@ -43,16 +43,15 @@ import { UsuarioModule } from './home/usuario/usuario.module';
 import { ProdutoService } from './services/produto.service';
 import { ConfigTelaModule } from './home/config/config-tela/config-tela.module';
 import { TelaSistemaService } from './services/telas/tela-sistema.service';
-import { DashboardModule } from './home/dashboard-analitico/dashboard-analitico.module';
-import { LoadingPageModule } from './shared/loading-page/loading-page.module';
-
+import { DashboardModule } from './home/dashboard-analitico/dashboard-analitico.module';;
+import { DashboardGestaoModule } from './home/dashboard-gestao/dashboard-gestao.module';
 
 
 registerLocaleData(ptBr);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   
   imports: [
@@ -82,7 +81,8 @@ registerLocaleData(ptBr);
     UsuarioModule,
     SortableModule,
     ConfigTelaModule,
-    DashboardModule
+    DashboardModule,
+    DashboardGestaoModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-br' },
@@ -102,7 +102,7 @@ registerLocaleData(ptBr);
     DateControllerService,
     UsuarioService,
     ProdutoService,
-    TelaSistemaService,
+    TelaSistemaService
   ],
   bootstrap: [AppComponent]
 })

@@ -14,8 +14,9 @@ export class GraficoBacklogTotalComponent implements OnInit {
 
   public elementChart: any;
   public chartBarEvolucao: any;
-  valoresDoAno: any = [0,0,0,0,0,0,0,0,0,0,0,0];
-  valoresDoAnoPassado: any = [0,0,0,0,0,0,0,0,0,0,0,0];
+  valoresDoAno: any = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  valoresDoAnoPassado: any = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  xy1: any = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   evolucaoCarteira: EvolucaoCarteira[];
   dataRecebida: any = moment().format('yyyy-MM-DD');
   private nomeTela = "dashboard-sintetico";
@@ -35,10 +36,8 @@ export class GraficoBacklogTotalComponent implements OnInit {
     this.receberData();
   }
 
-  private receberData(){
-    DateControllerService.emitirData.subscribe((res)=>{
-      this.valoresDoAno = [0,0,0,0,0,0,0,0,0,0,0,0];
-      this.valoresDoAnoPassado = [0,0,0,0,0,0,0,0,0,0,0,0];
+  private receberData() {
+    DateControllerService.emitirData.subscribe((res) => {
       this.dataRecebida = res;
       this.consultarValorEvolucaoCarteira();
     });
@@ -46,7 +45,6 @@ export class GraficoBacklogTotalComponent implements OnInit {
 
   private consultarValorEvolucaoCarteira() {
     let dataInicial = this.dateService.getInicioDoAno(moment(this.dataRecebida).subtract(1, 'year'));
-    console.log(dataInicial);
     this.clienteService.consultarEvolucaoCarteira(dataInicial, this.dataRecebida).subscribe({
       next: (res) => {
         this.evolucaoCarteira = res.objeto;
@@ -76,6 +74,8 @@ export class GraficoBacklogTotalComponent implements OnInit {
   }
 
   private prepararValores() {
+    this.valoresDoAno = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.valoresDoAnoPassado = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     this.medias.forEach((m: any) => {
       if (moment(this.dataRecebida).year() == moment(m.date).year()) {
         this.valoresDoAno[moment(m.date).month()] = m.media;
@@ -83,6 +83,19 @@ export class GraficoBacklogTotalComponent implements OnInit {
         this.valoresDoAnoPassado[moment(m.date).month()] = m.media;
       }
     });
+    this.calcularxY1();
+  }
+
+  private calcularxY1(){
+    this.xy1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    for(let i = 0; i<11; i++){
+      if(this.valoresDoAno[i] != 0 && this.valoresDoAnoPassado[i] != 0){
+          let v1 = this.valoresDoAnoPassado[i];
+          let v2 = this.valoresDoAno[i];
+          let v3 = ((v2 - v1)/v2)*100;
+          this.xy1[i] = v3;
+      }
+    }
     this.atualizaGrafico();
   }
 
@@ -97,8 +110,9 @@ export class GraficoBacklogTotalComponent implements OnInit {
 
   private atualizaGrafico() {
     if (this.elementChart) {
-      this.chartBarEvolucao.data.datasets[0].data = this.valoresDoAno;
+      this.chartBarEvolucao.data.datasets[0].data = this.xy1;
       this.chartBarEvolucao.data.datasets[1].data = this.valoresDoAnoPassado;
+      this.chartBarEvolucao.data.datasets[2].data = this.valoresDoAno;
       this.chartBarEvolucao.update();
     } else {
       this.gerarGraficoFaturamentoMensal();
@@ -114,19 +128,28 @@ export class GraficoBacklogTotalComponent implements OnInit {
         labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
         datasets: [
           {
+            label: `x Y-1`,
+            data: this.xy1,
             type: 'line',
-            label: `2023`,
+            borderWidth: 1,
+            pointBorderWidth: 5,
+            borderColor: 'black',
+            backgroundColor : 'black',
+            pointStyle: 'rect',
+
+          },{
+            type: 'line',
+            label: `${moment(this.dataRecebida).subtract(1, 'year').format('yyyy')}`,
             data: this.valoresDoAnoPassado,
             pointBackgroundColor: 'black',
             borderColor: 'rgb(46, 54, 175, 0.5)',
             backgroundColor: 'rgba(93, 186, 132, 0.399)',
             fill: true
           },{
-          label: `2024`,
-          data: this.valoresDoAno,
-          backgroundColor: 'rgba(0, 128, 0)',
-          // fill: true
-        },
+            label: `${moment(this.dataRecebida).format('yyyy')}`,
+            data: this.valoresDoAno,
+            backgroundColor: 'rgba(0, 128, 0)',
+          }
         ]
       },
       options: {

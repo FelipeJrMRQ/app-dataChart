@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { TesteRoutingModule } from './teste-routing.module';
 import { CreationComponent } from './creation/creation.component';
 import { DlgTesteComponent } from './dlg-teste/dlg-teste.component';
+import { AppModule } from 'src/app/app.module';
 
 
 
@@ -12,12 +13,12 @@ import { DlgTesteComponent } from './dlg-teste/dlg-teste.component';
 @NgModule({
   declarations: [
     CreationComponent,
-    DlgTesteComponent,
+    DlgTesteComponent
   ],
   imports: [
     CommonModule,
     TesteRoutingModule,
-    FormsModule,
+    FormsModule
   ]
 })
 export class TesteModule { }

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { EnvironmentInjector, EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { ModeloConsulta } from '../models/modelo-consulta';
 import { Observable } from 'rxjs';
-import { ModeloRetorno } from '../models/modelo-retorno';
 import { environment } from 'src/environments/environment';
+import { EntradaMensal } from '../models/entrada/entrada-mensal';
 
 @Injectable({
   providedIn: 'root'
@@ -65,5 +65,9 @@ export class EntradaService {
 
   public consultaExtratoAnualDeEntradasPorProdutoDoBeneficiamento(dataInicial: any, dataFinal: any, cdCliente: any, cdBeneficiamento: any): Observable<any> {
     return this.http.get<any>(`${this.urlApi}/extrato-anual-entrada-beneficiamento-produto/${dataInicial}/${dataFinal}/${cdCliente}/${cdBeneficiamento}`);
+  }
+
+  public consultarEntradaMensal(dataIncial: any, dataFinal: any): Observable<EntradaMensal[]>{
+    return this.http.get<EntradaMensal[]>(`${this.urlApi}/entrada-mensal/${dataIncial}/${dataFinal}`);
   }
 }
